@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="sdc-support" namespace="/" extends="sdc-default">
+    
+        <action name="userAgreement*" method="{1}" class="gov.utah.dts.sdc.actions.UserAgreement">
+            <result>/WEB-INF/pages/UserAgreement.jsp</result>
+            <result name="agree" type="redirectAction">Home</result>
+            <result name="disagree" type="redirectAction">Home</result>
+            <interceptor-ref name="guest"/>
+        </action>
+        
+        <action name="Home" class="gov.utah.dts.sdc.actions.Home">
+            <result>/WEB-INF/pages/Home.jsp</result>
+            <result name="highschool" >/WEB-INF/pages/highschool/Home.jsp</result>
+            <result name="guest" >/WEB-INF/pages/Home.jsp</result>
+            <result name="commercial" >/WEB-INF/pages/commercial/Home.jsp</result>
+            <result name="thirdparty" >/WEB-INF/pages/thirdparty/Home.jsp</result>
+            <result name="admin" >/WEB-INF/pages/Home.jsp</result>
+            <interceptor-ref name="guest"/>
+        </action>
+        
+        <action name="highSchoolFront" class="gov.utah.dts.sdc.actions.Home" method="highSchoolFront">
+            <result>/WEB-INF/pages/highschool/Home.jsp</result>
+            <interceptor-ref name="guest"/>
+        </action>
+        
+        <action name="Login_*" method="{1}" class="gov.utah.dts.sdc.actions.LoginAction">
+            <result type="redirectAction">userAgreement</result>
+            <result name="input" type="redirectAction">
+                <param name="actionName">Security</param>
+                <param name="namespace">/Security</param>
+            </result>
+            <result name="register" type="redirectAction">Registration_input</result>
+            <result name="merge" type="redirectAction">Registration_merge</result>
+            <interceptor-ref name="guest"/>
+        </action>
+        
+        <action name="Logout" class="gov.utah.dts.sdc.actions.LogoutAction">
+        	<result name="success" type="redirect">https://login2.utah.gov/user/logoff</result>
+        </action>
+        
+        <action name="Registration_*" method="{1}" class="gov.utah.dts.sdc.actions.RegisterAction">
+            <result name="input">/WEB-INF/pages/Registration.jsp</result>
+            <result name="merge">/WEB-INF/pages/RegistrationMerge.jsp</result>
+            <result type="redirectAction">Home</result>
+            <interceptor-ref name="guest"/>
+        </action>
+    </package>
+    
+    <package name="others" namespace="/others" extends="sdc-support">
+        <action name="listCompletionSlip" class="gov.utah.dts.sdc.actions.OthersAction" method="listCompletionSlip">
+            <result>/WEB-INF/pages/others/listCompletionSlip.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="editCompletionSlip-*" class="gov.utah.dts.sdc.actions.OthersAction">
+            <param name="namevaluePk">{1}</param>
+            <result name="success">/WEB-INF/pages/others/editCompletionSlip.jsp</result>
+            <result name="input">/WEB-INF/pages/others/editCompletionSlip.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">execute</param>
+            </interceptor-ref>
+        </action>
+        <action name="saveCompletionSlip" class="gov.utah.dts.sdc.actions.OthersAction" method="saveCompletionSlip">
+			<result name="success">/WEB-INF/pages/others/editCompletionSlip.jsp</result>
+			<result name="input">/WEB-INF/pages/others/editCompletionSlip.jsp</result>
+        </action>
+    </package>
+    
+    <package name="wildcard" namespace="/" extends="sdc-support">
+        
+        <action name="*" class="gov.utah.dts.sdc.actions.SDCSupport">
+            <result>/WEB-INF/pages/{1}.jsp</result>
+        </action>
+        
+    </package>
+</struts>

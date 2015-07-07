@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    
+    
+    <package name="sdc-default" namespace="/" extends="json-default">
+        <interceptors>
+            <interceptor name="authentication" class="gov.utah.dts.sdc.interceptors.AuthenticationInterceptor"/>
+            <interceptor-stack name="staticParamsPrepareParamsStack">
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="paramsPrepareParamsStack" />
+            </interceptor-stack>
+            
+            <interceptor-stack name="crudStack">
+                <interceptor-ref name="authentication" />
+                <interceptor-ref name="staticParamsPrepareParamsStack" />
+            </interceptor-stack>
+            
+            <interceptor-stack name="user" >
+                <interceptor-ref name="authentication" />
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+            
+            <interceptor-stack name="user-submit" >
+                <!-- struts 2.10 -->
+                <interceptor-ref name="tokenSession" />
+                <interceptor-ref name="user"/>
+            </interceptor-stack>
+            
+            <interceptor-stack name="guest" >
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+                        
+        </interceptors>
+        
+        <default-interceptor-ref name="user"/>
+        
+        <global-results>
+            <result name="error">/Error.jsp</result>
+            <result name="unknownError">/unknownError.jsp</result>
+            <result name="invalid.token">/Error.jsp</result>
+            <result name="login" type="redirectAction">
+                <param name="actionName">Login_input</param>
+                <param name="namespace">/</param>
+            </result>
+            <!--<result name="login_input" type="redirectAction">
+                <param name="actionName">Security</param>
+                <param name="namespace">/</param>
+            </result> -->
+        </global-results>
+        
+        <global-exception-mappings>
+            <exception-mapping
+                result="error"
+                exception="java.lang.Throwable"/>
+        </global-exception-mappings>
+        
+    </package>
+    
+</struts>

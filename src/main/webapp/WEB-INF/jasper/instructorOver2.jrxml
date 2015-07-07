@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="instructorOver2" pageWidth="612" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="257432f4-2cf3-4e81-8d70-7145c93f7369">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="gov.utah.dts.sdc.jasper.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<style name="Arial_Normal" isDefault="true" forecolor="#000000" backcolor="#FFFFFF" fontName="Arial" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+	<style name="Arial_Bold" style="Arial_Normal" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="Arial_Medium_Bold" style="Arial_Normal" fontSize="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="Arial_Medium_Normal" style="Arial_Normal" fontSize="12" isBold="false" pdfFontName="Helvetica"/>
+	<style name="Arial_Small" style="Arial_Normal" fontSize="8"/>
+	<style name="Arial_Large" style="Arial_Normal" forecolor="#086801" fontSize="14"/>
+	<style name="Arial_Medium" style="Arial_Normal" forecolor="#086801" fontSize="12"/>
+	<style name="Arial_Section" style="Arial_Normal" mode="Opaque" forecolor="#086801" backcolor="#E0E0E0" fontSize="12"/>
+	<style name="RowAlternateColor">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}.intValue() % 2 == 0 ? Boolean.TRUE : Boolean.FALSE]]></conditionExpression>
+			<style mode="Opaque" backcolor="#E0E0E0"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="stateSealImage" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="reportTitle" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Testing"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startDate" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="endDate" class="java.lang.String" isForPrompting="false"/>
+	<field name="firstName" class="java.lang.String"/>
+	<field name="lastName" class="java.lang.String"/>
+	<field name="btw_cr" class="java.lang.String"/>
+	<field name="obs_cr" class="java.lang.String"/>
+	<field name="btw_obs" class="java.lang.String"/>
+	<field name="byType" class="java.lang.String"/>
+	<field name="startTimeStr" class="java.lang.String"/>
+	<field name="endTimeStr" class="java.lang.String"/>
+	<field name="studentName" class="java.lang.String"/>
+	<field name="studentNumber" class="java.lang.String"/>
+	<field name="schoolName" class="java.lang.String"/>
+	<variable name="btw_cr" class="java.lang.Integer" resetType="Group" resetGroup="School" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{btw_cr})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="obs_cr" class="java.lang.Integer" resetType="Group" resetGroup="School" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{obs_cr})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="btw_obs" class="java.lang.Integer" resetType="Group" resetGroup="School" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{btw_obs})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="btw_cr_instr" class="java.lang.Integer" resetType="Group" resetGroup="Instructor" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{btw_cr})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="obs_cr_instr" class="java.lang.Integer" resetType="Group" resetGroup="Instructor" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{obs_cr})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="btw_obs_instr" class="java.lang.Integer" resetType="Group" resetGroup="Instructor" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{btw_obs})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="btw_cr_report" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{btw_cr})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="obs_cr_report" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{obs_cr})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="btw_obs_report" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[Integer.parseInt($F{btw_obs})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="School" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{schoolName}]]></groupExpression>
+		<groupHeader>
+			<band height="16" splitType="Stretch">
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="0212b671-5a75-4c52-8972-4580d15d82ef" key="textField-8" style="Arial_Normal" mode="Opaque" x="0" y="0" width="571" height="15" backcolor="#C0C0C0"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{schoolName}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<textField evaluationTime="Group" evaluationGroup="School" isBlankWhenNull="false">
+					<reportElement uuid="7ee88d48-29b4-481e-8218-778d6bd8dc10" key="textField-2" style="Arial_Normal" mode="Opaque" x="296" y="0" width="92" height="15" backcolor="#C0C0C0"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{btw_cr}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="2daf2a51-11d5-4772-9202-5968ef12549c" key="s01-1" style="Arial_Bold" mode="Opaque" x="3" y="0" width="293" height="15" backcolor="#C0C0C0"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[ TOTAL:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="School" isBlankWhenNull="false">
+					<reportElement uuid="2f557e4d-fb76-4c72-9944-f45e74aae3b1" key="textField-2" style="Arial_Normal" mode="Opaque" x="388" y="0" width="92" height="15" backcolor="#C0C0C0"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{obs_cr}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="School" isBlankWhenNull="false">
+					<reportElement uuid="8b1e8b6f-5a9d-4d16-a341-003343f87eb0" key="textField-2" style="Arial_Normal" mode="Opaque" x="480" y="0" width="92" height="15" backcolor="#C0C0C0"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{btw_obs}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Instructor">
+		<groupExpression><![CDATA[$F{lastName} + $F{firstName}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="19cb343a-4b6a-4679-8654-ab198c3eb770" key="textField-10" style="Arial_Normal" x="17" y="0" width="279" height="15"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[Util.concatName($F{firstName}, "", $F{lastName})]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Instructor" isBlankWhenNull="true">
+					<reportElement uuid="80eda34d-fd40-4e48-a731-3a1fcbd0e0b1" key="textField-10" style="Arial_Normal" x="296" y="0" width="92" height="15"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{btw_cr_instr} > 0 ? "YES" : "NO"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Instructor" isBlankWhenNull="true">
+					<reportElement uuid="9d91d72c-b709-45ea-8765-7a47a353be82" key="textField-10" style="Arial_Normal" x="480" y="0" width="92" height="15"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{btw_obs_instr} > 0 ? "YES" : "NO"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Instructor" isBlankWhenNull="true">
+					<reportElement uuid="39a85e50-cfbb-4660-b505-78acc78a9d0b" key="textField-10" style="Arial_Normal" x="388" y="0" width="92" height="15"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{obs_cr_instr} > 0 ? "YES" : "NO"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="187" splitType="Stretch">
+			<image>
+				<reportElement uuid="39de9684-d737-4aeb-ba9d-38469a5645e0" key="image-1" mode="Transparent" x="10" y="8" width="84" height="84"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[new File($P{stateSealImage})]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="1684e57c-0535-4066-8b27-1473e3317834" key="textField-5" style="Arial_Medium_Bold" x="0" y="92" width="572" height="15" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{reportTitle}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="192d7b72-8846-4eae-8a50-3c49b8c89271" key="staticText-7" style="Arial_Medium" x="156" y="39" width="257" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DEPARTMENT OF PUBLIC SAFETY
+DRIVER LICENSE DIVISION
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9280a2e5-627d-452d-94fe-718627a2750f" key="staticText-8" style="Arial_Medium" x="156" y="24" width="257" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[STATE OF UTAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="89d6a92a-c7fe-4c04-b1ce-f6d23f1f2574" key="staticText-9" style="Arial_Medium" x="156" y="56" width="257" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[DRIVER LICENSE DIVISION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0a9203c1-fe8f-4cdf-8306-4edc09f3fc68" key="staticText-10" style="Arial_Bold" x="0" y="140" width="106" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Report Description:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="633a3e5a-05d6-4df5-8330-b04f16108bb0" key="staticText-11" style="Arial_Normal" x="106" y="140" width="466" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Number of instructors that are doing two different kinds of training at one time.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="20815b78-0c2f-4320-9578-116d1ac0e831" key="staticText-12" style="Arial_Normal" x="0" y="155" width="572" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[BTW-CR: Behind-The-Wheel and Classroom -- OBS-CR: Observation and Classroom -- BTW-OBS: Behind-The-Wheel and]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fd482089-f172-4111-899d-103645407678" key="staticText-13" style="Arial_Normal" x="0" y="170" width="572" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Observation.]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="28b600f7-f105-4ece-94f1-953e07c1148d" key="textField-16" style="Arial_Medium_Bold" x="292" y="107" width="94" height="15" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{startDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c6b45a8f-b585-44e9-ba9b-262404096560" key="staticText-14" style="Arial_Medium_Normal" x="195" y="107" width="94" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Start Date:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="e64c64c2-afc0-4aad-801b-368c72ef6950" key="textField-17" style="Arial_Medium_Bold" x="292" y="122" width="94" height="15" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{endDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ee5a86a1-e0a0-41e7-abb4-a8f32eb443b6" key="staticText-15" style="Arial_Medium_Normal" x="195" y="122" width="94" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[End Date:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="45" splitType="Stretch">
+			<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() > 1)]]></printWhenExpression>
+			<line direction="BottomUp">
+				<reportElement uuid="2393e0fd-f6b2-477b-a35c-a6022e0b7f7c" key="line" x="1" y="40" width="571" height="1"/>
+			</line>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="181fcdaa-a066-4577-82df-df566493292f" key="textField-6" style="Arial_Medium_Bold" mode="Opaque" x="0" y="1" width="572" height="15">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{reportTitle}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="2453208c-52b1-40c0-96da-7c1b6eb3cb9d" key="textField-6" style="Arial_Medium_Bold" mode="Opaque" x="0" y="23" width="572" height="15" isRemoveLineWhenBlank="true" printWhenGroupChanges="School">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{schoolName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement uuid="56da43f5-b71a-4795-bb30-eb2f835fe509" key="columnFrame" mode="Opaque" x="0" y="6" width="572" height="17" backcolor="#333333"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<staticText>
+					<reportElement uuid="8c3a5885-ed6b-40f8-8599-7fafdc43ca23" key="s01-1" style="Arial_Bold" mode="Transparent" x="0" y="0" width="296" height="16" forecolor="#FFFFFF"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[SCHOOL NAME]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="15a858c1-f2b2-47ef-8780-9e57298df339" key="s01-3" style="Arial_Bold" x="296" y="0" width="92" height="16" forecolor="#FFFFFF"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[BTW-CR
+]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2c74dec4-828b-4496-aacf-24b04759129a" key="s01-5" style="Arial_Bold" mode="Transparent" x="480" y="0" width="92" height="16" forecolor="#FFFFFF"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[BTW-OBS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="e98e8896-7e0c-4f7f-a9ba-dd19994f2ee0" key="s01-6" style="Arial_Bold" x="388" y="0" width="92" height="16" forecolor="#FFFFFF"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[OBS-CR]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="71a40dbe-f5d9-4c51-b86f-82af40469458" key="textField-12" style="Arial_Normal" x="46" y="1" width="214" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{startTimeStr} == null ? "" : $F{startTimeStr} + " - " + $F{endTimeStr}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="0c776721-30bd-4334-a9cd-a4ad2c98f272" key="textField-13" style="Arial_Normal" x="260" y="1" width="138" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{studentName} == null ? "" : $F{studentName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="cc54be89-8cf0-4be8-9f9f-7699d8fa5cde" key="textField-14" style="Arial_Normal" x="398" y="1" width="94" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{studentNumber} == null ? "" : $F{studentNumber}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="6c13e404-30a8-43fe-b7fb-69c18eee7286" key="textField-15" style="Arial_Normal" x="492" y="0" width="80" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{byType} == null ? "" : $F{byType}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="27" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="e766c4e5-b665-4ec8-974f-dc9d675df399" key="textField" style="Arial_Normal" x="0" y="12" width="57" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="7e34d1bb-2353-4941-aa58-d84b4eaabb3a" key="line" x="0" y="9" width="571" height="3"/>
+			</line>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="2e60a869-1358-422f-97bb-3a80578bccdb" key="textField" style="Arial_Normal" x="445" y="12" width="127" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[Util.formatDate(new Date(), "MM/dd/yyy hh:mm a")]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement uuid="53c8b6b6-6fe2-49e5-8656-cec1fca0949d" key="textField-7" style="Arial_Normal" x="57" y="12" width="49" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="17">
+			<frame>
+				<reportElement uuid="81da136f-19c6-423e-a3fe-557fb73ee110" key="summaryFrame" style="Arial_Bold" mode="Opaque" x="1" y="0" width="572" height="15" backcolor="#FFFF99"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<staticText>
+					<reportElement uuid="9eef61dc-0051-4241-8abe-b91b6a1a8d8a" key="s01-1" style="Arial_Bold" mode="Transparent" x="0" y="0" width="295" height="15"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[ REPORT TOTAL:]]></text>
+				</staticText>
+				<textField evaluationTime="Report" isBlankWhenNull="false">
+					<reportElement uuid="9c3f252f-fb29-4d93-8c98-c62e3ba5357b" key="textField-1" style="Arial_Normal" x="295" y="0" width="92" height="15"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{btw_cr_report}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement uuid="68b31c33-1e82-4da6-999c-7c8fabe16e06" key="textField-1" style="Arial_Normal" x="388" y="0" width="92" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{obs_cr_report}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement uuid="e35d5888-6c59-4b41-9f6a-593388c42781" key="textField-1" style="Arial_Normal" x="481" y="0" width="92" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{btw_obs_report}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+	<noData>
+		<band height="25">
+			<staticText>
+				<reportElement uuid="2c0159e6-eedc-480b-b366-64dd6e538645" key="staticText-10" style="Arial_Bold" x="0" y="0" width="230" height="15"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[No Results Found!]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

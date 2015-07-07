@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="PersonSQL">
+    
+    <cacheModel id="person_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "personInsert" />
+        <flushOnExecute statement= "personUpdate" />
+        <flushOnExecute statement= "personDelete" />
+        <flushOnExecute statement= "personRolesInsert" />
+        <flushOnExecute statement= "personRolesUpdate" />
+        <flushOnExecute statement= "personRolesDelete" />
+        <flushOnExecute statement= "personSchoolInsert" />
+        <flushOnExecute statement= "personSchoolUpdate" />
+        <flushOnExecute statement= "personSchoolDelete" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel>
+    
+    <resultMap id="person_result"  class="gov.utah.dts.sdc.model.Person">
+        <result property="personPk"                   column="person_pk"/>
+        <result property="firstName"                  column="firstName"/>
+        <result property="lastName"                   column="lastName"/>
+        <result property="middleName"                 column="middleName"/>
+        <result property="suffix"                     column="suffix"/>
+        <result property="dob"                        column="dob"/>
+        <result property="address1"                   column="address1"/>
+        <result property="address2"                   column="address2"/>
+        <result property="city"                       column="city"/>
+        <result property="state"                      column="state"/>
+        <result property="zip"                        column="zip"/>
+        <result property="homePhone"                  column="homePhone"/>
+        <result property="businessPhone"              column="businessPhone"/>
+        <result property="email"                      column="email"/>
+        <result property="driversLicenseNumber"       column="dlnum"/>
+        <result property="driversLicenseState"        column="dlstate"/>
+        <result property="timestamp"                  column="timestamp"/>
+        <result property="updatedBy"                  column="updatedby"/>
+        <result property="dn"                         column="dn"/>
+        <result property="languages"                  column="languages"/>
+        <result property="instructorNum"              column="instructornum"/>
+        <result property="backgroundCheckDate"        column="background_check_date"/>
+        <result property="pdpCheckDate"               column="pdp_check_date"/>
+        <result property="instructorTrainingDate"     column="instructor_training_date"/>
+        <result property="licenseExpireDate"          column="license_expire_date"/>
+        <result property="dlHistoryDate"              column="dl_history_date"/>
+        <result property="deleted"                    column="deleted"/>
+        <result property="knowledgeTest"              column="knowledge_test"/>
+        <result property="skillsTest"                 column="skills_test"/>
+    </resultMap>
+    
+    <resultMap id="commercial_result"  class="gov.utah.dts.sdc.model.Person">
+        <result property="personPk"                   column="person_pk"/>
+        <result property="firstName"                  column="firstName"/>
+        <result property="lastName"                   column="lastName"/>
+        <result property="middleName"                 column="middleName"/>
+        <result property="suffix"                     column="suffix"/>
+        <result property="languages"                  column="languages"/>
+        <result property="instructorNum"              column="instructornum"/>
+    </resultMap>
+    
+    <resultMap id="instructor_label_value"  class="gov.utah.dts.sdc.model.Person">
+        <result property="personPk"             column="person_pk"/>
+        <result property="fullName"             column="fullName"/>
+    </resultMap>
+    
+    <statement id="personSelect" resultMap="person_result" cacheModel="person_cache">
+        SELECT
+        p.person_pk,p.firstName,p.lastName,p.middleName,p.suffix,p.dob,
+        p.address1,p.address2,p.city,p.state,p.zip,p.homePhone,p.businessPhone,p.email,p.dlnum,p.dlstate,
+        p.timestamp,p.updatedby,p.dn,p.languages,p.instructornum,p.background_check_date,
+        p.pdp_check_date,p.instructor_training_date,p.license_expire_date,p.dl_history_date,p.deleted,p.knowledge_test,p.skills_test
+        FROM person p
+        WHERE
+        p.person_pk IS NOT NULL
+        <dynamic>
+            <isGreaterThan property="personPk" compareValue="0" prepend=" AND ">p.person_pk = #personPk#</isGreaterThan>          
+            <isNotEmpty property="firstName" prepend=" AND ">p.firstName like upper(rtrim(#firstName#))</isNotEmpty>
+            <isNotEmpty property="lastName" prepend=" AND ">p.lastName like upper(rtrim(#lastName#))</isNotEmpty>
+            <isNotEmpty property="email" prepend=" AND ">p.email = upper(rtrim(#email#))</isNotEmpty>
+            <isNotEmpty property="dn" prepend=" AND ">p.dn = upper(rtrim(#dn#))</isNotEmpty>
+        </dynamic>
+        order by p.lastname
+    </statement>
+    
+    <statement id="personEqualsCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM person p
+        WHERE
+        p.person_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="personPk"  prepend=" AND ">p.person_pk = #personPk#</isNotEmpty>          
+            <isNotEmpty property="firstName" prepend=" AND ">upper(rtrim(p.firstName)) = upper(rtrim(#firstName#))</isNotEmpty>
+            <isNotEmpty property="lastName" prepend=" AND ">upper(rtrim(p.lastName)) = upper(rtrim(#lastName#))</isNotEmpty>
+            <isNotEmpty property="email" prepend=" AND ">upper(rtrim(p.email)) = upper(rtrim(#email#))</isNotEmpty>
+            <isNotEmpty property="dn" prepend=" AND ">upper(rtrim(p.dn)) = upper(rtrim(#dn#))</isNotEmpty>
+        </dynamic>
+    </statement>
+    
+    <statement id="personSearchEquals" resultMap="person_result" cacheModel="person_cache">
+        SELECT
+        p.person_pk,p.firstName,p.lastName,p.middleName,p.suffix,p.dob,
+        p.address1,p.address2,p.city,p.state,p.zip,p.homePhone,p.businessPhone,p.email,p.dlnum,
+        p.dlstate,p.timestamp, p.updatedby,p.dn,p.languages,p.instructornum,
+        p.background_check_date,p.pdp_check_date,p.instructor_training_date,
+        p.license_expire_date,p.dl_history_date,p.deleted,p.knowledge_test,skills_test
+        FROM person p
+        WHERE     
+        p.person_pk IS NOT NULL 
+        <dynamic>
+            <isNotEmpty property="personPk"  prepend=" AND ">p.person_pk = #personPk#</isNotEmpty>          
+            <isNotEmpty property="firstName" prepend=" AND ">upper(rtrim(p.firstName)) = upper(rtrim(#firstName#))</isNotEmpty>
+            <isNotEmpty property="lastName" prepend=" AND ">upper(rtrim(p.lastName)) = upper(rtrim(#lastName#))</isNotEmpty>
+            <isNotEmpty property="email" prepend=" AND ">upper(rtrim(p.email)) = upper(rtrim(#email#))</isNotEmpty>
+            <isNotEmpty property="dn" prepend=" AND ">upper(rtrim(p.dn)) = upper(rtrim(#dn#))</isNotEmpty>
+            <isNotEmpty property="instructorNum">
+	           	<isEqual property="instructorNum" compareValue="instructor" prepend=" AND ">p.instructornum != ''</isEqual>
+				<isEqual property="instructorNum" compareValue="non-instructor" prepend=" AND ">p.instructornum is null</isEqual>                        
+            </isNotEmpty>
+        </dynamic>
+        order by p.lastname
+    </statement>
+
+    <statement id="personSearchBeginsWith" resultMap="person_result" cacheModel="person_cache">
+        SELECT
+        p.person_pk,p.firstName,p.lastName,p.middleName,p.suffix,p.dob,
+        p.address1,p.address2,p.city,p.state,p.zip,p.homePhone,p.businessPhone,p.email,p.dlnum,
+        p.dlstate,p.timestamp, p.updatedby,p.dn,p.languages,p.instructornum,
+        p.background_check_date,p.pdp_check_date,p.instructor_training_date,
+        p.license_expire_date,p.dl_history_date,p.deleted,p.knowledge_test,p.skills_test
+        FROM person p
+        <dynamic><isNotEmpty property="schoolName">,person_school ps, school s</isNotEmpty></dynamic>
+        WHERE     
+        p.person_pk IS NOT NULL 
+        <dynamic>
+            <isNotEmpty property="firstName" prepend=" AND ">upper(rtrim(p.firstname)) like upper(rtrim(#firstName#))</isNotEmpty>
+            <isNotEmpty property="lastName" prepend=" AND ">upper(rtrim(p.lastname)) like upper(rtrim(#lastName#))</isNotEmpty>
+            <isNotEmpty property="schoolName" prepend=" AND ">ps.person_fk = p.person_pk AND s.school_pk = ps.school_fk AND upper(rtrim(s.name)) like upper(rtrim(#schoolName#))</isNotEmpty>
+			<isNotEmpty property="instructor">
+				<isEqual property="instructor" compareValue="Y" prepend=" AND ">(p.instructornum IS NOT NULL and p.instructornum != '')</isEqual>
+				<isEqual property="instructor" compareValue="N" prepend=" AND ">(p.instructornum IS NULL or p.instructornum = '')</isEqual>
+			</isNotEmpty>
+			<isNotEmpty property="instructorNum" prepend=" AND ">upper(rtrim(p.instructornum)) like upper(rtrim(#instructorNum#))</isNotEmpty>
+			<isNotEmpty property="deleted" prepend=" AND ">p.deleted = #deleted#</isNotEmpty>
+        </dynamic>
+        order by p.lastname
+    </statement>
+    
+    <statement id="personInsert">
+        INSERT INTO person(
+        firstname,lastname,email,updatedby
+        <dynamic>
+            <isNotEmpty property="dob" prepend=", ">dob</isNotEmpty>
+            <isNotEmpty property="address1" prepend=", ">address1</isNotEmpty>
+            <isNotEmpty property="city" prepend=", ">city</isNotEmpty>
+            <isNotEmpty property="state" prepend=", ">state</isNotEmpty>
+            <isNotEmpty property="zip" prepend=", ">zip</isNotEmpty>
+            <isNotEmpty property="homePhone" prepend=", ">homephone</isNotEmpty>
+            <isNotEmpty property="middleName" prepend=", ">middlename</isNotEmpty>
+            <isEmpty property="middleName" prepend=", ">middlename</isEmpty>
+            <isNotEmpty property="suffix" prepend=", ">suffix</isNotEmpty>
+            <isNotEmpty property="address2" prepend=", ">address2</isNotEmpty>
+            <isNotEmpty property="businessPhone" prepend=", ">businessphone</isNotEmpty>
+            <isNotEmpty property="instructorNum" prepend=", ">instructornum</isNotEmpty>
+            <isNotEmpty property="dn" prepend=", ">dn</isNotEmpty>
+            <isNotEmpty property="languages" prepend=", ">languages</isNotEmpty>
+            <isNotEmpty property="driversLicenseNumber" prepend=", ">dlnum</isNotEmpty>
+            <isNotEmpty property="driversLicenseState" prepend=", ">dlstate</isNotEmpty>
+            <isNotEmpty property="backgroundCheckDate" prepend=", ">background_check_date</isNotEmpty>
+            <isNotEmpty property="pdpCheckDate" prepend=", ">pdp_check_date</isNotEmpty>
+            <isNotEmpty property="instructorTrainingDate" prepend=", ">instructor_training_date</isNotEmpty>
+            <isNotEmpty property="licenseExpireDate" prepend=", ">license_expire_date</isNotEmpty>
+            <isNotEmpty property="dlHistoryDate" prepend=", ">dl_history_date</isNotEmpty>
+        </dynamic>
+        ,deleted
+        )
+        VALUES(
+        upper(rtrim(#firstName#)),upper(rtrim(#lastName#)),upper(rtrim(#email#)),#updatedBy#
+        <dynamic>
+            <isNotEmpty property="dob" prepend=", ">#dob#</isNotEmpty>
+            <isNotEmpty property="address1" prepend=", ">upper(rtrim(#address1#))</isNotEmpty>
+            <isNotEmpty property="city" prepend=", ">upper(rtrim(#city#))</isNotEmpty>
+            <isNotEmpty property="state" prepend=", ">upper(rtrim(#state#))</isNotEmpty>
+            <isNotEmpty property="zip" prepend=", ">#zip#</isNotEmpty>
+            <isNotEmpty property="homePhone" prepend=", ">#homePhone#</isNotEmpty>
+            <isNotEmpty property="middleName" prepend=", ">upper(rtrim(#middleName#))</isNotEmpty>
+            <isEmpty property="middleName" prepend=", ">' '</isEmpty>
+            <isNotEmpty property="suffix" prepend=", ">upper(rtrim(#suffix#))</isNotEmpty>
+            <isNotEmpty property="address2" prepend=", ">upper(rtrim(#address2#))</isNotEmpty>
+            <isNotEmpty property="businessPhone" prepend=", ">#businessPhone#</isNotEmpty>
+            <isNotEmpty property="instructorNum" prepend=", ">upper(rtrim(#instructorNum#))</isNotEmpty>
+            <isNotEmpty property="dn" prepend=", ">upper(rtrim(#dn#))</isNotEmpty>
+            <isNotEmpty property="languages" prepend=", ">upper(rtrim(#languages#))</isNotEmpty>
+            <isNotEmpty property="driversLicenseNumber" prepend=", ">#driversLicenseNumber#</isNotEmpty>
+            <isNotEmpty property="driversLicenseState" prepend=", ">#driversLicenseState#</isNotEmpty>
+            <isNotEmpty property="backgroundCheckDate" prepend=", ">#backgroundCheckDate#</isNotEmpty>
+            <isNotEmpty property="pdpCheckDate" prepend=", ">#pdpCheckDate#</isNotEmpty>
+            <isNotEmpty property="instructorTrainingDate" prepend=", ">#instructorTrainingDate#</isNotEmpty>
+            <isNotEmpty property="licenseExpireDate" prepend=", ">#licenseExpireDate#</isNotEmpty>
+            <isNotEmpty property="dlHistoryDate" prepend=", ">#dlHistoryDate#</isNotEmpty>
+        </dynamic>
+        ,0
+        )
+    </statement> 
+    
+    <statement id="personUpdate">
+        UPDATE person SET
+        firstName = upper(rtrim(#firstName#)),
+        lastName = upper(rtrim(#lastName#)),
+        dob = #dob#,
+        address1 = upper(rtrim(#address1#)),
+        city = upper(rtrim(#city#)),
+        state = upper(rtrim(#state#)),
+        zip = #zip#,
+        homephone = #homePhone#,
+        email = upper(rtrim(#email#)),
+        dlnum = #driversLicenseNumber#,
+        dlstate = upper(rtrim(#driversLicenseState#)),
+        instructornum = upper(rtrim(#instructorNum#)),
+        license_expire_date = #licenseExpireDate#,
+        updatedby = #updatedBy#
+        <dynamic>
+            <isNotEmpty property="middleName" prepend=", "> middlename = upper(rtrim(#middleName#))</isNotEmpty>
+            <isEmpty property="middleName" prepend=", "> middlename = ' '</isEmpty>
+            <isNotEmpty property="suffix" prepend=", ">suffix = upper(rtrim(#suffix#))</isNotEmpty>
+            <isEmpty property="suffix" prepend=", ">suffix = null</isEmpty>
+            <isNotEmpty property="address2" prepend=", ">address2 = upper(rtrim(#address2#))</isNotEmpty>
+            <isEmpty property="address2" prepend=", ">address2 = null</isEmpty>
+            <isNotEmpty property="businessPhone" prepend=", ">businessphone = #businessPhone#</isNotEmpty>
+            <isNotEmpty property="dn" prepend=", "> dn = upper(rtrim(#dn#))</isNotEmpty>
+            <isNotEmpty property="languages" prepend=", "> languages = upper(rtrim(#languages#))</isNotEmpty>
+            <isNotEmpty property="backgroundCheckDate" prepend=", ">background_check_date = #backgroundCheckDate#</isNotEmpty>
+            <isEmpty property="backgroundCheckDate" prepend=", ">background_check_date = null</isEmpty>
+            <isNotEmpty property="pdpCheckDate" prepend=", ">pdp_check_date = #pdpCheckDate#</isNotEmpty>
+            <isEmpty property="pdpCheckDate" prepend=", ">pdp_check_date = null</isEmpty>
+            <isNotEmpty property="instructorTrainingDate" prepend=", ">instructor_training_date = #instructorTrainingDate#</isNotEmpty>
+            <isEmpty property="instructorTrainingDate" prepend=", ">instructor_training_date = null</isEmpty>
+            <isNotEmpty property="dlHistoryDate" prepend=", ">dl_history_date = #dlHistoryDate#</isNotEmpty>
+            <isEmpty property="dlHistoryDate" prepend=", ">dl_history_date = null</isEmpty>
+            <isNotEmpty property="deleted" prepend=", ">deleted = #deleted#</isNotEmpty>
+            <isNotEmpty property="knowledgeTest" prepend=", ">knowledge_test = #knowledgeTest2#</isNotEmpty>
+            <isNotEmpty property="skillsTest" prepend=", ">skills_test = #skillsTest2#</isNotEmpty>
+        </dynamic>
+        WHERE person_pk = #personPk#
+    </statement>
+    
+    <statement  id="personDelete">                                
+        UPDATE person SET deleted = #deleted# WHERE person_pk = #personPk#
+    </statement>
+    
+    <statement id="instructorLabelValue" resultMap="instructor_label_value" cacheModel="person_cache">
+        SELECT DISTINCT p.person_pk, p.firstname + ' ' + p.lastname as fullName
+        FROM person p, person_school ps
+        WHERE
+        p.person_pk = ps.person_fk AND
+        p.deleted = 0
+        <dynamic>
+            <isPropertyAvailable property="schoolList">
+                <iterate prepend=" AND " property="schoolList" open="(" close=")" conjunction="OR">
+                    school_fk=#schoolList[]#
+                </iterate>
+            </isPropertyAvailable>
+        </dynamic>
+        order by 2
+    </statement>
+
+    <statement id="classroomInstructorSearch" resultMap="commercial_result" cacheModel="person_cache">
+        SELECT p.person_pk,p.firstName,p.lastName,p.middleName,p.suffix,p.languages,p.instructornum
+        FROM classroom c
+        INNER JOIN person_school ps ON c.school_fk = ps.school_fk
+        LEFT JOIN person p ON ps.person_fk = p.person_pk
+        WHERE
+            c.classroom_pk IS NOT NULL AND
+            p.deleted = 0 AND
+            p.instructornum IS NOT NULL
+        <dynamic>
+           <isNotEmpty property="classroomPk" prepend=" AND ">c.classroom_pk = #classroomPk#</isNotEmpty>
+        </dynamic>
+        order by p.firstname, p.middlename, p.lastname
+    </statement>
+    
+    <statement id="commercialInstructorSearch" resultMap="commercial_result" cacheModel="person_cache">
+        SELECT DISTINCT p.person_pk,p.firstName,p.lastName,p.middleName,p.suffix,p.languages,p.instructornum
+        FROM person p
+        LEFT JOIN person_school ps ON ps.person_fk = p.person_pk
+        WHERE
+            p.deleted = 0
+        <dynamic>
+           <isNotEmpty property="schoolFk" prepend=" AND ">ps.school_fk = #schoolFk#</isNotEmpty>
+        </dynamic>
+        order by 2, 3
+    </statement>
+    <statement id="roadTesterInstructorSearch" resultMap="commercial_result" cacheModel="person_cache">
+        SELECT DISTINCT p.person_pk,p.firstName,p.lastName,p.middleName,p.suffix,p.languages,p.instructornum
+        FROM person p
+        LEFT JOIN person_school ps ON ps.person_fk = p.person_pk
+        LEFT JOIN person_roles pr ON p.person_pk = pr.person_fk
+        WHERE
+            p.person_pk IS NOT NULL
+            and p.deleted = 0
+            and p.instructornum IS NOT NULL
+            and pr.role = 'THIRDPARTY'
+        <dynamic>
+           <isNotEmpty property="schoolFk" prepend=" AND ">ps.school_fk = #schoolFk#</isNotEmpty>
+        </dynamic>
+        order by 2, 3
+    </statement>
+    
+</sqlMap>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<sqlMap namespace="PersonRolesSQL">
+    
+    <cacheModel id="personroles_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "personInsert" />
+        <flushOnExecute statement= "personUpdate" />
+        <flushOnExecute statement= "personDelete" />
+        <flushOnExecute statement= "personRolesInsert" />
+        <flushOnExecute statement= "personRolesUpdate" />
+        <flushOnExecute statement= "personRolesDelete" />
+        <flushOnExecute statement= "personSchoolInsert" />
+        <flushOnExecute statement= "personSchoolUpdate" />
+        <flushOnExecute statement= "personSchoolDelete" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel>
+    
+    <resultMap id="personroles_result"  class="gov.utah.dts.sdc.model.PersonRoles">
+        <result property="personRolesPk"        column="person_roles_pk"/>
+        <result property="personFk"             column="person_fk"/>
+        <result property="roleTypesFk"          column="roletypes_fk"/>
+        <result property="email"                column="email"/>
+    </resultMap>
+    
+    <statement id="selectPersonRoles" resultMap="personroles_result" cacheModel="personroles_cache">
+        SELECT
+        *
+        FROM person_roles pr
+        WHERE
+        pr.person_roles_pk IS NOT NULL
+    </statement>
+    
+    <statement id="getPersonRoles" resultClass="java.lang.Integer" cacheModel="personroles_cache">
+        SELECT
+        roletypes_fk
+        FROM person_roles pr
+        WHERE
+        pr.person_roles_pk IS NOT NULL
+        <dynamic>
+            <isGreaterThan property="personPk" compareValue="0" prepend=" AND ">pr.person_fk = #personPk#</isGreaterThan>          
+            <isNotEmpty property="email" prepend=" AND ">pr.email = upper(rtrim(#email#))</isNotEmpty>
+        </dynamic>
+    </statement>
+    
+    <!-- left for an example
+        <dynamic>
+            <isPropertyAvailable property="roles">
+                <iterate prepend=" " property="roles"
+                         open="(" close=")" conjunction="OR">
+                    roletypes_fk=#roles[]#
+                </iterate>
+            </isPropertyAvailable>
+            WHERE
+            person_fk = #personPk#
+        </dynamic>
+    </statement>
+    
+    -->
+    <statement id="personRolesUpdate">
+        UPDATE person_roles SET
+        <dynamic prepend="WHERE ">
+            <isNotEmpty property="personPk">person_fk = #personPk#</isNotEmpty>
+            <isPropertyAvailable property="personFk">
+                <isNotEmpty property="personFk">person_fk = #personFk#</isNotEmpty>
+            </isPropertyAvailable>
+        </dynamic>
+    </statement>
+    
+    <statement id="personRolesDelete">
+        <dynamic prepend=" DELETE FROM person_roles WHERE ">
+            <isNotEmpty property="personPk">person_fk = #personPk#</isNotEmpty>
+            <isPropertyAvailable property="personFk">
+                <isNotEmpty property="personFk">person_fk = #personFk#</isNotEmpty>
+            </isPropertyAvailable>
+		</dynamic>
+    </statement>
+    
+    <statement id="personRolesInsert">
+        INSERT INTO person_roles(
+        person_fk,roletypes_fk,email,role
+        )
+        VALUES(
+        #personFk#,#roleTypesFk#,upper(rtrim(#email#)),
+        (SELECT description FROM role_types WHERE roletypes_pk = #roleTypesFk#)
+        )   
+    </statement> 
+</sqlMap>

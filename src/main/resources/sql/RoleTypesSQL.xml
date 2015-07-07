@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<sqlMap namespace="RoleTypesSQL">
+
+  <cacheModel id="roleTypes_cache" type="MEMORY" >
+    <flushInterval   hours="24"/>
+    <property name="reference-type" value="WEAK" />
+  </cacheModel>
+
+  <resultMap id="roleTypes_result"  class="gov.utah.dts.sdc.model.RoleTypes">
+    <result property="roleTypesPk"                   column="roletypes_pk"/>
+    <result property="description"                  column="description"/>
+  </resultMap>
+  
+   <statement id="getRolesList" resultMap="roleTypes_result" cacheModel="roleTypes_cache">
+    SELECT
+      *
+    FROM role_types rt
+    WHERE
+      rt.roletypes_pk IS NOT NULL
+  </statement>
+  
+  <statement id="getRole" resultClass="java.lang.String" cacheModel="roleTypes_cache">
+    SELECT
+      description
+    FROM role_types rt
+    WHERE
+      rt.roletypes_pk IS NOT NULL AND
+      rt.roletypes_pk = #roleTypesPk#
+  </statement>
+  
+  </sqlMap>

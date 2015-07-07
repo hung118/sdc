@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- Field-Validator Syntax -->
+    <field name="person.firstName">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="registration.field.required"/>
+        </field-validator>
+    </field>
+    <field name="person.lastName">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="registration.field.required"/>
+        </field-validator>
+    </field>
+    <field name="person.address1">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="registration.field.required"/>
+        </field-validator>
+    </field>
+    <field name="person.dob">
+        <field-validator type="required">
+            <message key="registration.field.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    
+    <field name="person.state">
+        <field-validator type="required">
+            <message key="registration.field.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                [A-Z][A-Z]
+            </param>
+            <message key="registration.field.required"/>
+        </field-validator>
+    </field>
+    
+    <field name="person.driversLicenseNumber">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="registration.field.required"/>
+        </field-validator>
+    </field>
+    <field name="person.driversLicenseState">
+        <field-validator type="required">
+            <message key="registration.field.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                [A-Z][A-Z]
+            </param>
+            <message key="registration.field.required"/>
+        </field-validator>
+    </field>
+    
+    <field name="person.businessPhone">
+        <field-validator type="requiredstring">
+            <message key="registration.field.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">[0-9]{3}-[0-9]{3}-[0-9]{4}</param>
+            <message>Phone number must be in the format XXX-XXX-XXXX</message>
+        </field-validator>
+    </field>
+    
+   <field name="person.zip">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="registration.field.required"/>
+        </field-validator>
+    </field>
+</validators>

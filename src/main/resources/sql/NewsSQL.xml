@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="NewsSQL">
+    
+    <cacheModel id="news_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "newsInsert" />
+        <flushOnExecute statement= "newsUpdate" />
+        <flushOnExecute statement= "newsDelete" />
+        <flushOnExecute statement= "insertCompletionSlip" />
+        <flushOnExecute statement= "updateCompletionSlip" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel>
+    
+    <resultMap id="news_result"  class="gov.utah.dts.sdc.model.News">
+        <result property="newsPk"                     column="news_pk"/>
+        <result property="description"                column="description"/>
+        <result property="news"                       column="news"/>
+        <result property="timestamp"                  column="timestamp"/>
+        <result property="roleTypesFk"                column="roletypes_fk"/>
+        <result property="deleted"                    column="deleted"/>
+    </resultMap>
+    
+    <resultMap id="completionSlip_result"  class="gov.utah.dts.sdc.model.CompletionSlip">
+    	<result property="namevaluePk"                  column="namevalue_pk"/>
+    	<result property="name"                     	column="name"/>
+    	<result property="value"                     	column="value"/>
+    	<result property="description"                  column="description"/>
+    	<result property="timestamp"                    column="timestamp"/>
+    </resultMap>
+    
+    <statement id="newsUserSelect" resultMap="news_result" cacheModel="news_cache">
+        SELECT n.news_pk, n.description, n.news, n.timestamp, n.roletypes_fk, n.deleted
+        FROM news n
+        WHERE
+        <dynamic>
+            <isPropertyAvailable property="rolesList">n.roletypes_fk in
+                <iterate prepend=" " property="rolesList" open="(0," close=") AND" conjunction=",">
+                    #rolesList[]#
+                </iterate>
+            </isPropertyAvailable>
+            <isNotPropertyAvailable property="rolesList">
+                n.roletypes_fk = 0 AND
+            </isNotPropertyAvailable>
+        </dynamic>
+        n.deleted = 0
+        order by n.timestamp DESC
+    </statement>
+    
+    <statement id="newsAdminSelect" resultMap="news_result" cacheModel="news_cache">
+        SELECT n.news_pk, n.description, n.news, n.timestamp, n.roletypes_fk, n.deleted
+        FROM news n
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty prepend=" AND" property="newsPk">n.news_pk = #newsPk#</isNotEmpty>    
+        </dynamic>
+        order by n.timestamp DESC
+    </statement>
+
+    <statement id="newsSearchContains" resultMap="news_result" cacheModel="news_cache">
+        SELECT n.news_pk, n.description, n.news, n.timestamp, n.roletypes_fk, n.deleted
+        FROM news n
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="description" prepend=" AND ">upper(rtrim(n.description)) like upper(rtrim(#description#))</isNotEmpty>
+            <isNotEmpty property="roleTypesFk" prepend=" AND ">n.roletypes_fk = #roleTypesFk#</isNotEmpty>    
+            <isNotEmpty property="deleted" prepend=" AND ">n.deleted = #deleted#</isNotEmpty>    
+        </dynamic>
+        order by n.timestamp DESC
+    </statement>
+    
+    <statement id="newsInsert">
+        INSERT INTO news(description,news,roletypes_fk,deleted)
+        VALUES(rtrim(#description#),rtrim(#news#),#roleTypesFk#,0)
+    </statement> 
+    
+    <statement id="newsUpdate">
+        UPDATE news SET
+        description = rtrim(#description#),
+        news = rtrim(#news#),
+        roletypes_fk = #roleTypesFk#
+        WHERE news_pk = #newsPk#
+    </statement>
+    
+    <statement  id="newsDelete">                                
+        UPDATE news SET deleted = #deleted# WHERE news_pk = #newsPk#
+    </statement>
+    
+    <statement id="completionSlipsSelect" resultMap="completionSlip_result" cacheModel="news_cache">
+        SELECT namevalue_pk, name, value, description, timestamp
+        FROM name_value
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty prepend=" AND" property="namevaluePk">namevalue_pk = #namevaluePk#</isNotEmpty>    
+        </dynamic>
+        order by timestamp
+    </statement>
+    
+    <statement id="insertCompletionSlip">
+        INSERT INTO name_value(name, value, description)
+        VALUES(ltrim(rtrim(#name#)),ltrim(rtrim(#value#)),ltrim(rtrim(#description#)))
+    </statement> 
+    
+    <statement id="updateCompletionSlip">
+        UPDATE name_value SET
+        name = ltrim(rtrim(#name#)),
+        value = ltrim(rtrim(#value#)),
+        description = ltrim(rtrim(#description#)),
+        timestamp = getdate()
+        WHERE namevalue_pk = #namevaluePk#
+    </statement>
+    
+</sqlMap>
+

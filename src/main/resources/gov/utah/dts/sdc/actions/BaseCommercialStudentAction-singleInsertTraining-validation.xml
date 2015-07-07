@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+   <!-- Field-Validator Syntax -->
+    <field name="trainingDate">
+         <field-validator type="required">
+            <message key="commercial.trainingDate.required"/>
+        </field-validator>
+    </field>
+ 
+   <field name="instructorFk">
+         <field-validator type="required">
+            <message key="commercial.instructorFk.required"/>
+        </field-validator>
+    </field>
+    
+    <field name="section">
+         <field-validator type="required">
+            <message key="commercial.section.required"/>
+        </field-validator>
+    </field>
+    
+        <field name="trainingStartTime">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="commercial.field.required"/>
+        </field-validator>
+    </field>
+    
+    <field name="trainingEndTime">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="commercial.field.required"/>
+        </field-validator>
+    </field>
+   
+  
+   
+    
+  </validators>

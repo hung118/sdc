@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr/dwr20.dtd">
+
+<dwr>
+	<allow>
+		<create creator="none" javascript="DWRAction">
+			<param name="class" value="org.directwebremoting.webwork.DWRAction" />
+			<include method="execute" />
+		</create>
+		<create creator="new" javascript="Classroom" scope="script">
+			<param name="class" value="gov.utah.dts.sdc.ajax.AjaxClassroom" />
+		</create>
+		<create creator="spring" javascript="RoadTesterService">
+			<param name="beanName" value="roadTesterService" />
+			<include method="getRoadTestersBySchools" />
+			<include method="getRoadTestersBySchoolType" />
+			<include method="getSchoolLabelValueList" />
+		</create>
+
+		<convert converter="bean" match="org.directwebremoting.webwork.ActionDefinition">
+			<param name="include" value="namespace,action,method,executeResult" />
+		</convert>
+		<convert converter="bean" match="org.directwebremoting.webwork.AjaxResult" />
+		<convert converter="bean" match="gov.utah.dts.sdc.model.Classroom" />
+		<convert converter="bean" match="gov.utah.dts.sdc.model.LabelValue" />
+		<convert converter="bean" match="gov.utah.dts.sdc.model.School" />
+	</allow>
+</dwr>

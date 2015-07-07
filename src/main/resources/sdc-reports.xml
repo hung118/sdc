@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    
+    <package name="sdc-jasper" extends="sdc-default">
+        <result-types>
+    		<result-type name="jasper" class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
+    	</result-types>
+        </package>
+    
+    
+    <package name="sdc-reports" namespace="/reports" extends="sdc-jasper">
+        <interceptors>
+        <interceptor-stack name="jasperStack" >
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+            </interceptors>
+        <default-interceptor-ref name="jasperStack"/>
+                      
+        <action name="completionDatesSearch" class="gov.utah.dts.sdc.jasper.CompletionTestsJasperAction" method="input">
+            <result>/WEB-INF/pages/reports/CompletionDatesSearch.jsp</result>
+            <interceptor-ref name="crudStack"/>
+        </action>
+        
+        <action name="generateCompletionDatesReport" class="gov.utah.dts.sdc.jasper.CompletionTestsJasperAction" method="generateCompletionDatesReport">
+            <result name="input">/WEB-INF/pages/reports/CompletionDatesSearch.jsp</result>
+            <result name="report" type="redirectAction">
+                <param name="actionName">completionTestsJasper</param>
+                <param name="namespace">/reports</param>
+            </result>
+            <interceptor-ref name="crudStack"/>
+        </action>
+        
+      <action name="completionTestsJasper" class="gov.utah.dts.sdc.jasper.CompletionTestsJasperAction">
+            <result name="success" type="jasper">
+                <param name="location">/WEB-INF/jasper/Completion_Dates_Sheet.jasper</param>
+                <param name="dataSource">myList</param>
+                <param name="format">PDF</param>
+            </result>
+            <result name="input">/WEB-INF/pages/reports/CompletionDatesSearch.jsp</result>
+        </action>
+        <action name="writtenCompletionJasper" class="gov.utah.dts.sdc.jasper.WrittenCompletionJasperAction">
+            <result name="success" type="jasper">
+                <param name="location">/WEB-INF/jasper/Written_Cert_Sheet.jasper</param>
+                <param name="dataSource">myList</param>
+                <param name="format">PDF</param>
+            </result>
+        </action>
+        <action name="fullCompletionJasper" class="gov.utah.dts.sdc.jasper.FullCompletionJasperAction">
+            <result name="success" type="jasper">
+                <param name="location">/WEB-INF/jasper/Completion_High_Cert_Sheet.jasper</param>
+                <param name="dataSource">myList</param>
+                <param name="format">PDF</param>
+            </result>
+        </action>
+        <action name="comFullCompletionJasper" class="gov.utah.dts.sdc.jasper.FullCompletionJasperAction">
+            <result name="success" type="jasper">
+                <param name="location">/WEB-INF/jasper/Completion_Cert_Sheet.jasper</param>
+                <param name="dataSource">myList</param>
+                <param name="format">PDF</param>
+            </result>
+        </action>
+        <action name="ocsCompletionJasper" class="gov.utah.dts.sdc.jasper.OcsCompletionJasperAction">
+            <result name="success" type="jasper">
+                <param name="location">/WEB-INF/jasper/Completion_Cert_Ocs.jasper</param>
+                <param name="dataSource">myList</param>
+                <param name="format">PDF</param>
+            </result>
+        </action>
+        <action name="roadCompletionJasper" class="gov.utah.dts.sdc.jasper.RoadCompletionJasperAction">
+            <result name="success" type="jasper">
+                <param name="location">/WEB-INF/jasper/ThirdParty_Cert_Sheet.jasper</param>
+                <param name="dataSource">myList</param>
+                <param name="format">PDF</param>
+            </result>
+        </action>
+        
+        <action name="searchAuditLogs" class="gov.utah.dts.sdc.actions.AuditLogsAction" method="searchAuditLogs">
+            <result>/WEB-INF/pages/reports/searchAuditLogs.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="listAuditLogs" class="gov.utah.dts.sdc.actions.AuditLogsAction" method="listAuditLogs">
+            <result>/WEB-INF/pages/reports/listAuditLogs.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="listLogs" class="gov.utah.dts.sdc.actions.AuditLogsAction" method="listLogs">
+            <result>/WEB-INF/pages/reports/listAuditLogs.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        
+    </package>
+</struts>

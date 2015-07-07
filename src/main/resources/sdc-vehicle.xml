@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="vehicle" extends="sdc-support" namespace="/vehicle">
+        <default-interceptor-ref name="crudStack"/>
+        
+        <action name="search" class="gov.utah.dts.sdc.actions.VehicleAction" method="search">
+            <result>/WEB-INF/pages/vehicle/searchVehicle.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+
+        <action name="list" class="gov.utah.dts.sdc.actions.VehicleAction" method="list">
+            <result>/WEB-INF/pages/vehicle/listVehicle.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">list</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="edit-*" class="gov.utah.dts.sdc.actions.VehicleAction">
+            <param name="vehiclePk">{1}</param>
+            <result>/WEB-INF/pages/vehicle/editVehicle.jsp</result>
+            <result name="input">/WEB-INF/pages/vehicle/editVehicle.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">execute</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="save" class="gov.utah.dts.sdc.actions.VehicleAction" method="save">
+            <result>/WEB-INF/pages/vehicle/listVehicle.jsp</result>
+            <result name="input">/WEB-INF/pages/vehicle/editVehicle.jsp</result>
+            <result name="list">/WEB-INF/pages/vehicle/listVehicle.jsp</result>
+        </action>
+        
+        <action name="delete-*" class="gov.utah.dts.sdc.actions.VehicleAction" method="delete">
+            <param name="vehiclePk">{1}</param>
+            <result>/WEB-INF/pages/vehicle/listVehicle.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">delete</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="undelete-*" class="gov.utah.dts.sdc.actions.VehicleAction" method="undelete">
+            <param name="vehiclePk">{1}</param>
+            <result>/WEB-INF/pages/vehicle/listVehicle.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">undelete</param>
+            </interceptor-ref>
+        </action>
+
+    </package>
+    
+</struts>
+
+

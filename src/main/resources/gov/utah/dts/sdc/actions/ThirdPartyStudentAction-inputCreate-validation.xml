@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- Field-Validator Syntax -->
+    <field name="schoolFk">
+        <field-validator type="required">
+            <message key="student.schoolPk.required"/>
+        </field-validator>
+    </field>
+    
+ </validators>

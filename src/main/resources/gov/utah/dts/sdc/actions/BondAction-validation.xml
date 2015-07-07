@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- Field-Validator Syntax -->
+    <field name="bond.company">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="bond.field.required"/>
+        </field-validator>
+    </field>
+    
+    <field name="bond.issueDate">
+        <field-validator type="required">
+            <message key="bond.field.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="bond.dateFormat" />
+        </field-validator>
+    </field>
+    
+    <field name="bond.expireDate">
+        <field-validator type="required">
+            <message key="bond.field.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="bond.dateFormat" />
+        </field-validator>
+    </field>
+    
+    <field name="bond.phone">
+        <field-validator type="regex">
+            <param name="regex">[0-9]{3}-[0-9]{3}-[0-9]{4}</param>
+            <message key="bond.phoneFormat" />
+        </field-validator>
+    </field>
+    
+</validators>

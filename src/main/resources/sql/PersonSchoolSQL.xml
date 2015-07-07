@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<sqlMap namespace="PersonSchoolSQL">
+    
+    <cacheModel id="personschool_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "personInsert" />
+        <flushOnExecute statement= "personUpdate" />
+        <flushOnExecute statement= "personDelete" />
+        <flushOnExecute statement= "personRolesInsert" />
+        <flushOnExecute statement= "personRolesUpdate" />
+        <flushOnExecute statement= "personRolesDelete" />
+        <flushOnExecute statement= "personSchoolInsert" />
+        <flushOnExecute statement= "personSchoolUpdate" />
+        <flushOnExecute statement= "personSchoolDelete" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel>
+    
+    <resultMap id="personschool_result"  class="gov.utah.dts.sdc.model.PersonSchool">
+        <result property="personSchoolPk"        column="personschool_pk"/>
+        <result property="personFk"             column="person_fk"/>
+        <result property="schoolFk"          column="school_fk"/>
+    </resultMap>
+    
+    <statement id="selectPersonSchool" resultMap="personschool_result" cacheModel="personschool_cache">
+        SELECT
+        *
+        FROM person_school ps
+        WHERE
+        ps.personschool_pk IS NOT NULL
+    </statement>
+    
+    <statement id="getPersonSchool" resultClass="java.lang.Integer" cacheModel="personschool_cache">
+        SELECT
+        school_fk
+        FROM person_school ps
+        WHERE
+        ps.personschool_pk IS NOT NULL
+        <dynamic>
+            <isGreaterThan property="personPk" compareValue="0" prepend=" AND ">ps.person_fk = #personPk#</isGreaterThan>          
+        </dynamic>
+    </statement>
+    
+    <statement id="personSchoolUpdate">
+        UPDATE person_school SET
+        <dynamic prepend="WHERE ">
+            <isNotEmpty property="personPk">person_fk = #personPk#</isNotEmpty>
+            <isPropertyAvailable property="personFk">
+                <isNotEmpty property="personFk">person_fk = #personFk#</isNotEmpty>
+            </isPropertyAvailable>
+        </dynamic>
+    </statement>
+    
+    <statement id="personSchoolDelete">
+        <dynamic prepend=" DELETE FROM person_school WHERE ">
+            <isNotEmpty property="personPk">person_fk = #personPk#</isNotEmpty>
+            <isPropertyAvailable property="personFk">
+                <isNotEmpty property="personFk">person_fk = #personFk#</isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="schoolPk">
+                <isNotEmpty property="schoolPk">school_fk = #schoolPk#</isNotEmpty>
+            </isPropertyAvailable>    
+            <isPropertyAvailable property="schoolFk">
+                <isNotEmpty property="schoolFk">school_fk = #schoolFk#</isNotEmpty>
+            </isPropertyAvailable>
+		</dynamic>
+    </statement>
+    
+    <statement id="personSchoolInsert">
+        INSERT INTO person_school(
+         person_fk,school_fk
+         )
+        VALUES(
+        #personFk#,#schoolFk#
+        )   
+    </statement> 
+    
+</sqlMap>

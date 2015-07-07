@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- Field-Validator Syntax -->
+    <field name="namevalue.name">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="others.completionSlip.name.required"/>
+        </field-validator>
+    </field>
+   
+    <field name="namevalue.value">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="others.completionSlip.value.required"/>
+        </field-validator>
+    </field>
+       
+</validators>

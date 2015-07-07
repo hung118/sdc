@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context crossContext="true" debug="0" docBase="sdc" path="/sdc" reloadable="true">
+  
+<!-- AT -->
+<Realm  
+	className="gov.utah.dts.realms.SDCRealm" 
+	debug="99"
+	driverName="net.sourceforge.jtds.jdbc.Driver"
+	connectionURL="jdbc:jtds:sqlserver://ITDB223SP.dts.utah.gov:52528/sdc;instance=mspd12" 
+	connectionName="sdc" 
+	connectionPassword="sdct3st"
+	userTable="person" 
+	userNameCol="email" 
+	userCredCol="email"
+	userRoleTable="person_roles"
+	roleNameCol="role" /> 
+
+<Resource 
+        auth="Container" 
+        driverClassName="net.sourceforge.jtds.jdbc.Driver" 
+        maxActive="100" 
+        maxIdle="30" 
+        maxWait="10000" 
+        name="sdcDataSource"
+        removeAbandoned="true" 
+        removeAbandonedTimeout="20" 
+        type="javax.sql.DataSource" 
+        url="jdbc:jtds:sqlserver://ITDB223SP.dts.utah.gov:52528/sdc;instance=mspd12" 
+        username="sdc"
+        password="sdct3st" />
+</Context>

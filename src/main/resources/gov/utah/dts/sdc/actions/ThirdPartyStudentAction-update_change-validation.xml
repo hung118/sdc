@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- Field-Validator Syntax -->
+    <field name="schoolFk">
+        <field-validator type="required">
+            <message>You must choose a school.</message>
+        </field-validator>
+    </field>
+    
+     <field name="routeNumber">
+        <field-validator type="required">
+            <message>You must input a route number.</message>
+        </field-validator>
+    </field>
+    
+    <field name="routeArea">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message>You must input a route area.</message>
+        </field-validator>
+    </field>
+    
+    <field name="roadInstructorPk">
+        <field-validator type="required">
+            <message>You must choose an instructor.</message>
+        </field-validator>
+    </field>
+    
+    <field name="vehicleFk">
+        <field-validator type="required">
+            <message>You must choose a vehicle.</message>
+        </field-validator>
+    </field>
+    
+    <field name="roadTestCompletionDate">
+        <field-validator type="required">
+            <message key="thirdparty.roadTestCompletionDate.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    
+    <field name="roadTestScore">
+        <field-validator type="required">
+            <message key="thirdparty.roadTest.required"/>
+        </field-validator>
+    </field>
+</validators>

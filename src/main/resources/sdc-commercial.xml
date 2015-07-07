@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="commercial" extends="sdc-support" namespace="/commercial">
+        <default-interceptor-ref name="crudStack"/>
+
+        <action name="commercialFront" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="commercialFront">
+            <result>/WEB-INF/pages/commercial/Home.jsp</result>
+        </action>
+        
+        <action name="createClassroom" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="createClassroom">
+            <result name="success" type="redirectAction">editClassroom-${currentClassroom.classroomPk}</result>
+            <result name="input">/WEB-INF/pages/commercial/Home.jsp</result>
+            <result name="invalid.token" type="redirect">commercialFront.do</result>
+            <!--Add token to crudStack for this to work -->
+        </action>
+        
+        <action name="editClassroom-*" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="editClassroom">
+            <param name="classroomPk">{1}</param>
+            <result>/WEB-INF/pages/commercial/EditClassroom.jsp</result>
+        </action>
+        
+        <action name="ajaxCallAddStudentNumber" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="addStudentNumberAjaxInput">
+            <result name="input">/WEB-INF/pages/commercial/StudentNumberSearch.jsp</result>
+        </action>
+        
+        <action name="addMultiObservationTimeInput" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="addMultiObservationTimeInput">
+            <result name="input">/WEB-INF/pages/commercial/addMultiObservationTime.jsp</result>
+        </action>
+        
+        <action name="addMultiObservationTime" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="addMultiObservationTime">
+            <result name="input">/WEB-INF/pages/commercial/addMultiObservationTime.jsp</result>
+            <result name="success">/WEB-INF/pages/commercial/addMultiObservationTimeResult.jsp</result>
+        </action>
+
+        <action name="addMultiTrainingTimeInput" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="addMultiTrainingTimeInput">
+            <result name="input">/WEB-INF/pages/commercial/addMultiTrainingTime.jsp</result>
+        </action>
+
+        <action name="addMultiTrainingTime" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="addMultiTrainingTime">
+            <result name="input">/WEB-INF/pages/commercial/addMultiTrainingTime.jsp</result>
+            <result name="success">/WEB-INF/pages/commercial/addMultiTrainingTimeResult.jsp</result>
+        </action>
+        
+        <action name="removeMultiStudentsInput" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="removeMultiStudentsInput">
+            <result name="input">/WEB-INF/pages/commercial/removeMultiStudentsInput.jsp</result>
+        </action>
+        
+        <action name="removeMultiStudents" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="removeMultiStudents">
+            <result name="input">/WEB-INF/pages/commercial/removeMultiStudentsInput.jsp</result>
+            <result name="success">/WEB-INF/pages/commercial/removeMultiStudentsResult.jsp</result>
+        </action>
+        
+        <action name="inputCommercialStudent" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="inputCommercialStudent">
+             <result name="input">/WEB-INF/pages/commercial/CreateStudentInput.jsp</result>
+             <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">inputCommercialStudent</param>
+            </interceptor-ref>
+         </action>
+        
+         <action name="createCommercialStudent" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="createCommercialStudent">
+             <result name="input">/WEB-INF/pages/commercial/CreateStudentInput.jsp</result>
+            
+            <result name="success" type="redirectAction">editClassroom-${classroomPk}</result>
+            <!--<result name="input">/WEB-INF/pages/commercial/EditClassroom.jsp</result>
+            <result name="success">/WEB-INF/pages/commercial/AjaxResult.jsp</result>-->
+        </action>
+        
+        <action name="webSearch" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="webSearch">
+            <result name="input" type="redirectAction">editClassroom-${classroomPk}</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">webSearch</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="dobSearch" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="dobSearch">
+            <result name="input">/WEB-INF/pages/commercial/AdvancedSearch.jsp</result>
+            <result name="multipleclass">/WEB-INF/pages/commercial/EditStudentMultipleClassroom.jsp</result>
+            <result name="noclass" type="redirectAction">noClassStudent-${studentPk}</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+            <result name="multipleResult">/WEB-INF/pages/commercial/AdvancedSearchResult.jsp</result>
+        </action>
+        
+        <action name="removeStudent" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="removeStudent">
+            <result name="success" type="redirectAction">editClassroom-${classroomPk}</result>
+        </action>
+        
+        <action name="editStudent-*-*" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="editStudent">
+            <param name="studentPk">{1}</param>
+            <param name="classroomPk">{2}</param>
+            <result>/WEB-INF/pages/commercial/EditStudent.jsp</result>
+            <result name="input">/WEB-INF/pages/commercial/EditStudent.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">editStudent</param>
+            </interceptor-ref>
+        </action>
+        
+         <action name="noClassStudent-*" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="editStudent">
+            <param name="studentPk">{1}</param>
+            <result>/WEB-INF/pages/commercial/EditStudentNoClassroom.jsp</result>
+            <result name="input">/WEB-INF/pages/commercial/EditStudent.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">editStudent</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="inputObservationTime" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="inputObservationTime">
+            <result name="input">/WEB-INF/pages/commercial/ObservationInput.jsp</result>
+            <result name="success" type="redirectAction">editClassroom-${classroomPk}</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">inputObservationTime</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="multipleInsertObservation" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="multipleInsertObservation">
+            <result name="input">/WEB-INF/pages/commercial/ObservationInput.jsp</result>
+            <result name="success" type="redirectAction">editClassroom-${classroomPk}</result>
+            <result name="edit" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleInsertObservation" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="singleInsertObservation">
+            <result name="input">/WEB-INF/pages/commercial/ObservationInput.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="inputTrainingTime" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="inputTrainingTime">
+            <result name="input">/WEB-INF/pages/commercial/TrainingInput.jsp</result>
+            <result name="success" type="redirectAction">editClassroom-${classroomPk}</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">inputTrainingTime</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="multipleInsertTraining" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="multipleInsertTraining">
+            <result name="input">/WEB-INF/pages/commercial/TrainingInput.jsp</result>
+            <result name="success" type="redirectAction">editClassroom-${classroomPk}</result>
+            <result name="edit" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleInsertTraining" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="singleInsertTraining">
+            <result name="input">/WEB-INF/pages/commercial/TrainingInput.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleInsertBtw" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="singleInsertBtw">
+            <result name="input">/WEB-INF/pages/commercial/BtwInput.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="syncFileNumber" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="syncFileNumber">
+            <result name="input" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+            <result name="merge">/WEB-INF/pages/commercial/MergeStudent.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+         </action>
+
+        <action name="commercialSyncFileNumber" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="commercialSyncFileNumber">
+            <result name="input" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+            <result name="merge">/WEB-INF/pages/commercial/MergeStudent.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+         </action>
+
+         <action name="mergeFileNumber" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="mergeFileNumber">
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+         </action>
+         <action name="insertObservationCompletion" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="insertObservationCompletion">
+            <result name="input">/WEB-INF/pages/commercial/ObservationCompletionInput.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        <action name="insertClassroomCompletion" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="insertClassroomCompletion">
+            <result name="input">/WEB-INF/pages/commercial/TrainingCompletionInput.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        <action name="insertBtwCompletion" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="insertBtwCompletion">
+            <result name="input">/WEB-INF/pages/commercial/BtwCompletionInput.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="inputStudentNumber" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="inputStudentNumber">
+           <result name="input">/WEB-INF/pages/commercial/SearchStudentNumber.jsp</result>
+           <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">inputStudentNumber</param>
+            </interceptor-ref>
+         </action>
+         
+         <action name="inputFileNumber" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="inputFileNumber">
+           <result name="input">/WEB-INF/pages/commercial/SearchFileNumber.jsp</result>
+           <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">inputFileNumber</param>
+            </interceptor-ref>
+         </action>
+         
+        <action name="inputDOB" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="inputDOB">
+            <result name="input">/WEB-INF/pages/commercial/AdvancedSearch.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">inputDOB</param>
+            </interceptor-ref>
+        </action>
+         
+        <action name="fileNumberSearch" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="fileNumberSearch">
+            <result name="input">/WEB-INF/pages/commercial/SearchFileNumber.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+    
+        <action name="studentNumberSearch" class="gov.utah.dts.sdc.actions.CommercialStudentSearchAction" method="studentNumberSearch">
+            <result name="input">/WEB-INF/pages/commercial/SearchStudentNumber.jsp</result>
+            <result name="multipleclass">/WEB-INF/pages/commercial/EditStudentMultipleClassroom.jsp</result>
+            <result name="noclass" type="redirectAction">noClassStudent-${studentPk}</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+            <result name="input-classroom" type="redirectAction">inputStudentNumber.do</result>
+        </action>
+        
+        <action name="generateFullCompletion" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="generateFullCompletion">
+            <result name="input">/WEB-INF/pages/commercial/Home.jsp</result>
+            <result name="report" type="redirectAction">
+                <param name="actionName">comFullCompletionJasper</param>
+                <param name="namespace">/reports</param>
+            </result>
+             <result name="success" type="dispatcher">/WEB-INF/pages/commercial/Home.jsp</result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="singleViewUpdateObservation-*-*-*" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="viewUpdateObservationTime">
+            <param name="timePk">{1}</param>
+            <param name="studentPk">{2}</param>
+            <param name="classroomPk">{3}</param>
+            <result name="input">/WEB-INF/pages/commercial/ObservationUpdate.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleUpdateObservation" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="updateObservationTime">
+            <result name="input">/WEB-INF/pages/commercial/ObservationUpdate.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleDeleteObservation-*-*-*" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="deleteObservationTime">
+            <param name="timePk">{1}</param>
+            <param name="studentPk">{2}</param>
+            <param name="classroomPk">{3}</param>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleViewUpdateTraining-*-*-*" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="viewUpdateTrainingTime">
+        	<param name="timePk">{1}</param>
+            <param name="studentPk">{2}</param>
+            <param name="classroomPk">{3}</param>
+            <result name="input">/WEB-INF/pages/commercial/TrainingUpdate.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleUpdateTraining" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="updateTrainingTime">
+            <result name="input">/WEB-INF/pages/commercial/TrainingUpdate.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleDeleteTraining-*-*-*" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="deleteTrainingTime">
+        	<param name="timePk">{1}</param>
+            <param name="studentPk">{2}</param>
+            <param name="classroomPk">{3}</param>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleViewUpdateBTW-*-*-*" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="viewUpdateBTWTime">
+        	<param name="timePk">{1}</param>
+            <param name="studentPk">{2}</param>
+            <param name="classroomPk">{3}</param>
+            <result name="input">/WEB-INF/pages/commercial/BtwUpdate.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleUpdateBTW" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="updateBTWTime">
+            <result name="input">/WEB-INF/pages/commercial/BtwUpdate.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="singleDeleteBTW-*-*-*" class="gov.utah.dts.sdc.actions.BaseCommercialStudentAction" method="deleteBTWTime">
+            <param name="timePk">{1}</param>
+            <param name="studentPk">{2}</param>
+            <param name="classroomPk">{3}</param>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="viewUpdateStudentInformation-*-*" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="viewUpdateStudentInformation">
+            <param name="studentPk">{1}</param>
+            <param name="classroomPk">{2}</param>
+            <result name="input">/WEB-INF/pages/commercial/UpdateStudentInformation.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="updateStudentInformation" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="updateStudentInformation">
+            <result name="input">/WEB-INF/pages/commercial/UpdateStudentInformation.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="updateStudentNote" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="updateStudentNote">
+            <result name="input">/WEB-INF/pages/commercial/UpdateStudentInformation.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+
+        <action name="updateStudentOcsScore" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="updateStudentOcsScore">
+            <result name="input">/WEB-INF/pages/commercial/UpdateStudentInformation.jsp</result>
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+
+        <action name="edit_*" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="input">
+            <param name="studentPk">{1}</param>
+            <result name="input">/WEB-INF/pages/student/EditStudent.jsp</result>
+        </action>
+
+        <action name="ajaxCheckUser" class="gov.utah.dts.sdc.actions.CommercialStudentCreateAction" method="ajaxCheckUser">
+        	<exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+
+        <action name="hideStudent" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="hideStudent">
+            <result name="success" type="redirectAction">
+            	<param name="actionName">editClassroom-</param>
+            	<param name="classroomPk">${classroomPk}</param>
+            	<param name="showHidden">${showHidden}</param>
+            </result>
+        </action>
+
+        <action name="unhideStudent" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="unhideStudent">
+            <result name="success" type="redirectAction">
+            	<param name="actionName">editClassroom-</param>
+            	<param name="classroomPk">${classroomPk}</param>
+            	<param name="showHidden">${showHidden}</param>
+            </result>
+        </action>
+    </package>
+</struts>

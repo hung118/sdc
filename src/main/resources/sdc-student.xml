@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="student" extends="sdc-support" namespace="/student">
+        <default-interceptor-ref name="crudStack"/>
+        
+        <action name="create_*" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="input">
+            <result name="input">/WEB-INF/pages/student/CreateStudent.jsp</result>
+           <!-- <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">create</param>
+            </interceptor-ref>
+            -->
+        </action>
+        
+        <action name="edit_*" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="input">
+            <param name="studentPk">{1}</param>
+            <result name="input">/WEB-INF/pages/student/EditStudent.jsp</result>
+        </action>
+        
+        <action name="search_*" class="gov.utah.dts.sdc.actions.StudentSearchAction" method="webSearch">
+            <param name="fileNumber">{1}</param>
+            <result name="input">/WEB-INF/pages/student/EditStudent.jsp</result>
+            <result name="success">/WEB-INF/pages/student/EditStudent.jsp</result>
+        </action>
+        
+        <action name="createStudent" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="createStudent">
+            <result name="input">/WEB-INF/pages/student/CreateStudent.jsp</result>
+            <result name="success">/WEB-INF/pages/student/EditStudent.jsp</result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="createSpecialStudent" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="createSpecialStudent">
+            <result name="input">/WEB-INF/pages/student/CreateStudent.jsp</result>
+            <result name="success" type="redirect">search_${currentStudent.fileNumber}.do</result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="generateWrittenTest" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="generateWrittenTest">
+            <result name="input">/WEB-INF/pages/student/CreateStudent.jsp</result>
+            <result name="generateWrittenTest" type="redirectAction">
+                <param name="actionName">writtenCompletionJasper</param>
+                <param name="namespace">/reports</param>
+            </result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="generateWrittenPDF" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="generateWrittenPDF">
+            <result name="input">/WEB-INF/pages/student/EditStudent.jsp</result>
+            <result name="success" type="redirectAction">
+                <param name="actionName">writtenCompletionJasper</param>
+                <param name="namespace">/reports</param>
+            </result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="generateFullCompletion" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="generateFullCompletion">
+            <result name="input">/WEB-INF/pages/student/EditStudent.jsp</result>
+            <result name="report" type="redirectAction">
+                <param name="actionName">fullCompletionJasper</param>
+                <param name="namespace">/reports</param>
+            </result>
+             <result name="success" type="dispatcher">/WEB-INF/pages/highschool/Home.jsp</result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="generateOcsFullCompletion" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="generateOcsFullCompletion">
+            <result name="input">/WEB-INF/pages/student/EditStudent.jsp</result>
+            <result name="report" type="redirectAction">
+                <param name="actionName">ocsCompletionJasper</param>
+                <param name="namespace">/reports</param>
+            </result>
+             <result name="success" type="dispatcher">/WEB-INF/pages/highschool/Home.jsp</result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="webSearch" class="gov.utah.dts.sdc.actions.StudentSearchAction" method="webSearch">
+            <result name="create" type="redirect">create_input.do</result>
+            <result name="input">/WEB-INF/pages/highschool/Home.jsp</result>
+            <result name="success" type="redirect">edit_${currentStudent.studentPk}.do</result>
+        </action>
+
+        <action name="dbSearch" class="gov.utah.dts.sdc.actions.StudentSearchAction" method="dbSearch">
+            <result name="create" type="redirect">create_input.do</result>
+            <result name="input">/WEB-INF/pages/highschool/AdvancedSearch.jsp</result>
+            <result name="success" type="redirect">edit_${currentStudent.studentPk}.do</result>
+            <result name="multipleResult">/WEB-INF/pages/highschool/AdvancedSearchResult.jsp</result>
+        </action>
+        
+        <action name="update" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="update">
+            <result name="input">/WEB-INF/pages/student/EditStudent.jsp</result>
+            <!-- <result name="success" type="redirect">edit_${currentStudent.studentPk}.do</result> -->
+             <result name="success" type="dispatcher">/WEB-INF/pages/highschool/Home.jsp</result>
+        </action>
+                        
+        <action name="dateOfBirthSearch" class="gov.utah.dts.sdc.actions.StudentSearchAction" method="dateOfBirthSearch">
+            <result name="dateOfBirthSearch">/WEB-INF/pages/highschool/AdvancedSearch.jsp</result>
+        </action>
+        
+        <action name="knowledgeTestGenerator" class="gov.utah.dts.sdc.actions.StudentSearchAction" method="knowledgeTestGenerator">
+            <result name="knowledgeTestGenerator">/WEB-INF/pages/highschool/knowledgeTestGenerator.jsp</result>
+        </action>
+
+        <action name="generateKnowledgeTest" class="gov.utah.dts.sdc.actions.StudentSearchAction" method="generateKnowledgeTest">
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="ajaxCheckUser" class="gov.utah.dts.sdc.actions.StudentCreateAction" method="ajaxCheckUser">
+        	<exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+    </package>
+
+</struts>
+
+

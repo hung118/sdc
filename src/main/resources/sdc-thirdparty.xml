@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="thirdparty" extends="sdc-support" namespace="/thirdparty">
+        <default-interceptor-ref name="crudStack"/>
+        
+         <action name="thirdPartyFront" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="thirdPartyFront">
+            <result>/WEB-INF/pages/thirdparty/Home.jsp</result>
+        </action>
+        
+        <action name="inputCreate" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="inputCreate">
+            <result name="input">/WEB-INF/pages/thirdparty/CreateStudent.jsp</result>
+        </action>
+        
+        <action name="edit_*" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="input">
+            <param name="studentPk">{1}</param>
+            <result name="input">/WEB-INF/pages/thirdparty/EditStudent.jsp</result>
+        </action>
+        
+        <action name="createStudent" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="createStudent">
+            <result name="input">/WEB-INF/pages/thirdparty/CreateStudent.jsp</result>
+            <result name="success">/WEB-INF/pages/thirdparty/EditStudent.jsp</result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="webSearch" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="webSearch">
+            <result name="create" type="redirect">create_input.do</result>
+            <result name="input">/WEB-INF/pages/thirdparty/Home.jsp</result>
+            <result name="success" type="redirect">edit_${currentStudent.studentPk}.do</result>
+        </action>
+
+        <action name="update" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="update">
+            <result name="input">/WEB-INF/pages/thirdparty/EditStudent.jsp</result>
+            <result name="success" type="redirect">edit_${studentPk}.do</result>
+        </action>
+        
+        <action name="updatechange_*_*" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="inputEditChange">
+            <param name="studentPk">{1}</param>
+            <param name="roadTestListIndex">{2}</param>
+            <result name="input">/WEB-INF/pages/thirdparty/EditStudent_change.jsp</result>
+        </action>
+        
+        <action name="update_change" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="update_change">
+            <result name="input">/WEB-INF/pages/thirdparty/EditStudent_change.jsp</result>
+            <result name="success" type="redirect">edit_${studentPk}.do</result>
+        </action>
+        
+        <action name="updatedelete_*_*" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="update_delete">
+            <param name="completionRoadPk">{1}</param>
+            <param name="studentPk">{2}</param>
+			<result name="success" type="redirect">edit_${studentPk}.do</result>
+        </action>        
+        
+        <action name="generateRoadTest" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="generateRoadTest">
+            <result name="input">/WEB-INF/pages/thirdparty/CreateStudent.jsp</result>
+            <result name="generateRoadTest" type="redirectAction">
+                <param name="actionName">roadCompletionJasper</param>
+                <param name="namespace">/reports</param>
+            </result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="generateRoadTestPDF" class="gov.utah.dts.sdc.actions.ThirdPartyStudentAction" method="generateRoadTestPDF">
+            <result name="input">/WEB-INF/pages/thirdparty/EditStudent.jsp</result>
+            <result name="success" type="redirectAction">
+                <param name="actionName">roadCompletionJasper</param>
+                <param name="namespace">/reports</param>
+            </result>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+        </action>
+        
+        <action name="dateOfBirthSearch" class="gov.utah.dts.sdc.actions.ThirdPartyStudentSearchAction" method="dateOfBirthSearch">
+            <result name="dateOfBirthSearch">/WEB-INF/pages/thirdparty/AdvancedSearch.jsp</result>
+        </action>
+        
+        <action name="inputStudentNumber" class="gov.utah.dts.sdc.actions.ThirdPartyStudentSearchAction" method="inputStudentNumber">
+            <result name="input">/WEB-INF/pages/thirdparty/SearchStudentNumber.jsp</result>
+            
+        </action>
+        
+        <action name="studentNumberSearch" class="gov.utah.dts.sdc.actions.ThirdPartyStudentSearchAction" method="studentNumberSearch">
+            <result name="input">/WEB-INF/pages/thirdparty/SearchStudentNumber.jsp</result>
+            <result name="multipleclass">/WEB-INF/pages/thirdparty/EditStudentMultipleClassroom.jsp</result>
+            <result name="noclass" type="redirect">edit_${currentStudent.studentPk}.do</result>
+            <result name="success" type="redirect">edit_${currentStudent.studentPk}.do</result>
+        </action>
+        
+        <action name="editStudent-*-*" class="gov.utah.dts.sdc.actions.ThirdPartyStudentSearchAction" method="editStudent">
+            <param name="studentPk">{1}</param>
+            <param name="classroomPk">{2}</param>
+            <result>/WEB-INF/pages/thirdparty/EditStudent.jsp</result>
+            <result name="input">/WEB-INF/pages/thirdparty/EditStudent.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">editStudent</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="noClassStudent-*" class="gov.utah.dts.sdc.actions.ThirdPartyStudentSearchAction" method="editStudent">
+            <param name="studentPk">{1}</param>
+            <result>/WEB-INF/pages/thirdparty/EditStudentNoClassroom.jsp</result>
+            <result name="input">/WEB-INF/pages/thirdparty/EditStudent.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">editStudent</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="editClassroom-*" class="gov.utah.dts.sdc.actions.ClassRoomAction" method="editClassroom">
+            <param name="classroomPk">{1}</param>
+            <result>/WEB-INF/pages/thirdparty/EditClassroom.jsp</result>
+        </action>
+        
+        <action name="mergeFileNumber" class="gov.utah.dts.sdc.actions.ThirdPartyStudentSearchAction" method="mergeFileNumber">
+            <result name="success" type="redirectAction">editStudent-${studentPk}-${classroomPk}</result>
+        </action>
+        
+        <action name="dbSearch" class="gov.utah.dts.sdc.actions.ThirdPartyStudentSearchAction" method="dbSearch">
+            <result name="input">/WEB-INF/pages/thirdparty/AdvancedSearch.jsp</result>
+            <result name="success" type="redirect">edit_${currentStudent.studentPk}.do</result>
+            <result name="multipleResult">/WEB-INF/pages/thirdparty/AdvancedSearchResult.jsp</result>
+        </action>
+        
+   </package>
+
+</struts>
+
+

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="school" extends="sdc-support" namespace="/school">
+        <default-interceptor-ref name="crudStack"/>
+        
+        <action name="search" class="gov.utah.dts.sdc.actions.SchoolAction" method="search">
+            <result>/WEB-INF/pages/school/searchSchool.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="list" class="gov.utah.dts.sdc.actions.SchoolAction" method="list">
+            <result>/WEB-INF/pages/school/listSchool.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="edit-*" class="gov.utah.dts.sdc.actions.SchoolAction" method="edit">
+            <param name="schoolPk">{1}</param>
+            <result>/WEB-INF/pages/school/editSchool.jsp</result>
+            <result name="input">/WEB-INF/pages/school/editSchool.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">edit</param>
+            </interceptor-ref>
+        </action>
+        <action name="save" class="gov.utah.dts.sdc.actions.SchoolAction" method="save">
+            <result>/WEB-INF/pages/school/editSchool.jsp</result>
+            <result name="input">/WEB-INF/pages/school/editSchool.jsp</result>
+            <result name="list">/WEB-INF/pages/school/listSchool.jsp</result>
+        </action>
+        
+        <action name="delete-*" class="gov.utah.dts.sdc.actions.SchoolAction" method="delete">
+            <param name="schoolPk">{1}</param>
+            <result>/WEB-INF/pages/school/listSchool.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">delete</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="undelete-*" class="gov.utah.dts.sdc.actions.SchoolAction" method="undelete">
+            <param name="schoolPk">{1}</param>
+            <result>/WEB-INF/pages/school/listSchool.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">undelete</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="editBranch-*-*" class="gov.utah.dts.sdc.actions.SchoolAction" method="editBranch">
+            <param name="branchPk">{1}</param>
+            <param name="schoolPk">{2}</param>
+            <result>/WEB-INF/pages/school/editBranch.jsp</result>
+            <result name="input">/WEB-INF/pages/school/editBranch.jsp</result>
+            <result name="list">/WEB-INF/pages/school/editSchool.jsp</result>
+        	<interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">editBranch</param>
+            </interceptor-ref>
+        </action>
+        
+        <action name="saveBranch" class="gov.utah.dts.sdc.actions.SchoolAction" method="saveBranch">
+            <result>/WEB-INF/pages/school/editSchool.jsp</result>
+            <result name="input">/WEB-INF/pages/school/editBranch.jsp</result>
+            <result name="list">/WEB-INF/pages/school/editSchool.jsp</result>
+        </action>
+        
+        <action name="deleteBranch-*-*" class="gov.utah.dts.sdc.actions.SchoolAction" method="deleteBranch">
+            <param name="branchPk">{1}</param>
+            <param name="schoolPk">{2}</param>
+            <result>/WEB-INF/pages/school/editSchool.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">deleteBranch</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="searchGroup" class="gov.utah.dts.sdc.actions.SchoolAction" method="searchGroup">
+            <result>/WEB-INF/pages/school/searchGroup.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+
+        <action name="listGroup" class="gov.utah.dts.sdc.actions.SchoolAction" method="listGroup">
+            <result>/WEB-INF/pages/school/listGroup.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+
+        <action name="deleteGroup-*" class="gov.utah.dts.sdc.actions.SchoolAction" method="deleteGroup">
+            <param name="classroomPk">{1}</param>
+            <result>/WEB-INF/pages/school/listGroup.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">deleteGroup</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="undeleteGroup-*" class="gov.utah.dts.sdc.actions.SchoolAction" method="undeleteGroup">
+            <param name="classroomPk">{1}</param>
+            <result>/WEB-INF/pages/school/listGroup.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">undeleteGroup</param>
+            </interceptor-ref>
+        </action>
+        
+    </package>
+    
+</struts>
+
+

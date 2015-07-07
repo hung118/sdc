@@ -1,0 +1,47 @@
+package gov.utah.dts.realms;
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.apache.catalina.realm.GenericPrincipal;
+import org.apache.catalina.realm.JDBCRealm;
+
+public class SDCRealm extends JDBCRealm {
+
+	public static void main(String[] args) {
+		try {
+			System.out.println("Running SDCRealm main class");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public Principal authenticate(String username, String credentials) {
+		System.out.println("Begin SDCRealm authenticate " + username + " - "
+				+ credentials);
+		GenericPrincipal p;
+
+		try {
+			// Accumulate the user's roles
+			ArrayList list = getRoles(username);
+			if (list.isEmpty()) {
+				list.add("GUEST");
+			}
+			Iterator i = list.iterator();
+			while (i.hasNext()) {
+				System.out.println("ROLE : " + i.next());
+			}
+
+			p = new GenericPrincipal(this, username, credentials, list);
+		} catch (Exception e) {
+			System.out.println("Sybase authenticate ERROR\n" + e);
+			// log.debug("Sybase authenticate ERROR\n"+e);
+			return null;
+		}
+
+		// Create and return a suitable Principal for this user
+		return (p);
+	}
+
+}

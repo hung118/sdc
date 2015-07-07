@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="windows-1252"?>
+
+<!--
+	Spring configuration of services
+-->
+
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+    default-autowire="byName"
+    default-lazy-init="false">
+    
+    <!-- =============================================================================== 	-->
+	<!-- 							DATA INITIALIZATION BEANS 								-->
+	<!-- =============================================================================== 	-->
+<!--
+    <bean id="dataInitializer"
+		class="gov.utah.dts.sdc.service.util.DataInitializer"/>
+-->    
+        
+    <!-- =============================================================================== 	-->
+	<!-- 							Import files             								-->
+	<!-- =============================================================================== 	-->
+    <import resource="applicationContext-dal.xml"/>
+    <import resource="applicationContext-services.xml"/>
+
+</beans>

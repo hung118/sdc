@@ -1,0 +1,35 @@
+<decorators defaultdir="/WEB-INF/decorators">
+    <!-- Any urls that are excluded will never be decorated by Sitemesh --> 
+    <excludes> 
+    	<pattern>/test.htm</pattern>
+    	<pattern>/test2.htm</pattern>
+    	
+        <pattern>/index.jsp</pattern> 
+        <pattern>/unknownError.jsp</pattern>
+        <pattern>/Error.jsp</pattern> 
+        <pattern>/struts/dojo/*</pattern>
+        <pattern>/struts/ajax/*</pattern>
+        <pattern>/resources/*</pattern>
+        <pattern>/commercial/ajax*</pattern>
+    </excludes>
+    
+    <decorator name="main" page="main.jsp">
+        <pattern>/*</pattern>
+        <pattern>/person/*</pattern> 
+        <pattern>/school/*</pattern>
+        <pattern>/commercial/*</pattern>
+        <pattern>/reports/*</pattern>
+    </decorator>
+
+    <decorator name="nonavigate" page="noMenu.jsp">
+        <pattern>/userAgreement*</pattern>
+        <pattern>/addresslookup*</pattern>
+    </decorator>
+    
+    <decorator name="news" page="news.jsp">
+        <pattern>/Home.do</pattern>
+        <pattern>/hs/student/dbSearch.do</pattern> 
+        <pattern>/hs/student/webSearch.do</pattern>
+    </decorator>
+    
+</decorators>

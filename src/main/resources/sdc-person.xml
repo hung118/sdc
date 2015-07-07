@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="person" extends="sdc-support" namespace="/person">
+        <default-interceptor-ref name="crudStack"/>
+
+        <action name="search" class="gov.utah.dts.sdc.actions.PersonAction" method="search">
+            <result>/WEB-INF/pages/person/searchPerson.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="list" class="gov.utah.dts.sdc.actions.PersonAction" method="list">
+            <result>/WEB-INF/pages/person/listPerson.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="edit-*" class="gov.utah.dts.sdc.actions.PersonAction">
+			<param name="personPk">{1}</param>
+            <result>/WEB-INF/pages/person/editPerson.jsp</result>
+            <result name="input">/WEB-INF/pages/person/editPerson.jsp</result>
+            <interceptor-ref name="crudStack">
+            	<param name="validation.excludeMethods">execute</param>
+            </interceptor-ref>
+        </action>
+        <action name="save" class="gov.utah.dts.sdc.actions.PersonAction" method="save">
+            <result name="input">/WEB-INF/pages/person/editPerson.jsp</result>
+            <result type="redirect">edit-${currentPerson.personPk}.do</result>
+            <result name="list">/WEB-INF/pages/person/listPerson.jsp</result>
+        </action>
+        <action name="delete-*" class="gov.utah.dts.sdc.actions.PersonAction" method="delete">
+			<param name="personPk">{1}</param>
+            <result>/WEB-INF/pages/person/listPerson.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">delete</param>
+            </interceptor-ref>
+        </action>
+        <action name="undelete-*" class="gov.utah.dts.sdc.actions.PersonAction" method="undelete">
+			<param name="personPk">{1}</param>
+            <result>/WEB-INF/pages/person/editPerson.jsp</result>
+            <result name="error">/WEB-INF/pages/person/listPerson.jsp</result>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">undelete</param>
+            </interceptor-ref>
+        </action>
+    </package>
+
+</struts>
+
+

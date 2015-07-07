@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="BondSQL">
+
+    <cacheModel id="bond_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+		<flushOnExecute statement= "bondInsert" />
+        <flushOnExecute statement= "bondUpdate" />
+        <flushOnExecute statement= "bondDelete" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel>
+    
+    <resultMap id="bond_result"  class="gov.utah.dts.sdc.model.Bond">
+        <result property="bondsPk"                  column="bonds_pk"/>
+        <result property="schoolFk"                 column="school_fk"/>
+        <result property="schoolName"               column="schoolName"/>
+        <result property="issueDate"               	column="issue_date"/>
+        <result property="expireDate"               column="expire_date"/>
+        <result property="amount"                 	column="amount"/>
+        <result property="company"                	column="company"/>
+        <result property="agent"                	column="agent"/>
+        <result property="phone"                	column="phone"/>
+        <result property="bondNumber"               column="bond_number"/>
+        <result property="deleted"                  column="deleted"/>
+    </resultMap>
+    
+    <statement id="bondEqualsCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM bonds b
+        WHERE
+        b.bonds_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="bondsPk"  prepend=" AND ">b.bonds_pk = #bondsPk#</isNotEmpty>          
+		</dynamic>
+    </statement>
+    
+    <statement id="bondSelect" resultMap="bond_result" cacheModel="bond_cache">
+        SELECT
+        b.bonds_pk,b.school_fk,s.name as schoolName,b.issue_date,b.expire_date,b.amount,
+        b.company,b.agent,b.phone,b.bond_number,b.deleted
+        FROM bonds b, school s
+        WHERE
+        b.deleted = 0 AND
+        <dynamic>
+            <isNotEmpty property="bondsPk">b.bonds_pk = #bondsPk# AND</isNotEmpty>
+        </dynamic>
+        s.school_pk = b.school_fk
+        order by b.company, schoolName
+    </statement>
+
+    <statement id="bondSearchBeginsWith" resultMap="bond_result" cacheModel="bond_cache">
+        SELECT
+        b.bonds_pk,b.school_fk,s.name as schoolName,b.issue_date,b.expire_date,b.amount,
+        b.company,b.agent,b.phone,b.bond_number,b.deleted
+        FROM bonds b, school s
+        WHERE
+        <dynamic>
+            <isNotEmpty property="schoolFk">b.school_fk = #schoolFk# AND</isNotEmpty>
+            <isNotEmpty property="deleted">b.deleted = #deleted# AND</isNotEmpty>
+        </dynamic>
+        s.school_pk = b.school_fk
+        order by b.company, schoolName
+    </statement>
+    
+    <statement id="bondUpdate">
+        UPDATE bonds
+        <dynamic prepend=" SET ">
+            <isNotEmpty property="schoolFk" prepend=" , ">school_fk = #schoolFk#</isNotEmpty>
+            <isNotEmpty property="issueDate" prepend=" , ">issue_date = #issueDate#</isNotEmpty>
+            <isNotEmpty property="expireDate" prepend=" , ">expire_date = #expireDate#</isNotEmpty>
+            <isNotEmpty property="amount" prepend=" , ">amount = #amount#</isNotEmpty>
+            <isNotEmpty property="company" prepend=" , ">company = #company#</isNotEmpty>
+            <isNotEmpty property="agent" prepend=" , ">agent = #agent#</isNotEmpty>
+            <isNotEmpty property="phone" prepend=" , ">phone = #phone#</isNotEmpty>
+            <isNotEmpty property="bondNumber" prepend=" , ">bond_number = #bondNumber#</isNotEmpty>
+        </dynamic>
+        WHERE bonds_pk = #bondsPk#
+    </statement>
+    
+    <statement  id="bondDelete">   
+    	UPDATE bonds SET deleted = #deleted# WHERE bonds_pk = #bondsPk# 
+    </statement>
+    
+    <statement id="bondInsert">
+        INSERT INTO bonds(
+        school_fk,company,agent,issue_date,expire_date
+        <dynamic>
+            <isNotEmpty property="amount" prepend=" , ">amount</isNotEmpty>
+            <isNotEmpty property="phone" prepend=" , ">phone</isNotEmpty>
+            <isNotEmpty property="bondNumber" prepend=" , ">bond_number</isNotEmpty>
+        </dynamic>
+        ,deleted
+        )
+        VALUES(
+        #schoolFk#,#company#,#agent#,#issueDate#,#expireDate#
+        <dynamic>
+            <isNotEmpty property="amount" prepend=" , ">#amount#</isNotEmpty>
+            <isNotEmpty property="phone" prepend=" , ">#phone#</isNotEmpty>
+            <isNotEmpty property="bondNumber" prepend=" , ">#bondNumber#</isNotEmpty>
+        </dynamic>
+        ,0
+        )   
+    </statement> 
+    
+</sqlMap>

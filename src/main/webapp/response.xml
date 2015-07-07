@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+	<soapenv:Body>
+		<soapenv:Fault>
+			<faultcode>soapenv:Server</faultcode>
+			<faultstring>BEA-380000</faultstring>
+			<detail>
+				<con:fault xmlns:con="http://www.bea.com/wli/sb/context">
+					<con:errorCode>BEA-380000</con:errorCode>
+					<con:location>
+						<con:node>RouteNode1</con:node>
+						<con:path>response-pipeline</con:path>
+					</con:location>
+				</con:fault>
+			</detail>
+		</soapenv:Fault>
+	</soapenv:Body>
+</soapenv:Envelope>

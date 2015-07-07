@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SchoolSQL">
+    
+    <cacheModel id="school_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "schoolInsert" />
+        <flushOnExecute statement= "schoolUpdate" />
+        <flushOnExecute statement= "schoolDelete" />
+        <flushOnExecute statement= "personInsert" />
+        <flushOnExecute statement= "personUpdate" />
+        <flushOnExecute statement= "personDelete" />
+        <flushOnExecute statement= "personRolesInsert" />
+        <flushOnExecute statement= "personRolesUpdate" />
+        <flushOnExecute statement= "personRolesDelete" />
+        <flushOnExecute statement= "personSchoolInsert" />
+        <flushOnExecute statement= "personSchoolUpdate" />
+        <flushOnExecute statement= "personSchoolDelete" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel>
+    
+    <resultMap id="school_result"  class="gov.utah.dts.sdc.model.School">
+        <result property="schoolPk"                   column="school_pk"/>
+        <result property="schoolName"                 column="name"/>
+        <result property="schoolNumber"               column="number"/>
+        <result property="schoolType"                 column="school_type"/>
+        <result property="homeStudy"                  column="home_study"/>
+        <result property="address1"                   column="address1"/>
+        <result property="address2"                   column="address2"/>
+        <result property="city"                       column="city"/>
+        <result property="state"                      column="state"/>
+        <result property="zip"                        column="zip"/>
+        <result property="businessPhone"              column="businessPhone"/>
+        <result property="businessPhone2"             column="businessPhone2"/>
+        <result property="schoolClosureDate"          column="school_closure_date"/>
+        <result property="lastInspectionDate"         column="last_inspection_date"/>
+        <result property="expireDate"                 column="expire_date"/>
+        <result property="timestamp"                  column="timestamp"/>
+        <result property="updatedBy"                  column="updatedby"/>
+        <result property="deleted"                    column="deleted"/>
+    </resultMap>
+    
+    <resultMap id="school_label_value"  class="gov.utah.dts.sdc.model.School">
+        <result property="schoolPk"                   column="school_pk"/>
+        <result property="schoolName"                 column="name"/>
+    </resultMap>
+    
+    <resultMap id="school_label_value2"  class="gov.utah.dts.sdc.model.School">
+        <result property="schoolNumber"               column="number"/>
+        <result property="schoolName"                 column="name"/>
+    </resultMap>
+    
+    <resultMap id="school_report_result"  class="gov.utah.dts.sdc.model.School">
+        <result property="schoolPk"                   column="school_pk"/>
+        <result property="schoolName"                 column="name"/>
+        <result property="schoolNumber"               column="number"/>
+        <result property="schoolType"                 column="school_type"/>
+        <result property="homeStudy"                  column="home_study"/>
+        <result property="deleted"                    column="deleted"/>
+        <result property="address1"                   column="address1"/>
+        <result property="address2"                   column="address2"/>
+        <result property="city"                       column="city"/>
+        <result property="state"                      column="state"/>
+        <result property="zip"                        column="zip"/>
+        <result property="businessPhone"              column="businessPhone"/>
+        <result property="reportStartDate"            column="reportStartDate"/>
+        <result property="reportEndDate"              column="reportEndDate"/>
+        <result property="writtenTestCount"           column="writtenTestCount"/>
+        <result property="roadTestCount"              column="roadTestCount"/>
+    </resultMap>
+
+    <resultMap id="school_label_value_result"  class="gov.utah.dts.sdc.model.LabelValue">
+        <result property="value"                      column="number"/>
+        <result property="label"                      column="name"/>
+    </resultMap>
+    
+    <statement id="schoolEqualsCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM school s
+        WHERE
+        s.school_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="schoolPk"  prepend=" AND ">s.school_pk = #schoolPk#</isNotEmpty>          
+        </dynamic>
+    </statement>
+    
+    <statement id="schoolSearchEquals" resultMap="school_result" cacheModel="school_cache">
+        SELECT
+        s.school_pk,s.name,s.number,s.school_type,s.home_study,s.address1,s.address2,s.city,s.state,s.zip,s.businessPhone,
+        s.businessPhone2,s.school_closure_date,s.last_inspection_date,s.expire_date,s.timestamp,s.updatedby,s.deleted
+        FROM school s
+        WHERE     
+        s.school_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="schoolPk"  prepend=" AND ">s.school_pk = #schoolPk#</isNotEmpty>
+            <isNotEmpty property="schoolNumber" prepend=" AND ">upper(rtrim(s.number)) = upper(rtrim(#schoolNumber#))</isNotEmpty>
+            <isNotEmpty property="schoolType"  prepend=" AND ">s.school_type = #schoolType#</isNotEmpty>  
+            <isNotEmpty property="deleted"  prepend=" AND ">s.deleted = #deleted#</isNotEmpty>
+        </dynamic>
+        order by s.name
+    </statement>
+
+    <statement id="schoolSearchBeginsWith" resultMap="school_result" cacheModel="school_cache">
+        SELECT
+        s.school_pk,s.name,s.number,s.school_type,s.home_study,s.address1,s.address2,s.city,s.state,s.zip,s.businessPhone,
+        s.businessPhone2,s.school_closure_date,s.last_inspection_date,s.expire_date,s.timestamp,s.updatedby,s.deleted
+        FROM school s
+        WHERE     
+        s.school_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="schoolName" prepend=" AND ">upper(rtrim(s.name)) like upper(rtrim(#schoolName#))</isNotEmpty>          
+            <isNotEmpty property="schoolNumber" prepend=" AND ">upper(rtrim(s.number)) like upper(rtrim(#schoolNumber#))</isNotEmpty>
+            <isNotEmpty property="schoolType"  prepend=" AND ">s.school_type = #schoolType#</isNotEmpty>
+            <isNotEmpty property="city" prepend=" AND ">upper(rtrim(s.city)) like upper(rtrim(#city#))</isNotEmpty>
+            <isNotEmpty property="deleted" prepend=" AND ">s.deleted = #deleted#</isNotEmpty>
+        </dynamic>
+        order by s.name
+    </statement>
+    
+    <statement id="schoolInsert">
+        INSERT INTO school(
+        name,number,address1,city,state,zip,businessPhone
+        <dynamic>
+            <isNotEmpty property="address2" prepend=" , ">address2</isNotEmpty>
+            <isNotEmpty property="businessPhone2" prepend=" , ">businessphone2</isNotEmpty>
+            <isNotEmpty property="lastInspectionDate" prepend=" , ">last_inspection_date</isNotEmpty>
+            <isNotEmpty property="updatedBy" prepend=" , ">updatedby</isNotEmpty>
+            <isNotEmpty property="schoolType" prepend=" , ">school_type</isNotEmpty>
+            <isNotEmpty property="homeStudy" prepend=" , ">home_study</isNotEmpty>
+            <isNotEmpty property="expireDate" prepend=" , ">expire_date</isNotEmpty>
+        </dynamic>
+        ,deleted
+        )
+        VALUES(
+        upper(rtrim(#schoolName#)),upper(rtrim(#schoolNumber#)),upper(rtrim(#address1#)),upper(rtrim(#city#)),
+        upper(rtrim(#state#)),#zip#,#businessPhone#
+        <dynamic>
+            <isNotEmpty property="address2" prepend=" , ">upper(rtrim(#address1#))</isNotEmpty>
+            <isNotEmpty property="businessPhone2" prepend=" , ">#businessPhone2#</isNotEmpty>
+            <isNotEmpty property="lastInspectionDate" prepend=" , ">#lastInspectionDate#</isNotEmpty>
+            <isNotEmpty property="updatedBy" prepend=" , ">upper(rtrim(#updatedBy#))</isNotEmpty>
+            <isNotEmpty property="schoolType" prepend=" , ">#schoolType#</isNotEmpty>
+            <isNotEmpty property="homeStudy" prepend=" , ">#homeStudy#</isNotEmpty>
+            <isNotEmpty property="expireDate" prepend=" , ">#expireDate#</isNotEmpty>
+        </dynamic>
+        ,0
+        )
+    </statement> 
+    
+    <statement id="schoolUpdate">
+        <dynamic prepend="UPDATE school SET ">
+            <isNotEmpty property="schoolName" prepend=" , ">name = upper(rtrim(#schoolName#))</isNotEmpty>
+            <isNotEmpty property="schoolNumber" prepend=" , ">number = upper(rtrim(#schoolNumber#))</isNotEmpty>
+            <isNotEmpty property="schoolType" prepend=" , ">school_type = #schoolType#</isNotEmpty>
+            <isNotEmpty property="homeStudy" prepend=" , ">home_study = #homeStudy#</isNotEmpty>
+            <isNotEmpty property="deleted" prepend=" , ">deleted = #deleted#</isNotEmpty>
+            <isNotEmpty property="address1" prepend=" , ">address1 = upper(rtrim(#address1#))</isNotEmpty>
+            <isNotEmpty property="address2" prepend=" , ">address2 = upper(rtrim(#address2#))</isNotEmpty>
+            <isNotEmpty property="city" prepend=" , ">city = upper(rtrim(#city#))</isNotEmpty>
+            <isNotEmpty property="state" prepend=" , ">state = upper(rtrim(#state#))</isNotEmpty>
+            <isNotEmpty property="zip" prepend=" , ">zip = #zip#</isNotEmpty>
+            <isNotEmpty property="businessPhone" prepend=" , ">businessphone = #businessPhone#</isNotEmpty>
+            <isNotEmpty property="businessPhone2" prepend=" , ">businessphone2 = #businessPhone2#</isNotEmpty>
+            <isNotEmpty property="schoolClosureDate" prepend=" , ">school_closure_date = #schoolClosureDate#</isNotEmpty>
+            <isNotEmpty property="lastInspectionDate" prepend=" , ">last_inspection_date = #lastInspectionDate#</isNotEmpty>
+            <isNotEmpty property="expireDate" prepend=" , ">expire_date = #expireDate#</isNotEmpty>
+            <isNotEmpty property="updatedBy" prepend=" , ">updatedby = upper(rtrim(#updatedBy#))</isNotEmpty>
+            WHERE school_pk = #schoolPk#
+        </dynamic>
+    </statement>
+    
+    <statement  id="schoolDelete">                                
+        UPDATE school SET deleted = #deleted# WHERE school_pk = #schoolPk#
+    </statement>
+    
+    <statement id="schoolLabelValue" resultMap="school_label_value" cacheModel="school_cache">
+        SELECT DISTINCT s.school_pk, s.name
+        FROM school s, person_school ps
+        WHERE
+        s.school_pk = ps.school_fk AND
+        s.deleted = 0
+        <dynamic>
+            <isNotEmpty property="personFk"  prepend=" AND ">ps.person_fk = #personFk#</isNotEmpty> 
+            <isNotEmpty property="schoolType"  prepend=" AND ">s.school_type = #schoolType#</isNotEmpty> 
+        </dynamic>
+        order by 2
+    </statement>
+
+    <statement id="schoolLabelValue2" resultMap="school_label_value2" cacheModel="school_cache">
+        SELECT DISTINCT s.number, s.name
+        FROM school s, person_school ps
+        WHERE
+        s.school_pk = ps.school_fk AND
+        s.deleted = 0
+        <dynamic>
+            <isNotEmpty property="personFk"  prepend=" AND ">ps.person_fk = #personFk#</isNotEmpty> 
+            <isNotEmpty property="schoolType"  prepend=" AND ">s.school_type = #schoolType#</isNotEmpty> 
+        </dynamic>
+        order by 2
+    </statement>
+
+    <statement id="allSchoolLabelValue" resultMap="school_label_value" cacheModel="school_cache">
+        SELECT DISTINCT s.school_pk, s.name
+        FROM school s
+        WHERE 
+        s.deleted = 0
+        <dynamic>
+            <isNotEmpty property="schoolType"  prepend=" AND ">s.school_type = #schoolType#</isNotEmpty> 
+        </dynamic>
+        order by 2
+    </statement>
+    
+    <statement id="allSchoolLabelValue2" resultMap="school_label_value2" cacheModel="school_cache">
+        SELECT DISTINCT s.number, s.name
+        FROM school s
+        WHERE 
+        s.deleted = 0
+        <dynamic>
+            <isNotEmpty property="schoolType"  prepend=" AND ">s.school_type = #schoolType#</isNotEmpty> 
+        </dynamic>
+        order by 2
+    </statement>
+    
+    <statement id="completionTests" resultMap="school_report_result" cacheModel="school_cache">
+        SELECT s.school_pk, s.name, s.number, s.deleted,
+        s.school_type,s.home_study,s.address1,s.address2,s.city,s.state,s.zip,s.businessPhone,
+        (
+        select count(*) from completion_written 
+        where completion_date is not null and 
+        school_number = s.number 
+        <dynamic>
+            <isNotEmpty property="reportStartDate">
+                <isNotEmpty property="reportEndDate"  prepend=" AND ">completion_date <![CDATA[>=]]> #reportStartDate# and completion_date <![CDATA[<=]]> #reportEndDate#</isNotEmpty>
+            </isNotEmpty> 
+        </dynamic>
+        ) as writtenTestCount,
+        (
+        select count(*) from completion_road 
+        where completion_date is not null and 
+        school_number = s.number 
+        <dynamic>
+            <isNotEmpty property="reportStartDate">
+                <isNotEmpty property="reportEndDate"  prepend=" AND ">completion_date <![CDATA[>=]]> #reportStartDate# and completion_date <![CDATA[<=]]> #reportEndDate#</isNotEmpty>
+            </isNotEmpty> 
+        </dynamic>
+        ) as roadTestCount
+        <dynamic>
+            <isNotEmpty property="reportStartDate"  prepend=" , ">#reportStartDate# as reportStartDate</isNotEmpty>    
+            <isNotEmpty property="reportEndDate"  prepend=" , ">#reportEndDate# as reportEndDate</isNotEmpty>
+            <isEmpty property="reportStartDate"  prepend=" , ">null as reportStartDate</isEmpty>
+            <isEmpty property="reportEndDate"  prepend=" , ">null as reportEndDate</isEmpty>
+        </dynamic>
+        FROM school s
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="schoolPk"  prepend=" AND ">s.school_pk = #schoolPk#</isNotEmpty> 
+            <isNotEmpty property="schoolType"  prepend=" AND ">s.school_type = #schoolType#</isNotEmpty>         
+        </dynamic>
+    </statement>
+    
+</sqlMap>

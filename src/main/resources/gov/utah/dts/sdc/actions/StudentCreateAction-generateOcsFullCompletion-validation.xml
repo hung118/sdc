@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+   <!-- Field-Validator Syntax -->
+    <field name="currentStudent.firstName">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="student.firstName.required"/>
+        </field-validator>
+    </field>
+    
+    <field name="currentStudent.lastName">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="student.lastName.required"/>
+        </field-validator>
+    </field>
+    <field name="currentStudent.dob">
+        <field-validator type="required">
+            <message key="student.dob.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                 (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    
+    <field name="currentStudent.writtenTestScore">
+        <field-validator type="int">
+            <param name="min">80</param>
+            <param name="max">101</param>
+            <message>The score must be between ${min} and 100,
+                current value is ${currentStudent.writtenTestScore}.</message>
+        </field-validator>
+    </field>
+    
+    <field name="currentStudent.classroomCompletionDate">
+        <field-validator type="regex">
+            <param name="regex">
+               (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    <field name="currentStudent.behindWheelCompletionDate">
+        <field-validator type="regex">
+            <param name="regex">
+                 (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    <field name="currentStudent.observationCompletionDate">
+        <field-validator type="regex">
+            <param name="regex">
+                 (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    <field name="currentStudent.roadTestCompletionDate">
+        <field-validator type="regex">
+            <param name="regex">
+                 (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+     <field name="currentStudent.roadTestScore">
+        <field-validator type="int">
+            <param name="min">0</param>
+            <param name="max">20</param>
+            <message>The score must be between ${min} and ${max},
+            current value is ${currentStudent.roadTestScore}.</message>
+        </field-validator>
+    </field>
+    
+ </validators>

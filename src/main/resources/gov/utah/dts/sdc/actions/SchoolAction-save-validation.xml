@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- Field-Validator Syntax -->
+    <field name="currentSchool.schoolName">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="school.schoolName.required"/>
+        </field-validator>
+    </field>
+    <field name="currentSchool.schoolNumber">
+        <field-validator type="required">
+            <message key="school.schoolNumber.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                [0-9]{1,9}
+            </param>
+            <message key="school.number.only"/>
+        </field-validator>
+    </field>
+    
+    <field name="currentSchool.address1">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="school.address1.required"/>
+        </field-validator>
+    </field>
+   
+    <field name="currentSchool.city">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="school.city.required"/>
+        </field-validator>
+    </field>
+    
+    <field name="currentSchool.state">
+        <field-validator type="required">
+            <message key="school.state.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                [A-Z][A-Z]
+            </param>
+            <message key="school.state.required"/>
+        </field-validator>
+    </field>
+
+    <field name="currentSchool.zip">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="school.zip.required"/>
+        </field-validator>
+    </field>
+
+    <field name="currentSchool.businessPhone">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="school.businessPhone.required"/>
+        </field-validator>
+    </field>
+
+</validators>

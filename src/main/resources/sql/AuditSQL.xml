@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="AuditSQL">
+    
+    <cacheModel id="audit_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "studentInsert" />
+        <flushOnExecute statement= "studentUpdateAbsolute" />
+        <flushOnExecute statement= "studentUpdateFileNumber" />
+        <flushOnExecute statement= "studentUpdate" />
+        <flushOnExecute statement= "studentDelete" />
+
+        <flushOnExecute statement= "insertBaseCompletion" />
+        <flushOnExecute statement= "insertWrittenCompletion" />
+        <flushOnExecute statement= "insertRoadCompletion" />
+        <flushOnExecute statement= "updateRoadCompletion" />
+        <flushOnExecute statement= "deleteRoadCompletion" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel>
+    <!--
+    <resultMap id="audit_result"  class="gov.utah.dts.sdc.model.Audit">
+        <result property="studentPk"                  column="student_pk"/>
+        <result property="writtenTestCompletionDate"    column="written_completion_date"/>
+        <result property="writtenTestScore"             column="written_test_score"/>
+        <result property="roadTestCompletionDate"       column="road_completion_date"/>
+        <result property="roadTestScore"                column="road_score"/>
+        <result property="roadTestInstructorFk"         column="road_teacher_fk"/>
+        <result property="classroomCompletionDate"      column="classroom_completion_date"/>
+       <result property="behindWheelCompletionDate"       column="btw_completion_date"/>
+        <result property="observationCompletionDate"       column="observation_completion_date"/>
+        <result property="classroomCompletionSchoolNumber"    column="classroom_completion_school"/>
+        <result property="btwCompletionSchoolNumber"          column="btw_completion_school"/>
+        <result property="observationCompletionSchoolNumber"  column="observation_completion_school"/>
+        <result property="writtenCompletionSchoolNumber"      column="written_completion_school"/>
+        <result property="roadCompletionSchoolNumber"         column="road_completion_school"/>
+        <result property="studentNumber"                  column="student_number"/>     
+    </resultMap>
+    
+
+    <statement id="studentSelect" resultMap="student_result" cacheModel="student_cache">
+        SELECT
+        s.student_pk,s.file_number,s.firstname,s.lastname,s.middlename,s.suffix,s.dob,s.permit_type,
+        s.address1,s.address2,s.city,s.state,s.zip,s.homePhone,s.email,s.written_completion_date,s.classroom_completion_date,
+        s.classroom_completion_check,s.btw_completion_date,s.btw_completion_check,s.observation_completion_date,s.observation_completion_check,
+        s.road_completion_date,s.road_score,s.road_teacher_fk, s.timestamp,s.updatedby,s.student_number,s.eligibility_date,s.written_test_score,
+        s.classroom_completion_school,s.btw_completion_school,s.observation_completion_school,s.written_completion_school,s.road_completion_school
+        FROM student s
+        WHERE
+        s.student_pk IS NOT NULL
+        <dynamic>
+            <isGreaterThan property="studentPk" compareValue="0" prepend=" AND ">s.student_pk = #studentPk#</isGreaterThan>  
+            <isGreaterThan property="classroomCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.classroom_completion_school = #classroomCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="btwCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.btw_completion_school = #btwCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="observationCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.observation_completion_school = #observationCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="writtenCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.written_completion_school = #writtenCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="roadCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.road_completion_school = #roadCompletionSchoolNumber#</isGreaterThan>
+            <isNotEmpty property="fileNumber" prepend=" AND ">s.file_number like upper(trim(#fileNumber#))</isNotEmpty>
+            <isNotEmpty property="studentNumber" prepend=" AND ">s.student_number like upper(trim(#studentNumber#))</isNotEmpty>
+            <isNotEmpty property="firstName" prepend=" AND ">s.firstname like upper(trim(#firstName#))</isNotEmpty>
+            <isNotEmpty property="lastName" prepend=" AND ">s.lastname like upper(trim(#lastName#))</isNotEmpty>
+            <isNotEmpty property="middleName" prepend=" AND ">s.middlename like upper(trim(#middleName#))</isNotEmpty>
+            <isNotEmpty property="dob" prepend=" AND ">s.dob = STR_TO_DATE(#dob#,'%Y-%m-%d')</isNotEmpty>
+            <isNotEmpty property="email" prepend=" AND ">s.email = upper(trim(#email#))</isNotEmpty>
+            <isNotEmpty property="writtenTestCompletionDate" prepend=" AND ">s.written_completion_date = #writtenTestCompletionDate#</isNotEmpty>
+        </dynamic>
+        GROUP BY s.student_pk
+    </statement>
+-->
+   <statement id="baseCompletionCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM completion
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="studentFk" prepend=" AND ">student_fk = #studentFk#</isNotEmpty>
+            <isNotEmpty property="completionDate" prepend=" AND ">convert(varchar, date, 1) = convert(varchar, #completionDate#, 1)</isNotEmpty>
+            <isNotEmpty property="schoolNumber" prepend=" AND ">school_number = #schoolNumber#</isNotEmpty>
+            <isNotEmpty property="completionType" prepend=" AND ">
+               completiontype_fk = (select completiontype_pk from completion_type where type = #completionType#)
+            </isNotEmpty>
+        </dynamic>
+    </statement>
+    
+    <statement id="roadCompletionCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM completion_road
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="studentFk" prepend=" AND ">student_fk = #studentFk#</isNotEmpty>
+            <isNotEmpty property="completionDate" prepend=" AND ">convert(varchar, completion_date, 1) = convert(varchar, #completionDate#, 1)</isNotEmpty>
+            <isNotEmpty property="schoolNumber" prepend=" AND ">school_number = #schoolNumber#</isNotEmpty>
+        </dynamic>
+    </statement>
+    
+    <statement id="writtenCompletionCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM completion_written
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="studentFk" prepend=" AND ">student_fk = #studentFk#</isNotEmpty>
+            <isNotEmpty property="completionDate" prepend=" AND ">convert(varchar, completion_date, 1) = convert(varchar, #completionDate#, 1)</isNotEmpty>
+            <isNotEmpty property="schoolNumber" prepend=" AND ">school_number = #schoolNumber#</isNotEmpty>
+        </dynamic>
+    </statement>
+
+<statement id="roadEligibleCount" resultClass="java.lang.Integer">
+        <dynamic prepend="SELECT count(*) FROM completion WHERE ">
+            <isNotEmpty property="studentFk" prepend=" AND ">student_fk = #studentFk#</isNotEmpty>
+            <isNotEmpty property="schoolFk" prepend=" AND ">school_number = (select number from school where school_pk = #schoolFk#)</isNotEmpty>
+        </dynamic>
+    </statement>
+    
+    <statement id="insertBaseCompletion">
+        INSERT INTO completion
+        (student_fk,school_number,completiontype_fk,date)
+        VALUES
+        (#studentFk#,#schoolNumber#,(select completiontype_pk from completion_type where type = #completionType#),#completionDate#)
+    </statement> 
+    
+    <statement id="insertWrittenCompletion">
+        INSERT INTO completion_written
+        (student_fk,school_number,completion_date,written_score)
+        VALUES
+        (#studentFk#,#schoolNumber#,#completionDate#,#writtenScore#)
+    </statement> 
+    
+    <statement id="insertRoadCompletion">
+        INSERT INTO completion_road
+        (student_fk,school_number,completion_date,road_score,route_number,route_area,start_time,end_time,
+        vehicle_fk,roadinstructor_fk, road_userid, road_datestamp)
+        VALUES
+        (#studentFk#,#schoolNumber#,#completionDate#,#roadScore#,#routeNumber#,#routeArea#,#roadStartTime#,#roadEndTime#,
+        #vehicleFk#,#roadInstructorFk#, #road_userid#, #road_datestamp#)
+        </statement>
+
+	<statement id="updateRoadCompletion">
+        UPDATE completion_road SET
+        	student_fk = #studentFk#,
+			school_number = #schoolNumber#,
+			completion_date = #completionDate#,
+			road_score = #roadScore#,
+			route_number = #routeNumber#,
+			route_area = #routeArea#,
+			start_time = #roadStartTime#,
+			end_time = #roadEndTime#,
+			vehicle_fk = #vehicleFk#,
+			roadinstructor_fk = #roadInstructorFk#,
+			road_userid = #road_userid#,
+			road_datestamp = #road_datestamp#
+			<dynamic>
+				<isNotEmpty property="notes" prepend=" , ">notes = #notes#</isNotEmpty>
+				<isNotEmpty property="notes_userid" prepend=" , ">notes_userid = #notes_userid#</isNotEmpty>
+				<isNotEmpty property="school_userid" prepend=" , ">school_userid = #school_userid#</isNotEmpty>
+				<isNotEmpty property="school_datestamp" prepend=" , ">school_datestamp = #school_datestamp#</isNotEmpty>
+				<isNotEmpty property="completion_date_userid" prepend=" , ">completion_date_userid = #completion_date_userid#</isNotEmpty>
+				<isNotEmpty property="completion_date_datestamp" prepend=" , ">completion_date_datestamp = #completion_date_datestamp#</isNotEmpty>
+				<isNotEmpty property="score_userid" prepend=" , ">score_userid = #score_userid#</isNotEmpty>
+				<isNotEmpty property="score_datestamp" prepend=" , ">score_datestamp = #score_datestamp#</isNotEmpty>
+				<isNotEmpty property="instructor_userid" prepend=" , ">instructor_userid = #instructor_userid#</isNotEmpty>
+				<isNotEmpty property="instructor_datestamp" prepend=" , ">instructor_datestamp = #instructor_datestamp#</isNotEmpty>
+			</dynamic>
+			
+        WHERE completionroad_pk = #completionRoadPk#
+	</statement>
+	
+	<statement id="deleteRoadCompletion">
+		DELETE from completion_road
+		WHERE 
+		<dynamic>
+			<isNotEmpty property="completionRoadPk">completionroad_pk = #completionRoadPk#</isNotEmpty>
+			<isNotEmpty property="studentFk">student_fk = #studentFk#</isNotEmpty>
+		</dynamic>
+	</statement>
+</sqlMap>

@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="StudentSQL">
+    
+    <!-- Remove cache to resolve file number problem when submitting completion date in commercial school -->
+    <!-- cacheModel id="student_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "studentInsert" />
+        <flushOnExecute statement= "studentUpdateAbsolute" />
+        <flushOnExecute statement= "studentUpdate" />
+        <flushOnExecute statement= "studentDelete" />
+        <flushOnExecute statement= "classroomStudentAdd" />
+        <flushOnExecute statement= "classroomStudentRemove" />
+        <flushOnExecute statement= "insertTraining" />
+        <flushOnExecute statement= "insertBehindTheWheel" />
+        <flushOnExecute statement= "insertObservation" />
+        <flushOnExecute statement= "insertRoadCompletion" />
+        <flushOnExecute statement= "updateStudentOcsScore" />
+        <flushOnExecute statement= "updateStudentNote" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel -->
+    
+    <resultMap id="student_result"  class="gov.utah.dts.sdc.model.Student">
+        <result property="studentPk"                  column="student_pk"/>
+        <result property="schoolFk"                   column="school_fk"/>
+        <result property="fileNumber"                 column="file_number"/>
+        <result property="licenseType"                column="permit_type"/>
+        <result property="firstName"                  column="firstname"/>
+        <result property="lastName"                   column="lastname"/>
+        <result property="middleName"                 column="middlename"/>
+        <result property="suffix"                     column="suffix"/>
+        <result property="dob"                        column="dob"/>
+        <result property="address1"                   column="address1"/>
+        <result property="address2"                   column="address2"/>
+        <result property="city"                       column="city"/>
+        <result property="state"                      column="state"/>
+        <result property="zip"                        column="zip"/>
+        <result property="homePhone"                  column="homephone"/>
+        <result property="email"                      column="email"/>
+        <result property="eligibilityDate"              column="eligibility_date"/>
+        <result property="writtenTestCompletionDate"    column="written_completion_date"/>
+        <result property="writtenTestScore"             column="written_test_score"/>
+        <result property="roadTestCompletionDate"       column="road_completion_date"/>
+        <result property="roadTestScore"                column="road_score"/>
+        <result property="roadTestInstructorFk"         column="road_teacher_fk"/>
+        <result property="classroomCompletionDate"      column="classroom_completion_date"/>
+        <result property="classroomCompletionCheck"         column="classroom_completion_check" typeHandler="sql.StringBooleanTypeHandler" />
+        <result property="behindWheelCompletionDate"       column="btw_completion_date"/>
+        <result property="behindWheelCompletionCheck"      column="btw_completion_check" typeHandler="sql.StringBooleanTypeHandler" />
+        <result property="observationCompletionDate"       column="observation_completion_date"/>
+        <result property="observationCompletionCheck"      column="observation_completion_check" typeHandler="sql.StringBooleanTypeHandler" />
+        <result property="timestamp"                       column="timestamp"/>
+        <result property="updatedBy"                      column="updatedby"/>
+        <result property="classroomCompletionSchoolNumber"    column="classroom_completion_school"/>
+        <result property="btwCompletionSchoolNumber"          column="btw_completion_school"/>
+        <result property="observationCompletionSchoolNumber"  column="observation_completion_school"/>
+        <result property="writtenCompletionSchoolNumber"      column="written_completion_school"/>
+        <result property="roadCompletionSchoolNumber"         column="road_completion_school"/>
+        <result property="studentNumber"                  	column="student_number"/>
+        <result property="ocsScore"                  		column="ocs_score"/>
+        <result property="note"								column="note"/>
+        <result property="hide"                             column="hide"/>
+    </resultMap>
+    
+    <resultMap id="student_result_hs"  class="gov.utah.dts.sdc.model.Student">
+        <result property="studentPk"                  column="student_pk"/>
+        <result property="schoolFk"                   column="school_fk"/>
+        <result property="fileNumber"                 column="file_number"/>
+        <result property="licenseType"                column="permit_type"/>
+        <result property="firstName"                  column="firstname"/>
+        <result property="lastName"                   column="lastname"/>
+        <result property="middleName"                 column="middlename"/>
+        <result property="suffix"                     column="suffix"/>
+        <result property="dob"                        column="dob"/>
+        <result property="address1"                   column="address1"/>
+        <result property="address2"                   column="address2"/>
+        <result property="city"                       column="city"/>
+        <result property="state"                      column="state"/>
+        <result property="zip"                        column="zip"/>
+        <result property="homePhone"                  column="homephone"/>
+        <result property="email"                      column="email"/>
+        <result property="eligibilityDate"              column="eligibility_date"/>
+        <result property="writtenTestCompletionDate"    column="written_completion_date"/>
+        <result property="writtenTestScore"             column="written_test_score"/>
+        <result property="roadTestCompletionDate"       column="road_completion_date"/>
+        <result property="roadTestScore"                column="road_score"/>
+        <result property="roadTestInstructorFk"         column="road_teacher_fk"/>
+        <result property="classroomCompletionDate"      column="classroom_completion_date"/>
+        <result property="classroomCompletionCheck"         column="classroom_completion_check" typeHandler="sql.StringBooleanTypeHandler" />
+        <result property="behindWheelCompletionDate"       column="btw_completion_date"/>
+        <result property="behindWheelCompletionCheck"      column="btw_completion_check" typeHandler="sql.StringBooleanTypeHandler" />
+        <result property="observationCompletionDate"       column="observation_completion_date"/>
+        <result property="observationCompletionCheck"      column="observation_completion_check" typeHandler="sql.StringBooleanTypeHandler" />
+        <result property="timestamp"                       column="timestamp"/>
+        <result property="updatedBy"                      column="updatedby"/>
+        <result property="classroomCompletionSchoolNumber"    column="classroom_completion_school"/>
+        <result property="btwCompletionSchoolNumber"          column="btw_completion_school"/>
+        <result property="observationCompletionSchoolNumber"  column="observation_completion_school"/>
+        <result property="writtenCompletionSchoolNumber"      column="written_completion_school"/>
+        <result property="roadCompletionSchoolNumber"         column="road_completion_school"/>
+        <result property="studentNumber"                  	column="student_number"/>
+        <result property="ocsScore"                  		column="ocs_score"/>
+        <result property="note"								column="note"/>
+        <result property="hide"                             column="hide"/>
+        <result property="studentAudit.writtenTestScore_userid"				column="writtenTestScore_userid"/>
+        <result property="studentAudit.writtenTestScore_datestamp"			column="writtenTestScore_datestamp"/>
+        <result property="studentAudit.writtenCompletionDate_userid"	column="writtenCompletionDate_userid"/>
+        <result property="studentAudit.writtenCompletionDate_datestamp"	column="writtenCompletionDate_datestamp"/>
+        <result property="studentAudit.writtenCompletionSchool_userid"	column="writtenCompletionSchool_userid"/>
+        <result property="studentAudit.writtenCompletionSchool_datestamp"	column="writtenCompletionSchool_datestamp"/>
+        <result property="studentAudit.classroomCompletionDate_userid"	column="classroomCompletionDate_userid"/>
+        <result property="studentAudit.classroomCompletionDate_datestamp"	column="classroomCompletionDate_datestamp"/>
+        <result property="studentAudit.classroomCompletionSchool_userid"	column="classroomCompletionSchool_userid"/>
+        <result property="studentAudit.classroomCompletionSchool_datestamp"	column="classroomCompletionSchool_datestamp"/>
+        <result property="studentAudit.observationCompletionDate_userid"	column="observationCompletionDate_userid"/>
+        <result property="studentAudit.observationCompletionDate_datestamp"	column="observationCompletionDate_datestamp"/>
+        <result property="studentAudit.observationCompletionSchool_userid"	column="observationCompletionSchool_userid"/>
+        <result property="studentAudit.observationCompletionSchool_datestamp"	column="observationCompletionSchool_datestamp"/>
+        <result property="studentAudit.btwCompletionDate_userid"	column="btwCompletionDate_userid"/>
+        <result property="studentAudit.btwCompletionDate_datestamp"	column="btwCompletionDate_datestamp"/>
+        <result property="studentAudit.btwCompletionSchool_userid"	column="btwCompletionSchool_userid"/>
+        <result property="studentAudit.btwCompletionSchool_datestamp"	column="btwCompletionSchool_datestamp"/>
+        <result property="studentAudit.roadInstructor_userid"				column="roadInstructor_userid"/>
+        <result property="studentAudit.roadInstructor_datestamp"			column="roadInstructor_datestamp"/>
+        <result property="studentAudit.roadScore_userid"				column="roadScore_userid"/>
+        <result property="studentAudit.roadScore_datestamp"			column="roadScore_datestamp"/>
+        <result property="studentAudit.roadCompletionDate_userid"	column="roadCompletionDate_userid"/>
+        <result property="studentAudit.roadCompletionDate_datestamp"	column="roadCompletionDate_datestamp"/>
+        <result property="studentAudit.roadCompletionSchool_userid"	column="roadCompletionSchool_userid"/>
+        <result property="studentAudit.roadCompletionSchool_datestamp"	column="roadCompletionSchool_datestamp"/>
+        <result property="ocs_score_userid"                 column="ocs_score_userid"/>
+        <result property="ocs_score_datestamp"				column="ocs_score_datestamp"/>
+    </resultMap>
+    
+    <resultMap id="commercial_times_vehicle_result"  class="gov.utah.dts.sdc.model.CommercialTimes">
+        <result property="timePk"                     column="timePk"/>
+        <result property="studentFk"                  column="student_fk"/>
+        <result property="classroomFk"                column="classroom_fk"/>
+        <result property="startTime"                  column="start_time"/>
+        <result property="endTime"                    column="end_time"/>
+        <result property="instructorFullName"         column="instructorFullName"/>
+        <result property="instructorFk"               column="instructor_fk"/>
+        <result property="vehicleFullDesc"            column="vehicleFullDesc"/>
+        <result property="vehicleFk"                  column="vehicle_fk"/>
+        <result property="branchName"                 column="branchName"/>
+        <result property="branchFk"                   column="branch_fk"/>
+        <result property="observationStartTime"       column="observationStartTime"/>
+        <result property="observationEndTime"         column="observationEndTime"/>
+        <result property="observationCreateDate"      column="create_date"/>
+        <result property="editable"                   column="editable"/>
+        <result property="observation_userid"         column="observation_userid"/>
+        <result property="observation_datestamp"      column="observation_datestamp"/>
+    </resultMap>
+    
+    <resultMap id="commercial_behind_the_wheel_result"  class="gov.utah.dts.sdc.model.CommercialTimes">
+        <result property="timePk"                     column="timePk"/>
+        <result property="studentFk"                  column="student_fk"/>
+        <result property="classroomFk"                column="classroom_fk"/>
+        <result property="startTime"                  column="start_time"/>
+        <result property="endTime"                    column="end_time"/>
+        <result property="instructorFullName"         column="instructorFullName"/>
+        <result property="instructorFk"               column="instructor_fk"/>
+        <result property="vehicleFullDesc"            column="vehicleFullDesc"/>
+        <result property="vehicleFk"                  column="vehicle_fk"/>
+        <result property="branchName"                 column="branchName"/>
+        <result property="branchFk"                   column="branch_fk"/>
+        <result property="behindTheWheelStartTime"    column="behindTheWheelStartTime"/>
+        <result property="behindTheWheelEndTime"      column="behindTheWheelEndTime"/>
+        <result property="behindTheWheelCreateDate"   column="create_date"/>
+        <result property="editable"                   column="editable"/>
+        <result property="btw_userid"         			column="btw_userid"/>
+        <result property="btw_datestamp"      			column="btw_datestamp"/>
+    </resultMap>
+    
+    
+    
+    <resultMap id="commercial_times_section_result"  class="gov.utah.dts.sdc.model.CommercialTimes">
+        <result property="timePk"                     column="timePk"/>
+        <result property="studentFk"                  column="student_fk"/>
+        <result property="classroomFk"                column="classroom_fk"/>
+        <result property="startTime"                  column="start_time"/>
+        <result property="endTime"                    column="end_time"/>
+        <result property="instructorFullName"         column="instructorFullName"/>
+        <result property="instructorFk"               column="instructor_fk"/>
+        <result property="section"                    column="section"/>
+        <result property="branchName"                 column="branchName"/>
+        <result property="branchFk"                   column="branch_fk"/>
+        <result property="trainingStartTime"          column="trainingStartTime"/>
+        <result property="trainingEndTime"            column="trainingEndTime"/>
+        <result property="trainingCreateDate"         column="create_date"/>
+        <result property="editable"                   column="editable"/>
+        <result property="training_userid"			column="training_userid"/>
+        <result property="training_datestamp"      	column="training_datestamp"/>
+    </resultMap>
+    
+    <resultMap id="commercial_times_road_result"  class="gov.utah.dts.sdc.model.CommercialTimes">
+        <result property="timePk"                     column="timePk"/>
+        <result property="studentFk"                  column="student_fk"/>
+        <result property="startTime"                  column="start_time"/>
+        <result property="endTime"                    column="end_time"/>
+        <result property="completionDate"             column="completion_date"/>
+        <result property="roadScore"                  column="road_score"/>
+        <result property="routeNumber"                column="route_number"/>
+        <result property="routeArea"                  column="route_area"/>
+        <result property="roadInstructorFk"           column="roadinstructor_fk"/>
+        <result property="instructorFullName"         column="instructorFullName"/>
+        <result property="vehicleFullDesc"            column="vehicleFullDesc"/>
+        <result property="vehicleFk"                  column="vehicleFk"/>
+        <result property="schoolName"                 column="schoolName"/>
+        <result property="notes"                 		column="notes"/>
+        <result property="notes_userid"                 column="notes_userid"/>
+        <result property="school_userid"                 		column="school_userid"/>
+        <result property="school_datestamp"                 column="school_datestamp"/>
+        <result property="completion_date_userid"                 		column="completion_date_userid"/>
+        <result property="completion_date_datestamp"                 column="completion_date_datestamp"/>
+        <result property="score_userid"                 		column="score_userid"/>
+        <result property="score_datestamp"                 column="score_datestamp"/>
+        <result property="instructor_userid"                 		column="instructor_userid"/>
+        <result property="instructor_datestamp"                 column="instructor_datestamp"/>
+        <result property="road_userid"                column="road_userid"/>
+        <result property="road_datestamp"             column="road_datestamp"/>
+    </resultMap>
+    
+    <resultMap id="thirdparty_times_section_result"  class="gov.utah.dts.sdc.model.ThirdPartyTimes">
+        <result property="timePk"                     column="timePk"/>
+        <result property="studentFk"                  column="student_fk"/>
+        <result property="classroomFk"                column="classroom_fk"/>
+        <result property="startTime"                  column="start_time"/>
+        <result property="endTime"                    column="end_time"/>
+        <result property="instructorFullName"         column="instructorFullName"/>
+        <result property="section"                    column="section"/>
+        <result property="branchName"                 column="branchName"/>
+    </resultMap>
+    
+    <resultMap id="thirdparty_times_vehicle_result"  class="gov.utah.dts.sdc.model.ThirdPartyTimes">
+        <result property="timePk"                     column="timePk"/>
+        <result property="studentFk"                  column="student_fk"/>
+        <result property="classroomFk"                column="classroom_fk"/>
+        <result property="startTime"                  column="start_time"/>
+        <result property="endTime"                    column="end_time"/>
+        <result property="instructorFullName"         column="instructorFullName"/>
+        <result property="vehicleFullDesc"            column="vehicleFullDesc"/>
+        <result property="branchName"                 column="branchName"/>
+    </resultMap>
+    
+    <statement id="studentSelect" resultMap="student_result_hs">
+        SELECT
+        s.student_pk,s.school_fk,s.file_number,s.firstname,s.lastname,s.middlename,s.suffix,s.dob,s.permit_type,
+        s.address1,s.address2,s.city,s.state,s.zip,s.homePhone,s.email,s.written_completion_date,s.classroom_completion_date,
+        s.classroom_completion_check,s.btw_completion_date,s.btw_completion_check,s.observation_completion_date,s.observation_completion_check,
+        s.road_completion_date,s.road_score,s.road_teacher_fk, s.timestamp,s.updatedby,s.student_number,s.eligibility_date,s.written_test_score,
+        s.classroom_completion_school,s.btw_completion_school,s.observation_completion_school,s.written_completion_school,s.road_completion_school,
+        s.ocs_score,s.note,null AS hide, 
+        sa.writtenTestScore_userid, sa.writtenTestScore_datestamp,
+        sa.writtenCompletionDate_userid, sa.writtenCompletionDate_datestamp,
+        sa.writtenCompletionSchool_userid, sa.writtenCompletionSchool_datestamp,
+        sa.classroomCompletionDate_userid, sa.classroomCompletionDate_datestamp,
+        sa.classroomCompletionSchool_userid, sa.classroomCompletionSchool_datestamp,
+        sa.observationCompletionDate_userid, sa.observationCompletionDate_datestamp,
+        sa.observationCompletionSchool_userid, sa.observationCompletionSchool_datestamp,
+        sa.btwCompletionDate_userid, btwCompletionDate_datestamp,
+        sa.btwCompletionSchool_userid, btwCompletionSchool_datestamp,
+        sa.roadInstructor_userid, sa.roadInstructor_datestamp,
+        sa.roadScore_userid, sa.roadScore_datestamp,
+        sa.roadCompletionDate_userid, sa.roadCompletionDate_datestamp,
+        sa.roadCompletionSchool_userid, sa.roadCompletionSchool_datestamp,
+        s.ocs_score_userid,
+        s.ocs_score_datestamp
+        FROM student s left join student_audit sa on s.student_pk = sa.student_fk
+        WHERE
+        s.student_pk IS NOT NULL
+        <dynamic>
+            <isGreaterThan property="studentPk" compareValue="0" prepend=" AND ">s.student_pk = #studentPk#</isGreaterThan>  
+            <isGreaterThan property="classroomCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.classroom_completion_school = #classroomCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="btwCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.btw_completion_school = #btwCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="observationCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.observation_completion_school = #observationCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="writtenCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.written_completion_school = #writtenCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="roadCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.road_completion_school = #roadCompletionSchoolNumber#</isGreaterThan>
+            <isNotEmpty property="fileNumber" prepend=" AND ">s.file_number like upper(rtrim(#fileNumber#))</isNotEmpty>
+            <isNotEmpty property="studentNumber" prepend=" AND ">s.student_number like upper(rtrim(#studentNumber#))</isNotEmpty>
+            <isNotEmpty property="firstName" prepend=" AND ">s.firstname like upper(rtrim(#firstName#))</isNotEmpty>
+            <isNotEmpty property="lastName" prepend=" AND ">s.lastname like upper(rtrim(#lastName#))</isNotEmpty>
+            <isNotEmpty property="middleName" prepend=" AND ">s.middlename like upper(rtrim(#middleName#))</isNotEmpty>
+            <isNotEmpty property="dob" prepend=" AND ">s.dob = convert(datetime, #dob# + ' 00:00:00', 120)</isNotEmpty>
+            <isNotEmpty property="email" prepend=" AND ">s.email = upper(rtrim(#email#))</isNotEmpty>
+            <isNotEmpty property="writtenTestCompletionDate" prepend=" AND ">s.written_completion_date = #writtenTestCompletionDate#</isNotEmpty>
+            <isGreaterThan property="schoolFk" compareValue="0" prepend=" AND ">s.school_fk = #schoolFk#</isGreaterThan>  
+        </dynamic>
+        ORDER BY s.firstname,s.lastname
+    </statement>
+    
+    <statement id="studentCommercialSelect" resultMap="student_result">
+        SELECT
+        s.student_pk,s.school_fk,s.file_number,s.firstname,s.lastname,s.middlename,s.suffix,s.dob,s.permit_type,
+        s.address1,s.address2,s.city,s.state,s.zip,s.homePhone,s.email,s.written_completion_date,s.classroom_completion_date,
+        s.classroom_completion_check,s.btw_completion_date,s.btw_completion_check,s.observation_completion_date,s.observation_completion_check,
+        s.road_completion_date,s.road_score,s.road_teacher_fk,s.timestamp,s.updatedby,s.student_number,s.eligibility_date,s.written_test_score,
+        s.classroom_completion_school,s.btw_completion_school,s.observation_completion_school,s.written_completion_school,s.road_completion_school,
+        s.ocs_score,s.note,c.hide
+        FROM student s
+        LEFT JOIN classroom_student c ON c.student_fk = s.student_pk
+        WHERE
+        s.student_pk IS NOT NULL
+        <dynamic>
+            <isGreaterThan property="studentPk" compareValue="0" prepend=" AND ">s.student_pk = #studentPk#</isGreaterThan>  
+            <isGreaterThan property="classroomCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.classroom_completion_school = #classroomCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="btwCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.btw_completion_school = #btwCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="observationCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.observation_completion_school = #observationCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="writtenCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.written_completion_school = #writtenCompletionSchoolNumber#</isGreaterThan>
+            <isGreaterThan property="roadCompletionSchoolNumber" compareValue="0" prepend=" AND ">s.road_completion_school = #roadCompletionSchoolNumber#</isGreaterThan>
+            <isNotEmpty property="fileNumber" prepend=" AND ">s.file_number like upper(rtrim(#fileNumber#))</isNotEmpty>
+            <isNotEmpty property="firstName" prepend=" AND ">s.firstname like upper(rtrim(#firstName#))</isNotEmpty>
+            <isNotEmpty property="lastName" prepend=" AND ">s.lastname like upper(rtrim(#lastName#))</isNotEmpty>
+            <isNotEmpty property="middleName" prepend=" AND ">s.middlename like upper(rtrim(#middleName#))</isNotEmpty>
+            <isNotEmpty property="dob" prepend=" AND ">s.dob = convert(datetime, #dob# + ' 00:00:00', 120)</isNotEmpty>
+            <isNotEmpty property="email" prepend=" AND ">s.email = upper(rtrim(#email#))</isNotEmpty>
+            <isNotEmpty property="writtenTestCompletionDate" prepend=" AND ">s.written_completion_date = #writtenTestCompletionDate#</isNotEmpty>
+            <isGreaterEqual property="classroomFk" compareValue="0" prepend=" AND ">c.classroom_fk = #classroomFk#</isGreaterEqual>
+            <isEmpty property="classroomFk"  prepend=" AND ">c.classroom_fk = 0</isEmpty>
+        	<isNotEmpty property="showHidden" prepend=" AND ">c.hide = #showHidden#</isNotEmpty>
+        </dynamic>
+        ORDER BY s.firstname, s.middlename, s.lastname
+    </statement>
+    
+    <!--No RoadTest Stuff in this one -->
+    <statement id="studentInsert">
+        INSERT INTO student(
+        firstname,lastname,dob
+        <dynamic>
+            <isNotEmpty property="fileNumber"  prepend=", ">file_number</isNotEmpty>
+            <isNotEmpty property="licenseType"  prepend=", ">permit_type</isNotEmpty>
+            <isNotEmpty property="middleName"  prepend=", ">middlename</isNotEmpty>
+            <isEmpty property="middleName"  prepend=", ">middlename</isEmpty>
+            <isNotEmpty property="homePhone"  prepend=", ">homephone</isNotEmpty>
+            <isNotEmpty property="address1"  prepend=", ">address1</isNotEmpty>
+            <isNotEmpty property="address2"  prepend=", ">address2</isNotEmpty>
+            <isNotEmpty property="city"  prepend=", ">city</isNotEmpty>
+            <isNotEmpty property="state"  prepend=", ">state</isNotEmpty>
+            <isNotEmpty property="zip"  prepend=", ">zip</isNotEmpty>
+            <isNotEmpty property="writtenTestCompletionDate"  prepend=", ">written_completion_date</isNotEmpty>
+            <isNotEmpty property="writtenCompletionSchoolNumber"  prepend=", ">written_completion_school</isNotEmpty>
+            <isNotEmpty property="classroomCompletionDate"  prepend=", ">classroom_completion_date</isNotEmpty>
+            <isNotEmpty property="classroomCompletionSchoolNumber"  prepend=", ">classroom_completion_school</isNotEmpty>
+            <isNotEmpty property="classroomCompletionCheck"  prepend=", ">classroom_completion_check</isNotEmpty>
+            <isNotEmpty property="behindWheelCompletionDate"  prepend=", ">btw_completion_date</isNotEmpty>
+            <isNotEmpty property="btwCompletionSchoolNumber"  prepend=", ">btw_completion_school</isNotEmpty>
+            <isNotEmpty property="behindWheelCompletionCheck"  prepend=", ">btw_completion_check</isNotEmpty>
+            <isNotEmpty property="observationCompletionDate"  prepend=", ">observation_completion_date</isNotEmpty>
+            <isNotEmpty property="observationCompletionSchoolNumber"  prepend=", ">observation_completion_school</isNotEmpty>
+            <isNotEmpty property="observationCompletionCheck"  prepend=", ">observation_completion_check</isNotEmpty>
+            <isNotEmpty property="roadTestCompletionDate"  prepend=", ">road_completion_date</isNotEmpty>
+            <isNotEmpty property="roadTestScore"  prepend=", ">road_score</isNotEmpty>
+            <isGreaterThan property="roadTestInstructorFk" compareValue="0" prepend=", ">road_teacher_fk</isGreaterThan>
+            <isNotEmpty property="roadCompletionSchoolNumber"  prepend=", ">road_completion_school</isNotEmpty>
+            <isNotEmpty property="updatedBy"  prepend=", ">updatedby</isNotEmpty>
+            <isNotEmpty property="schoolFk"  prepend=", ">school_fk</isNotEmpty>
+            <isNotEmpty property="studentNumber"  prepend=", ">student_number</isNotEmpty>
+            <isNotEmpty property="eligibilityDate"  prepend=", ">eligibility_date</isNotEmpty>  
+            <isGreaterThan property="writtenTestScore" compareValue="0" prepend=", ">written_test_score</isGreaterThan>
+        </dynamic>
+        )
+        VALUES(
+        upper(rtrim(#firstName#)),upper(rtrim(#lastName#)),#dob#
+        <dynamic>
+            <isNotEmpty property="fileNumber"  prepend=", ">upper(rtrim(#fileNumber#))</isNotEmpty>
+            <isNotEmpty property="licenseType"  prepend=", ">upper(rtrim(#licenseType#))</isNotEmpty>
+            <isNotEmpty property="middleName"  prepend=", ">upper(rtrim(#middleName#))</isNotEmpty>
+            <isEmpty property="middleName"  prepend=", ">' '</isEmpty>
+            <isNotEmpty property="homePhone"  prepend=", ">#homePhone#</isNotEmpty>
+            <isNotEmpty property="address1"  prepend=", ">upper(rtrim(#address1#))</isNotEmpty>
+            <isNotEmpty property="address2"  prepend=", ">upper(rtrim(#address2#))</isNotEmpty>
+            <isNotEmpty property="city"  prepend=", ">upper(rtrim(#city#))</isNotEmpty>
+            <isNotEmpty property="state"  prepend=", ">#state#</isNotEmpty>
+            <isNotEmpty property="zip"  prepend=", ">#zip#</isNotEmpty>
+            <isNotEmpty property="writtenTestCompletionDate"  prepend=", ">#writtenTestCompletionDate#</isNotEmpty>
+            <isNotEmpty property="writtenCompletionSchoolNumber"  prepend=", ">#writtenCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionDate"  prepend=", ">#classroomCompletionDate#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionSchoolNumber"  prepend=", ">#classroomCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionCheck"  prepend=", ">#classroomCompletionCheck2#</isNotEmpty>
+            <isNotEmpty property="behindWheelCompletionDate"  prepend=", ">#behindWheelCompletionDate#</isNotEmpty>
+            <isNotEmpty property="btwCompletionSchoolNumber"  prepend=", ">#btwCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="behindWheelCompletionCheck"  prepend=", ">#behindWheelCompletionCheck2#</isNotEmpty>
+            <isNotEmpty property="observationCompletionDate"  prepend=", ">#observationCompletionDate#</isNotEmpty>
+            <isNotEmpty property="observationCompletionSchoolNumber"  prepend=", ">#observationCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="observationCompletionCheck"  prepend=", ">#observationCompletionCheck2#</isNotEmpty>
+            <isNotEmpty property="roadTestCompletionDate"  prepend=", ">#roadTestCompletionDate#</isNotEmpty>
+            <isNotEmpty property="roadTestScore"  prepend=", ">#roadTestScore#</isNotEmpty>
+            <isGreaterThan property="roadTestInstructorFk" compareValue="0" prepend=", ">#roadTestInstructorFk#</isGreaterThan>
+            <isNotEmpty property="roadCompletionSchoolNumber"  prepend=", ">#roadCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="updatedBy"  prepend=", ">#updatedBy#</isNotEmpty>
+            <isNotEmpty property="schoolFk"  prepend=", ">#schoolFk#</isNotEmpty>
+            <isNotEmpty property="studentNumber"  prepend=", ">#studentNumber#</isNotEmpty>
+            <isNotEmpty property="eligibilityDate"  prepend=", ">#eligibilityDate#</isNotEmpty>
+            <isGreaterThan property="writtenTestScore" compareValue="0" prepend=", ">#writtenTestScore#</isGreaterThan>
+        </dynamic>  
+        )
+    </statement> 
+    
+    <statement id="studentUpdate">
+        UPDATE student SET
+        <dynamic prepend="   ">
+            <isNotEmpty property="fileNumber"  prepend=", ">file_number = upper(rtrim(#fileNumber#))</isNotEmpty>
+            <isNotEmpty property="firstName"  prepend=", ">firstname = upper(rtrim(#firstName#))</isNotEmpty>
+            <isNotEmpty property="lastName"  prepend=", ">lastname = upper(rtrim(#lastName#))</isNotEmpty>
+            <isNotEmpty property="dob"  prepend=", ">dob = #dob#</isNotEmpty>
+            <isNotEmpty property="licenseType"  prepend=", ">permit_type = upper(rtrim(#licenseType#))</isNotEmpty>
+            <isNotEmpty property="middleName"  prepend=", ">middlename = upper(rtrim(#middleName#))</isNotEmpty>
+            <isEmpty property="middleName"  prepend=", ">middlename = ' '</isEmpty>
+            <isNotEmpty property="writtenTestScore"  prepend=", ">written_test_score = #writtenTestScore#</isNotEmpty>
+            <isNotEmpty property="writtenTestCompletionDate"  prepend=", ">written_completion_date = #writtenTestCompletionDate#</isNotEmpty>
+            <isNotEmpty property="writtenCompletionSchoolNumber" prepend=", ">written_completion_school = #writtenCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionDate"  prepend=", ">classroom_completion_date = #classroomCompletionDate#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionSchoolNumber" prepend=", ">classroom_completion_school = #classroomCompletionSchoolNumber#</isNotEmpty>
+			<isNotEmpty property="observationCompletionDate"  prepend=", ">observation_completion_date = #observationCompletionDate#</isNotEmpty>
+			<isNotEmpty property="observationCompletionSchoolNumber" prepend=", ">observation_completion_school = #observationCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="behindWheelCompletionDate"  prepend=", ">btw_completion_date = #behindWheelCompletionDate#</isNotEmpty>
+            <isNotEmpty property="btwCompletionSchoolNumber" prepend=", ">btw_completion_school = #btwCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="roadTestCompletionDate"  prepend=", ">road_completion_date = #roadTestCompletionDate#</isNotEmpty>
+            <isNotEmpty property="roadTestScore"  prepend=", ">road_score = #roadTestScore#</isNotEmpty>
+            <isNotEmpty property="roadCompletionSchoolNumber" prepend=", ">road_completion_school = #roadCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionCheck"  prepend=", ">classroom_completion_check = #classroomCompletionCheck2#</isNotEmpty>            
+            <isNotEmpty property="behindWheelCompletionCheck"  prepend=", ">btw_completion_check = #behindWheelCompletionCheck2#</isNotEmpty>
+            <isNotEmpty property="observationCompletionCheck"  prepend=", ">observation_completion_check = #observationCompletionCheck2#</isNotEmpty>
+            <isNotEmpty property="eligibilityDate"  prepend=", ">eligibility_date = #eligibilityDate#</isNotEmpty>       
+            <isNotEmpty property="updatedBy"  prepend=", ">updatedby = #updatedBy#</isNotEmpty>
+            <isNotEmpty property="schoolFk"  prepend=", ">school_fk = #schoolFk#</isNotEmpty>
+            <isNotEmpty property="studentNumber"  prepend=", ">student_number = #studentNumber#</isNotEmpty>
+            <isNotEmpty property="roadTestInstructorFk"  prepend=", ">road_teacher_fk = #roadTestInstructorFk#</isNotEmpty>
+            <isNotEmpty property="note" prepend=", ">note = #note#</isNotEmpty>
+        </dynamic>
+        WHERE student_pk = #studentPk#
+    </statement>
+
+    <statement id="studentUpdateFileNumber">
+         UPDATE student SET
+         file_number = #fileNumber#
+         WHERE student_pk = #studentPk#
+    </statement>
+
+    <!--No RoadTest Stuff in this one -->
+    <statement id="studentUpdateAbsolute">
+        UPDATE student SET
+        <dynamic prepend="   ">
+            <isNotEmpty property="fileNumber"  prepend=", ">file_number = upper(rtrim(#fileNumber#))</isNotEmpty>
+            <isNotEmpty property="firstName"  prepend=", ">firstname = upper(rtrim(#firstName#))</isNotEmpty>
+            <isNotEmpty property="lastName"  prepend=", ">lastname = upper(rtrim(#lastName#))</isNotEmpty>
+            <isNotEmpty property="dob"  prepend=", ">dob = #dob#</isNotEmpty>
+            <isNotEmpty property="licenseType"  prepend=", ">permit_type = upper(rtrim(#licenseType#))</isNotEmpty>
+            <isNotEmpty property="middleName"  prepend=", ">middlename = upper(rtrim(#middleName#))</isNotEmpty>
+            <isEmpty property="middleName"  prepend=", ">middlename = ' '</isEmpty>
+            <isNotEmpty property="writtenTestCompletionDate"  prepend=", ">written_completion_date = #writtenTestCompletionDate#</isNotEmpty>
+            <isNotEmpty property="writtenTestScore"  prepend=", ">written_test_score = #writtenTestScore#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionDate"  prepend=", ">classroom_completion_date = #classroomCompletionDate#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionCheck"  prepend=", ">classroom_completion_check = #classroomCompletionCheck2#</isNotEmpty>
+            <isNotEmpty property="behindWheelCompletionDate"  prepend=", ">btw_completion_date = #behindWheelCompletionDate#</isNotEmpty>
+            <isNotEmpty property="behindWheelCompletionCheck"  prepend=", ">btw_completion_check = #behindWheelCompletionCheck2#</isNotEmpty>
+            <isNotEmpty property="observationCompletionDate"  prepend=", ">observation_completion_date = #observationCompletionDate#</isNotEmpty>
+            <isNotEmpty property="observationCompletionCheck"  prepend=", ">observation_completion_check = #observationCompletionCheck2#</isNotEmpty>
+            <isNotEmpty property="roadTestCompletionDate"  prepend=", ">road_completion_date = #roadTestCompletionDate#</isNotEmpty>
+            <isNotEmpty property="roadTestScore"  prepend=", ">road_score = #roadTestScore#</isNotEmpty>
+            <isNotEmpty property="eligibilityDate"  prepend=", ">eligibility_date = #eligibilityDate#</isNotEmpty>       
+            <isNotEmpty property="updatedBy"  prepend=", ">updatedby = #updatedBy#</isNotEmpty>
+            <isNotEmpty property="schoolFk"  prepend=", ">school_fk = #schoolFk#</isNotEmpty>
+            <isNotEmpty property="studentNumber"  prepend=", ">student_number = #studentNumber#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionSchoolNumber" prepend=", ">classroom_completion_school = #classroomCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="btwCompletionSchoolNumber" prepend=", ">btw_completion_school = #btwCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="observationCompletionSchoolNumber" prepend=", ">observation_completion_school = #observationCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="writtenCompletionSchoolNumber" prepend=", ">written_completion_school = #writtenCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="roadCompletionSchoolNumber" prepend=", ">road_completion_school = #roadCompletionSchoolNumber#</isNotEmpty>
+            <isEmpty property="writtenTestCompletionDate"  prepend=", ">written_completion_date = #writtenTestCompletionDate#</isEmpty>
+            <isEmpty property="writtenTestScore"  prepend=", ">written_test_score = #writtenTestScore#</isEmpty>
+            <isEmpty property="classroomCompletionDate"  prepend=", ">classroom_completion_date = #classroomCompletionDate#</isEmpty>
+            <isEmpty property="behindWheelCompletionDate"  prepend=", ">btw_completion_date = #behindWheelCompletionDate#</isEmpty>
+            <isEmpty property="observationCompletionDate"  prepend=", ">observation_completion_date = #observationCompletionDate#</isEmpty>
+            <isEmpty property="roadTestCompletionDate"  prepend=", ">road_completion_date = #roadTestCompletionDate#</isEmpty>
+            <isEmpty property="roadTestScore"  prepend=", ">road_score = #roadTestScore#</isEmpty>
+            <isEmpty property="eligibilityDate"  prepend=", ">eligibility_date = #eligibilityDate#</isEmpty>       
+            <isEmpty property="classroomCompletionSchoolNumber" prepend=", ">classroom_completion_school = null</isEmpty>
+            <isEmpty property="btwCompletionSchoolNumber" prepend=", ">btw_completion_school = null</isEmpty>
+            <isEmpty property="observationCompletionSchoolNumber" prepend=", ">observation_completion_school = null</isEmpty>
+            <isEmpty property="writtenCompletionSchoolNumber" prepend=", ">written_completion_school = null</isEmpty>
+            <isEmpty property="roadCompletionSchoolNumber" prepend=", ">road_completion_school = null</isEmpty>
+            <isNotEmpty property="note" prepend=", ">note = #note#</isNotEmpty>
+        </dynamic>
+        WHERE student_pk = #studentPk#
+    </statement>
+    
+    <statement  id="studentDelete">                                
+        DELETE FROM student WHERE student_pk = #studentPk#
+    </statement>
+    
+    <statement id="studentEqualsCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM student s
+        WHERE
+        s.student_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="studentPk" prepend=" AND ">s.student_pk = #studentPk#</isNotEmpty>
+            <isNotEmpty property="firstName" prepend=" AND ">s.firstname = #firstName#</isNotEmpty>
+            <isNotEmpty property="middleName" prepend=" AND ">s.middlename = #middleName#</isNotEmpty>
+            <isNotEmpty property="lastName" prepend=" AND ">s.lastname = #lastName#</isNotEmpty>
+            <isNotEmpty property="dob" prepend=" AND ">convert(varchar, s.dob, 1) = convert(varchar, #dob#, 1)</isNotEmpty>
+            <isNotEmpty property="writtenTestCompletionDate" prepend=" AND ">convert(varchar, s.written_completion_date, 1) = convert(varchar, #writtenTestCompletionDate#, 1)</isNotEmpty>
+            <isNotEmpty property="writtenCompletionSchoolNumber" prepend=" AND ">s.written_completion_school = #writtenCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="roadTestCompletionDate" prepend=" AND ">convert(varchar, s.road_completion_date, 1) = convert(varchar, #roadTestCompletionDate#, 1)</isNotEmpty>
+            <isNotEmpty property="roadCompletionSchoolNumber" prepend=" AND ">s.road_completion_school = #roadCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="classroomCompletionDate" prepend=" AND ">convert(varchar, s.classroom_completion_date, 1) = convert(varchar, #classroomCompletionDate#, 1)</isNotEmpty>
+            <isNotEmpty property="classroomCompletionSchoolNumber" prepend=" AND ">s.classroom_completion_school = #classroomCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="observationCompletionDate" prepend=" AND ">convert(varchar, s.observation_completion_date, 1) = convert(varchar, #observationCompletionDate#, 1)</isNotEmpty>
+            <isNotEmpty property="observationCompletionSchoolNumber" prepend=" AND ">s.observation_completion_school = #observationCompletionSchoolNumber#</isNotEmpty>
+            <isNotEmpty property="schoolFk" prepend=" AND ">s.school_fk = #schoolFk#</isNotEmpty>
+        </dynamic>
+    </statement>
+    
+    <statement  id="deleteObservation">                                
+        DELETE FROM student_observation WHERE observation_pk = #timePk#
+    </statement>
+    
+    <statement  id="deleteTraining">                                
+        DELETE FROM student_training WHERE training_pk = #timePk#
+    </statement>
+    
+    <statement  id="deleteBehindTheWheel">                                
+        DELETE FROM student_btw WHERE btw_pk = #timePk#
+    </statement>
+    
+    <statement id="insertObservation">
+        INSERT INTO student_observation(start_time,end_time,instructor_fk,vehicle_fk,student_fk,classroom_fk, observation_userid, observation_datestamp
+        <dynamic>
+            <isNotEmpty property="branchFk" prepend=" , ">branch_fk</isNotEmpty>
+        </dynamic>
+            )
+        VALUES(#observationStartTime#,#observationEndTime#,#instructorFk#,#vehicleFk#,#studentFk#,#classroomFk#, #observation_userid#, #observation_datestamp#
+        <dynamic>
+            <isNotEmpty property="branchFk" prepend=" , ">#branchFk#</isNotEmpty>
+        </dynamic>
+        )
+    </statement>
+    
+    <statement id="updateBehindTheWheel">
+        UPDATE student_btw SET 
+        start_time = #btwStartTime#,
+        end_time = #btwEndTime#,
+        instructor_fk = #instructorFk#,
+        vehicle_fk = #vehicleFk#,
+        student_fk = #studentFk#,
+        branch_fk = #branchFk#,
+        btw_userid = #btw_userid#,
+        btw_datestamp = #btw_datestamp#
+        WHERE btw_pk = #timePk#
+    </statement>
+    
+    <statement id="updateObservation">
+        UPDATE student_observation SET
+        start_time = #observationStartTime#,
+        end_time = #observationEndTime#,
+        instructor_fk = #instructorFk#,
+        vehicle_fk = #vehicleFk#,
+        student_fk = #studentFk#,
+        classroom_fk = #classroomFk#,
+        branch_fk = #branchFk#,
+        observation_userid = #observation_userid#,
+        observation_datestamp = #observation_datestamp#
+        WHERE observation_pk = #timePk#
+    </statement>
+    
+    <statement id="updateTraining">
+        UPDATE student_training SET
+        section = #section#,
+        start_time = #trainingStartTime#,
+        end_time = #trainingEndTime#,
+        instructor_fk = #instructorFk#,
+        student_fk = #studentFk#,
+        classroom_fk = #classroomFk#,
+        branch_fk = #branchFk#,
+        training_userid = #training_userid#,
+        training_datestamp = #training_datestamp#
+        WHERE training_pk = #timePk#
+    </statement>
+    
+    <statement id="updateStudentInformation">
+        UPDATE student SET
+        firstname = upper(rtrim(#firstName#)),
+        lastname = upper(rtrim(#lastName#)),
+        dob = #dob#,
+        homephone = #homePhone#
+        <dynamic>
+            <isNotEmpty property="middleName" prepend=" , "> middlename = upper(rtrim(#middleName#))</isNotEmpty>
+            <isEmpty property="middleName" prepend=" , "> middlename = ' '</isEmpty>
+            <isNotEmpty property="address1" prepend=" , "> address1 = upper(rtrim(#address1#))</isNotEmpty>
+            <isNotEmpty property="address2" prepend=" , "> address2 = upper(rtrim(#address2#))</isNotEmpty>
+            <isNotEmpty property="city" prepend=" , "> city = upper(rtrim(#city#))</isNotEmpty>
+            <isNotEmpty property="state" prepend=" , "> state = upper(rtrim(#state#))</isNotEmpty>
+            <isNotEmpty property="zip" prepend=" , "> zip = #zip#</isNotEmpty>
+            <isNotEmpty property="fileNumber"  prepend=", ">file_number = upper(rtrim(#fileNumber#))</isNotEmpty>
+        </dynamic>
+        WHERE student_pk = #studentPk#
+    </statement>
+        
+    <statement id="insertBehindTheWheel">
+        INSERT INTO student_btw(start_time,end_time,instructor_fk,vehicle_fk,student_fk,classroom_fk, btw_userid, btw_datestamp
+        <dynamic>
+            <isNotEmpty property="branchFk" prepend=" , ">branch_fk</isNotEmpty>
+        </dynamic>
+            )
+        VALUES(#btwStartTime#,#btwEndTime#,#instructorFk#,#vehicleFk#,#studentFk#,#classroomFk#, #btw_userid#, #btw_datestamp#<dynamic>
+            <isNotEmpty property="branchFk" prepend=" , ">#branchFk#</isNotEmpty>
+        </dynamic>
+        )
+    </statement> 
+    
+    <statement id="insertTraining">
+        INSERT INTO student_training(section,start_time,end_time,instructor_fk,student_fk,classroom_fk, training_userid, training_datestamp
+        <dynamic>
+            <isNotEmpty property="branchFk" prepend=" , ">branch_fk</isNotEmpty>
+        </dynamic>
+            )
+        VALUES(#section#,#trainingStartTime#,#trainingEndTime#,#instructorFk#,#studentFk#,#classroomFk#, #training_userid#, #training_datestamp#
+        <dynamic>
+            <isNotEmpty property="branchFk" prepend=" , ">#branchFk#</isNotEmpty>
+        </dynamic>
+        )
+    </statement>
+    
+    <statement id="getCommercialObservation" resultMap="commercial_times_vehicle_result">
+        SELECT s.observation_pk as timePk,s.student_fk,s.classroom_fk,s.start_time,s.end_time,s.instructor_fk, s.vehicle_fk, s.branch_fk,
+        substring(convert(varchar, s.start_time, 114), 1, 5) as observationStartTime,
+        substring(convert(varchar, s.end_time, 114), 1, 5) as observationEndTime,
+        s.create_date,
+        p.firstname + ' '+ p.lastname as instructorFullName,
+        isnull((select b.address1 from branch b where b.branch_pk = s.branch_fk),'Main Office') as branchName,
+        v.plate + ' - ' + v.state as vehicleFullDesc,
+        (SELECT distinct count(*) from student_observation where left(convert(varchar, SYSDATETIME(), 120), 10) = left(convert(varchar, create_date, 120), 10) and observation_pk = s.observation_pk) as editable,
+        s.observation_userid,
+        s.observation_datestamp
+        FROM student_observation s, person p, vehicle v
+        WHERE
+        p.person_pk = s.instructor_fk AND
+        v.vehicle_pk = s.vehicle_fk 
+        <dynamic>
+            <isNotEmpty property="studentPk" prepend=" AND ">s.student_fk = #studentPk#</isNotEmpty>
+            <isNotEmpty property="classroomPk" prepend=" AND ">s.classroom_fk = #classroomPk#</isNotEmpty>
+            <isNotEmpty property="timePk" prepend=" AND ">s.observation_pk = #timePk#</isNotEmpty>
+        </dynamic>
+        order by s.start_time
+    </statement>
+    
+    <statement id="getCommercialBehindTheWheel" resultMap="commercial_behind_the_wheel_result">
+        SELECT s.btw_pk as timePk,s.student_fk,s.classroom_fk,s.start_time,s.end_time,s.instructor_fk,s.vehicle_fk,s.branch_fk,
+        substring(convert(varchar, s.start_time, 114), 1, 5) as behindTheWheelStartTime,
+        substring(convert(varchar, s.end_time, 114), 1, 5) as behindTheWheelEndTime,
+        s.create_date,
+        p.firstname + ' ' + p.lastname as instructorFullName,
+        isnull((select b.address1 from branch b where b.branch_pk = s.branch_fk),'Main Office') as branchName,
+        v.plate + ' - ' + v.state as vehicleFullDesc,
+        (SELECT distinct count(*) from student_btw where left(convert(varchar, SYSDATETIME(), 120), 10) = left(convert(varchar, create_date, 120), 10) and btw_pk = s.btw_pk) as editable,
+        s.btw_userid,
+        s.btw_datestamp
+        FROM student_btw s, person p, vehicle v
+        WHERE
+        p.person_pk = s.instructor_fk AND
+        v.vehicle_pk = s.vehicle_fk 
+        <dynamic>
+            <isNotEmpty property="studentPk" prepend=" AND ">s.student_fk = #studentPk#</isNotEmpty>
+            <isNotEmpty property="classroomPk" prepend=" AND ">s.classroom_fk = #classroomPk#</isNotEmpty>
+            <isNotEmpty property="timePk" prepend=" AND ">s.btw_pk = #timePk#</isNotEmpty>
+        </dynamic>
+        order by s.start_time
+    </statement>
+    
+    <statement id="getCommercialTraining" resultMap="commercial_times_section_result">
+        SELECT s.training_pk as timePk,s.student_fk,s.classroom_fk,s.section,s.start_time,s.end_time,s.instructor_fk, s.branch_fk,
+        substring(convert(varchar, s.start_time, 114), 1, 5) as trainingStartTime,
+        substring(convert(varchar, s.end_time, 114), 1, 5) as trainingEndTime,
+        s.create_date,
+        isnull((select b.address1 from branch b where b.branch_pk = s.branch_fk),'Main Office') as branchName,
+        p.firstname + ' ' + p.lastname as instructorFullName,
+        (SELECT distinct count(*) from student_training where left(convert(varchar, SYSDATETIME(), 120), 10) = left(convert(varchar, create_date, 120), 10) and training_pk = s.training_pk) as editable,
+        s.training_userid,
+        s.training_datestamp
+        FROM student_training s, person p
+        WHERE
+        p.person_pk = s.instructor_fk
+        <dynamic>
+            <isNotEmpty property="studentPk" prepend=" AND ">s.student_fk = #studentPk#</isNotEmpty>
+            <isNotEmpty property="classroomPk" prepend=" AND ">s.classroom_fk = #classroomPk#</isNotEmpty>
+            <isNotEmpty property="timePk" prepend=" AND ">s.training_pk = #timePk#</isNotEmpty>
+        </dynamic>
+        order by s.start_time
+    </statement>
+    
+    <statement id="getCommercialRoad" resultMap="commercial_times_road_result">
+        SELECT c.completionroad_pk as timePk, c.student_fk, c.start_time, c.end_time, c.completion_date,
+        isnull(c.road_score,101) as road_score, c.route_number, c.route_area, c.roadinstructor_fk,
+        isnull(p.firstname + ' ' + p.lastname,'DL Instructor') as instructorFullName,
+        isnull(v.plate + ' - ' + v.state,'DL Vehicle') as vehicleFullDesc,
+        c.vehicle_fk as vehicleFk,
+        s.name as schoolName,
+        c.notes, c.notes_userid,
+        c.school_userid, c.school_datestamp,
+        c.completion_date_userid, c.completion_date_datestamp,
+        c.score_userid, c.score_datestamp,
+        c.instructor_userid, c.instructor_datestamp,
+        c.road_userid,
+        c.road_datestamp
+        FROM completion_road c
+            LEFT JOIN vehicle v ON c.vehicle_fk = v.vehicle_pk
+            LEFT JOIN person p ON c.roadinstructor_fk = p.person_pk
+            LEFT JOIN school s ON c.school_number = s.number
+        WHERE
+        c.completionroad_pk is not null and
+        c.start_time is not null and
+        c.end_time is not null
+        <dynamic>
+            <isNotEmpty property="studentFk" prepend=" AND ">c.student_fk = #studentFk#</isNotEmpty>
+         <!--   <isNotEmpty property="schoolFk" prepend=" AND ">c.school_number = (select number from school where school_pk = #schoolFk#)</isNotEmpty>
+         -->
+        </dynamic>
+        order by c.completion_date
+    </statement>
+    
+    <statement id="getThirdPartyTraining" resultMap="thirdparty_times_section_result">
+        SELECT s.training_pk as timePk,s.student_fk,s.classroom_fk,s.section,s.start_time,s.end_time, 
+        isnull((select b.address1 from branch b where b.branch_pk = s.branch_fk),'Main Office') as branchName,
+        p.firstname + ' ' + p.lastname as instructorFullName
+        FROM student_training s, person p
+        WHERE
+        p.person_pk = s.instructor_fk
+        <dynamic>
+            <isNotEmpty property="studentPk" prepend=" AND ">s.student_fk = #studentPk#</isNotEmpty>
+            <isNotEmpty property="classroomPk" prepend=" AND ">s.classroom_fk = #classroomPk#</isNotEmpty>
+        </dynamic>
+        order by s.start_time
+    </statement>
+    
+    <statement id="getThirdPartyBehindTheWheel" resultMap="thirdparty_times_vehicle_result">
+        SELECT s.btw_pk as timePk,s.student_fk,s.classroom_fk,s.start_time,s.end_time,
+        p.firstname + ' ' + p.lastname as instructorFullName,
+        isnull((select b.address1 from branch b where b.branch_pk = s.branch_fk),'Main Office') as branchName,
+        v.plate + ' - ' + v.state as vehicleFullDesc
+        FROM student_btw s, person p, vehicle v
+        WHERE
+        p.person_pk = s.instructor_fk AND
+        v.vehicle_pk = s.vehicle_fk 
+        <dynamic>
+            <isNotEmpty property="studentPk" prepend=" AND ">s.student_fk = #studentPk#</isNotEmpty>
+            <isNotEmpty property="classroomPk" prepend=" AND ">s.classroom_fk = #classroomPk#</isNotEmpty>
+        </dynamic>
+        order by s.start_time
+    </statement>
+    
+    <statement id="updateStudentOcsScore">
+        UPDATE student SET
+        ocs_score = #ocsScore#,
+        ocs_score_userid = #ocs_score_userid#,
+        ocs_score_datestamp = #ocs_score_datestamp#
+        WHERE student_pk = #studentPk#
+    </statement>
+    
+    <statement id="updateStudentNote">
+        UPDATE student SET
+        note = #note#
+        WHERE student_pk = #studentPk#
+    </statement>
+    
+    <statement id="updateStudentRoadTestCompletionDate">
+        UPDATE student SET
+        road_completion_date = null
+        WHERE student_pk = #studentPk#
+    </statement>
+
+	<statement id="checkNullStudentNumber" resultClass="java.lang.Long">
+		select student_number from student
+		where student_pk = #studentPk#
+	</statement>
+	
+    <statement id="getStudentAuditCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM student_audit s
+        WHERE
+        s.student_fk = #studentFk#
+    </statement>
+	
+    <statement id="insertStudentAudit">
+        INSERT INTO student_audit(
+        	student_fk, 
+        	writtenTestScore_userid, writtenTestScore_datestamp,
+        	writtenCompletionDate_userid, writtenCompletionDate_datestamp,  
+        	writtenCompletionSchool_userid, writtenCompletionSchool_datestamp,
+        	classroomCompletionDate_userid, classroomCompletionDate_datestamp,
+        	classroomCompletionSchool_userid, classroomCompletionSchool_datestamp,
+        	observationCompletionDate_userid, observationCompletionDate_datestamp,
+        	observationCompletionSchool_userid, observationCompletionSchool_datestamp,
+        	btwCompletionDate_userid, btwCompletionDate_datestamp,
+        	btwCompletionSchool_userid, btwCompletionSchool_datestamp,
+        	roadInstructor_userid, roadInstructor_datestamp,
+        	roadCompletionDate_userid, roadCompletionDate_datestamp,
+        	roadScore_userid, roadScore_datestamp,
+        	roadCompletionSchool_userid, roadCompletionSchool_datestamp
+        )
+        VALUES(
+        	#studentPk#, 
+        	#studentAudit.writtenTestScore_userid#, #studentAudit.writtenTestScore_datestamp#,
+        	#studentAudit.writtenCompletionDate_userid#, #studentAudit.writtenCompletionDate_datestamp#,  
+        	#studentAudit.writtenCompletionSchool_userid#, #studentAudit.writtenCompletionSchool_datestamp#,
+        	#studentAudit.classroomCompletionDate_userid#, #studentAudit.classroomCompletionDate_datestamp#,
+        	#studentAudit.classroomCompletionSchool_userid#, #studentAudit.classroomCompletionSchool_datestamp#,
+        	#studentAudit.observationCompletionDate_userid#, #studentAudit.observationCompletionDate_datestamp#,
+        	#studentAudit.observationCompletionSchool_userid#, #studentAudit.observationCompletionSchool_datestamp#,
+        	#studentAudit.btwCompletionDate_userid#, #studentAudit.btwCompletionDate_datestamp#,
+        	#studentAudit.btwCompletionSchool_userid#, #studentAudit.btwCompletionSchool_datestamp#,
+        	#studentAudit.roadInstructor_userid#, #studentAudit.roadInstructor_datestamp#,
+        	#studentAudit.roadCompletionDate_userid#, #studentAudit.roadCompletionDate_datestamp#,
+        	#studentAudit.roadScore_userid#, #studentAudit.roadScore_datestamp#,
+        	#studentAudit.roadCompletionSchool_userid#, #studentAudit.roadCompletionSchool_datestamp#
+        )
+    </statement> 
+    
+   <statement id="updateStudentAudit">
+        UPDATE student_audit SET
+        	student_fk = #studentPk#
+		<dynamic>
+            <isNotEmpty property="studentAudit.writtenTestScore_userid" prepend=" , ">writtenTestScore_userid = #studentAudit.writtenTestScore_userid#, writtenTestScore_datestamp = #studentAudit.writtenTestScore_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.writtenCompletionDate_userid" prepend=" , ">writtenCompletionDate_userid = #studentAudit.writtenCompletionDate_userid#, writtenCompletionDate_datestamp = #studentAudit.writtenCompletionDate_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.writtenCompletionSchool_userid" prepend=" , ">writtenCompletionSchool_userid = #studentAudit.writtenCompletionSchool_userid#, writtenCompletionSchool_datestamp = #studentAudit.writtenCompletionSchool_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.classroomCompletionDate_userid" prepend=" , ">classroomCompletionDate_userid = #studentAudit.classroomCompletionDate_userid#, classroomCompletionDate_datestamp = #studentAudit.classroomCompletionDate_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.classroomCompletionSchool_userid" prepend=" , ">classroomCompletionSchool_userid = #studentAudit.classroomCompletionSchool_userid#, classroomCompletionSchool_datestamp = #studentAudit.classroomCompletionSchool_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.observationCompletionDate_userid" prepend=" , ">observationCompletionDate_userid = #studentAudit.observationCompletionDate_userid#, observationCompletionDate_datestamp = #studentAudit.observationCompletionDate_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.observationCompletionSchool_userid" prepend=" , ">observationCompletionSchool_userid = #studentAudit.observationCompletionSchool_userid#, observationCompletionSchool_datestamp = #studentAudit.observationCompletionSchool_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.btwCompletionDate_userid" prepend=" , ">btwCompletionDate_userid = #studentAudit.btwCompletionDate_userid#, btwCompletionDate_datestamp = #studentAudit.btwCompletionDate_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.btwCompletionSchool_userid" prepend=" , ">btwCompletionSchool_userid = #studentAudit.btwCompletionSchool_userid#, btwCompletionSchool_datestamp = #studentAudit.btwCompletionSchool_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.roadInstructor_userid" prepend=" , ">roadInstructor_userid = #studentAudit.roadInstructor_userid#, roadInstructor_datestamp = #studentAudit.roadInstructor_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.roadCompletionDate_userid" prepend=" , ">roadCompletionDate_userid = #studentAudit.roadCompletionDate_userid#, roadCompletionDate_datestamp = #studentAudit.roadCompletionDate_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.roadScore_userid" prepend=" , ">roadScore_userid = #studentAudit.roadScore_userid#, roadScore_datestamp = #studentAudit.roadScore_datestamp#</isNotEmpty>
+            <isNotEmpty property="studentAudit.roadCompletionSchool_userid" prepend=" , ">roadCompletionSchool_userid = #studentAudit.roadCompletionSchool_userid#, roadCompletionSchool_datestamp = #studentAudit.roadCompletionSchool_datestamp#</isNotEmpty>
+        </dynamic>
+        WHERE student_fk = #studentPk#
+    </statement>
+    
+</sqlMap>

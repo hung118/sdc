@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RoadTesterSQL">
+    
+    <resultMap id="road_tester_label_value"  class="gov.utah.dts.sdc.model.LabelValue">
+        <result property="value"					  column="value"/>
+        <result property="label"                      column="label"/>
+    </resultMap>
+    
+    <statement id="selectRoadTestersLabelValue" resultMap="road_tester_label_value">
+    SELECT a.*
+    FROM
+    (SELECT r.roadinstructor_fk AS value, p.firstname + ' ' + p.lastname AS label
+    FROM school s, completion_road r, person p
+    WHERE
+    <dynamic>
+    <isNotEmpty property="schoolType">s.school_type = #schoolType# AND</isNotEmpty>
+    <isNotEmpty property="schoolList">s.number in <iterate property="schoolList" open="(" close=")" conjunction=",">#schoolList[]#</iterate> AND</isNotEmpty>          
+    </dynamic>
+    r.school_number = s.number AND
+    <dynamic><isNotEmpty property="personPk">r.roadinstructor_fk = #personPk# AND</isNotEmpty></dynamic>
+    p.person_pk = r.roadinstructor_fk
+    UNION
+    SELECT ps.person_fk AS value, p.firstname + ' ' + p.lastname AS label
+    FROM school s, person_school ps, person p
+    WHERE
+    <dynamic>
+    <isNotEmpty property="schoolType">s.school_type = #schoolType# AND</isNotEmpty>
+    <isNotEmpty property="schoolList">s.school_pk in <iterate property="schoolList" open="(" close=")" conjunction=",">#schoolList[]#</iterate> AND</isNotEmpty>          
+    </dynamic>
+    ps.school_fk = s.school_pk AND
+    <dynamic><isNotEmpty property="personPk">ps.person_fk = #personPk# AND</isNotEmpty></dynamic>
+    p.person_pk = ps.person_fk
+    ) a
+    ORDER BY a.label
+    </statement>
+
+    <statement id="selectSchoolLabelValue" resultMap="road_tester_label_value">
+ 	SELECT a.school_pk AS value, a.name AS label
+	FROM
+	(SELECT s.school_pk, s.name FROM school s, completion_road r
+	 WHERE s.deleted = 0 AND
+	 <dynamic><isNotEmpty property="schoolType">s.school_type = #schoolType# AND</isNotEmpty></dynamic>
+	 r.school_number = s.number
+	 <dynamic><isNotEmpty property="personPk" prepend=" AND ">r.roadinstructor_fk = #personPk#</isNotEmpty></dynamic>
+	 UNION
+	 SELECT s.school_pk, s.name FROM school s, person_school p
+	 WHERE s.deleted = 0 AND
+	 <dynamic><isNotEmpty property="schoolType">s.school_type = #schoolType# AND</isNotEmpty></dynamic>
+	 p.school_fk = s.school_pk
+	 <dynamic><isNotEmpty property="personPk" prepend=" AND ">p.person_fk = #personPk#</isNotEmpty></dynamic>
+	) a
+	order by a.name
+    </statement>
+    
+
+</sqlMap>

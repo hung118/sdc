@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ClassroomSQL">
+    
+    <!-- Remove cache (?) to fix duplicate student number in statement classroomStudentNumber -->
+    <cacheModel id="classroom_cache" type="MEMORY">
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "classroomInsert" />
+        <flushOnExecute statement= "classroomUpdate" />
+        <flushOnExecute statement= "classroomDelete" />
+        <flushOnExecute statement= "classroomStudentAdd" />
+        <flushOnExecute statement= "classroomStudentRemove" />
+        <property name="reference-type" value="SOFT" />
+    </cacheModel>
+    
+    <resultMap id="classroom_result"  class="gov.utah.dts.sdc.model.Classroom">
+        <result property="classroomPk"                column="classroom_pk"/>
+        <result property="classroomNumber"            column="classroomNumber"/>
+        <result property="schoolName"                 column="schoolName"/>
+        <result property="schoolFk"                   column="school_fk"/>
+        <result property="alias"                      column="alias"/>
+        <result property="classroomClosed"            column="closed"/>
+        <result property="timestamp"                  column="timestamp"/>
+     </resultMap>
+    
+    <resultMap id="classroom_school_result"  class="gov.utah.dts.sdc.model.Classroom">
+        <result property="classroomPk"                column="classroom_pk"/>
+        <result property="classroomNumber"            column="classroomNumber"/>
+        <result property="schoolName"                 column="schoolName"/>
+        <result property="homeStudy"                  column="home_study"/>
+        <result property="schoolFk"                   column="school_fk"/>
+        <result property="alias"                      column="alias"/>
+        <result property="classroomClosed"            column="closed"/>
+        <result property="timestamp"                  column="timestamp"/>
+     </resultMap>
+     
+     <resultMap id="classroom_student_result"  class="gov.utah.dts.sdc.model.Classroom">
+        <result property="classroomPk"                column="classroom_fk"/>
+        <result property="studentPk"                  column="student_fk"/>
+        <result property="schoolFk"                   column="school_fk"/>
+        <result property="alias"                      column="alias"/>
+        <result property="schoolName"                 column="schoolName"/>
+        <result property="classroomClosed"            column="closed"/>
+     </resultMap>
+     
+      <resultMap id="classroom_branch_result"  class="gov.utah.dts.sdc.model.Branch">
+        <result property="branchPk"                  column="branch_pk"/>
+        <result property="address1"                  column="address1"/>
+     </resultMap>
+     
+     <statement id="classroomSchoolSearch" resultMap="classroom_school_result" cacheModel="classroom_cache">
+        SELECT
+        c.classroom_pk,c.alias,c.classroom_pk as classroomNumber,c.closed,c.timestamp,
+        c.school_fk, s.home_study,COALESCE(s.name, 'SCHOOL DELETED') as schoolName 
+        FROM classroom_student cs
+        LEFT JOIN classroom c ON
+        cs.classroom_fk = c.classroom_pk
+        LEFT JOIN school s ON
+        c.school_fk = s.school_pk
+        WHERE
+        c.classroom_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="classroomClosed"  prepend=" AND ">c.closed = '0'</isNotEmpty>
+            <isNotEmpty property="classroomPk"  prepend=" AND ">c.classroom_pk = #classroomPk#</isNotEmpty>          
+            <isNotEmpty property="schoolFk" prepend=" AND ">c.school_fk = #schoolFk#</isNotEmpty>
+            <isNotEmpty property="studentFk" prepend=" AND ">cs.student_fk = #studentFk#</isNotEmpty>
+        </dynamic>
+        ORDER BY schoolName, alias
+    </statement>
+     
+    
+    <statement id="classroomEqualsCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM classroom_student c
+        WHERE
+        c.classroom_fk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="classroomFk"  prepend=" AND ">c.classroom_fk = #classroomFk#</isNotEmpty>  
+             <isNotEmpty property="studentFk"  prepend=" AND ">c.student_fk = #studentFk#</isNotEmpty>
+        </dynamic>
+    </statement>
+    
+    <statement id="classroomSearchEquals" resultMap="classroom_result" cacheModel="classroom_cache">
+        SELECT
+        c.classroom_pk,c.alias,c.classroom_pk as classroomNumber,c.closed,c.timestamp,
+        c.school_fk, COALESCE(s.name, 'SCHOOL DELETED') as schoolName 
+        FROM classroom c
+        LEFT JOIN school s ON
+        c.school_fk = s.school_pk
+        WHERE
+        c.classroom_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="classroomClosed"  prepend=" AND ">c.closed = #classroomClosed#</isNotEmpty>
+            <isNotEmpty property="classroomPk"  prepend=" AND ">c.classroom_pk = #classroomPk#</isNotEmpty>          
+            <isNotEmpty property="schoolFk" prepend=" AND ">c.school_fk = #schoolFk#</isNotEmpty>
+        </dynamic>
+        order by c.classroom_pk desc
+    </statement>
+
+    <statement id="classroomSearchBeginsWith" resultMap="classroom_result" cacheModel="classroom_cache">
+        SELECT
+        c.classroom_pk,c.alias,c.classroom_pk as classroomNumber,c.closed,c.timestamp,
+        c.school_fk, COALESCE(s.name, 'SCHOOL DELETED') as schoolName 
+        FROM classroom c
+        LEFT JOIN school s ON
+        c.school_fk = s.school_pk
+        WHERE
+        c.classroom_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="groupName"  prepend=" AND ">upper(rtrim(c.alias)) like upper(rtrim(#groupName#))</isNotEmpty>          
+            <isNotEmpty property="schoolFk" prepend=" AND ">c.school_fk = #schoolFk#</isNotEmpty>
+            <isNotEmpty property="closed"  prepend=" AND ">c.closed = #closed#</isNotEmpty>
+        </dynamic>
+        order by schoolName, c.alias
+    </statement>
+    
+    <statement id="classroomInsert">
+        INSERT INTO classroom
+        (school_fk,alias)
+        VALUES(#schoolFk#,#alias#)
+    </statement> 
+    
+    <statement id="classroomUpdate">
+        UPDATE classroom SET
+       <dynamic prepend=" ">
+           <isNotEmpty property="classroomClosed" prepend=" , ">closed = #classroomClosed#</isNotEmpty>
+        </dynamic>
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="schoolPk" prepend=" , ">school_fk = #schoolPk#</isNotEmpty>
+            <isNotEmpty property="classroomPk" prepend=" , ">classroom_pk = #classroomPk#</isNotEmpty>
+       </dynamic>
+    </statement>
+    
+    <statement  id="classroomDelete">                                
+        UPDATE classroom SET closed = #closed# WHERE classroom_pk = #classroomPk#
+    </statement>
+    
+    <statement id="classroomStudentRemove">   
+        <dynamic prepend=" DELETE FROM classroom_student WHERE ">
+            <isNotEmpty property="studentFk" prepend=" AND ">student_fk = #studentFk#</isNotEmpty>
+            <isNotEmpty property="classroomPk" prepend=" AND ">classroom_fk = #classroomPk#</isNotEmpty>
+       </dynamic>
+    </statement>
+    
+    <statement  id="classroomStudentAdd">                                
+        INSERT INTO classroom_student 
+        (classroom_fk,student_fk)
+        VALUES 
+        (#classroomFk#,#studentFk#)
+    </statement>
+    
+    <statement id="classroomStudentSearch" resultMap="classroom_student_result" cacheModel="classroom_cache">
+        SELECT cs.student_fk, c.alias, cs.classroom_fk, c.closed, c.school_fk, COALESCE(s.name, 'SCHOOL DELETED') as schoolName
+        FROM classroom_student cs
+        LEFT JOIN classroom c ON c.classroom_pk = cs.classroom_fk
+        LEFT JOIN school s ON c.school_fk = s.school_pk
+        WHERE
+        c.closed = '0'
+        <dynamic>
+            <isNotEmpty property="studentPk" prepend=" AND ">cs.student_fk = #studentPk#</isNotEmpty>
+        </dynamic>
+    </statement>
+
+    <statement id="classroomStudentNumber" resultClass="java.lang.Long">
+         SELECT
+             replace(str(s.number) +
+             str(year(sysdatetime())) + str(month(sysdatetime())) +
+             str(IDENT_CURRENT('student') + IDENT_INCR('student')), ' ', '')
+             as studentNumber
+        FROM classroom c, school s
+        WHERE 
+        c.classroom_pk = #classroomFk# AND
+        c.school_fk = s.school_pk
+    </statement>
+    
+    <statement id="getBranchList" resultMap="classroom_branch_result" cacheModel="classroom_cache">
+        SELECT
+        b.branch_pk,b.address1
+        FROM classroom c,branch b
+        WHERE
+        c.school_fk = b.school_fk AND
+        c.classroom_pk =  #classroomPk#
+    </statement>
+    
+     <statement id="hideClassroomStudent">
+        UPDATE classroom_student SET
+        hide = #hide#
+        WHERE student_fk = #studentFk# AND classroom_fk = #classroomPk#
+    </statement>
+    
+ </sqlMap>

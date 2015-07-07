@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="BranchSQL">
+    
+    <cacheModel id="branch_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "branchInsert" />
+        <flushOnExecute statement= "branchUpdate" />
+        <flushOnExecute statement= "branchDelete" />
+        <flushOnExecute statement= "schoolInsert" />
+        <flushOnExecute statement= "schoolUpdate" />
+        <flushOnExecute statement= "schoolDelete" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel>
+
+   <resultMap id="branch_result"  class="gov.utah.dts.sdc.model.Branch">
+        <result property="branchPk"                   column="branch_pk"/>
+        <result property="schoolFk"                   column="school_fk"/>
+        <result property="address1"                   column="address1"/>
+        <result property="address2"                   column="address2"/>
+        <result property="city"                       column="city"/>
+        <result property="state"                      column="state"/>
+        <result property="zip"                        column="zip"/>
+        <result property="businessPhone"              column="businessPhone"/>
+        <result property="businessPhone2"             column="businessPhone2"/>
+        <result property="timestamp"                  column="timestamp"/>
+        <result property="updatedBy"                  column="updatedby"/>
+    </resultMap>
+    
+    <statement id="branchEqualsCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM branch s
+        WHERE
+        s.branch_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="branchPk"  prepend=" AND ">s.branch_pk = #branchPk#</isNotEmpty>          
+        </dynamic>
+    </statement>
+    
+    <statement id="branchSearchEquals" resultMap="branch_result" cacheModel="branch_cache">
+        SELECT
+        s.branch_pk,s.school_fk,s.address1,s.address2,s.city,s.state,s.zip,s.businessPhone,
+        s.businessPhone2,s.timestamp, s.updatedby
+        FROM branch s
+        WHERE
+        s.branch_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="branchPk"  prepend=" AND ">s.branch_pk = #branchPk#</isNotEmpty>          
+            <isNotEmpty property="schoolFk" prepend=" AND ">s.school_fk = #schoolFk#</isNotEmpty>
+        </dynamic>
+        order by s.school_fk, s.city
+    </statement>
+    
+    <statement id="branchInsert">
+        INSERT INTO branch(
+        school_fk,address1,city,state,zip,businessPhone
+        <dynamic>
+            <isNotEmpty property="address2" prepend=" , ">address2</isNotEmpty>
+            <isNotEmpty property="businessPhone2" prepend=" , ">businessphone2</isNotEmpty>
+            <isNotEmpty property="updatedBy" prepend=" , ">updatedby</isNotEmpty>
+        </dynamic>
+        )
+        VALUES(
+        #schoolFk#,upper(rtrim(#address1#)),upper(rtrim(#city#)),
+        upper(rtrim(#state#)),#zip#,#businessPhone#
+        <dynamic>
+            <isNotEmpty property="address2" prepend=" , ">upper(rtrim(#address1#))</isNotEmpty>
+            <isNotEmpty property="businessPhone2" prepend=" , ">#businessPhone2#</isNotEmpty>
+            <isNotEmpty property="updatedBy" prepend=" , ">upper(rtrim(#updatedBy#))</isNotEmpty>
+        </dynamic>
+        )
+    </statement> 
+    
+    <statement id="branchUpdate">
+        <dynamic prepend="UPDATE branch SET ">
+            <isNotEmpty property="address1" prepend=" , ">address1 = upper(rtrim(#address1#))</isNotEmpty>
+            <isNotEmpty property="address2" prepend=" , ">address2 = upper(rtrim(#address2#))</isNotEmpty>
+            <isNotEmpty property="city" prepend=" , ">city = upper(rtrim(#city#))</isNotEmpty>
+            <isNotEmpty property="state" prepend=" , ">state = upper(rtrim(#state#))</isNotEmpty>
+            <isNotEmpty property="zip" prepend=" , ">zip = #zip#</isNotEmpty>
+            <isNotEmpty property="businessPhone" prepend=" , ">businessphone = #businessPhone#</isNotEmpty>
+            <isNotEmpty property="businessPhone2" prepend=" , ">businessphone2 = #businessPhone2#</isNotEmpty>
+            <isNotEmpty property="updatedBy" prepend=" , ">updatedby = upper(rtrim(#updatedBy#))</isNotEmpty>
+            WHERE branch_pk = #branchPk#
+        </dynamic>
+    </statement>
+    
+    <statement  id="branchDelete">                                
+        <dynamic prepend=" DELETE FROM branch WHERE ">
+            <isNotEmpty property="branchPk"  prepend=" AND ">branch_pk = #branchPk#</isNotEmpty>          
+            <isNotEmpty property="schoolPk" prepend=" AND ">school_fk = #schoolPk#</isNotEmpty>
+        </dynamic>
+    </statement>
+</sqlMap>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- Field-Validator Syntax -->
+    <field name="currentPerson.lastName">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="person.lastName.required"/>
+        </field-validator>
+    </field>
+
+    <field name="currentPerson.dob">
+        <field-validator type="required">
+            <message key="person.dob.required"/>
+        </field-validator>
+        <field-validator type="date">
+        	<param name="min">01/01/1900</param>
+        	<param name="max">01/01/2100</param>
+            <message key="person.dob.invalid"/>
+        </field-validator>
+    </field>
+    
+    <field name="currentPerson.email">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="person.email.required"/>
+        </field-validator>
+    </field>
+
+    <field name="currentPerson.businessPhone">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="person.businessPhone.required"/>
+        </field-validator>
+    </field>
+    <field name="currentPerson.backgroundCheckDate">
+        <field-validator type="regex">
+            <param name="regex">
+                 (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    <field name="currentPerson.pdpCheckDate">
+        <field-validator type="regex">
+            <param name="regex">
+                 (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    <field name="currentPerson.instructorTrainingDate">
+        <field-validator type="regex">
+            <param name="regex">
+                 (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    <field name="currentStudent.licenseExpireDate">
+        <field-validator type="regex">
+            <param name="regex">
+                 (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+    <field name="currentPerson.dlHistoryDate">
+        <field-validator type="regex">
+            <param name="regex">
+                 (0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9][0-9][0-9][0-9])
+            </param>
+            <message key="registration.fieldFormat" />
+        </field-validator>
+    </field>
+</validators>

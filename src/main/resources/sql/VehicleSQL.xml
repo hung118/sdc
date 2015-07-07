@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="VehicleSQL">
+    
+    <cacheModel id="vehicle_cache" type="MEMORY" >
+        <flushInterval   hours="24"/>
+        <flushOnExecute statement= "vehicleInsert" />
+        <flushOnExecute statement= "vehicleUpdate" />
+        <flushOnExecute statement= "vehicleDelete" />
+        <property name="reference-type" value="WEAK" />
+    </cacheModel>
+    
+    <resultMap id="vehicle_result"  class="gov.utah.dts.sdc.model.Vehicle">
+        <result property="vehiclePk"                  column="vehicle_pk"/>
+        <result property="schoolFk"                   column="school_fk"/>
+        <result property="vehiclePlate"               column="plate"/>
+        <result property="vehicleState"               column="state"/>
+        <result property="schoolName"                 column="schoolName"/>
+        <result property="vehicleMake"                column="make"/>
+        <result property="vehicleYear"                column="year"/>
+        <result property="vehicleVin"                 column="vin"/>
+        <result property="insurancePolicy"            column="insurance_policy"/>
+        <result property="insuranceExpire"            column="insurance_expire"/>
+        <result property="insuranceCompany"           column="insurance_company"/>
+        <result property="insuranceAgent"             column="insurance_agent"/>
+        <result property="insurancePhone"             column="insurance_phone"/>
+        <result property="deleted"                    column="deleted"/>
+    </resultMap>
+    
+    <resultMap id="instructor_label_value"  class="gov.utah.dts.sdc.model.Vehicle">
+        <result property="vehiclePk"             column="vehicle_pk"/>
+        <result property="vehiclePlate"                   column="plate"/>
+    </resultMap>
+    
+    <resultMap id="vehicle_commercial_result"  class="gov.utah.dts.sdc.model.Vehicle">
+        <result property="vehiclePk"                   column="vehicle_pk"/>
+        <result property="vehiclePlate"                   column="plate"/>
+        <result property="vehicleState"                   column="state"/>
+    </resultMap>
+    
+    <statement id="vehicleEqualsCount" resultClass="java.lang.Integer">
+        SELECT count(*)
+        FROM vehicle p
+        WHERE
+        p.vehicle_pk IS NOT NULL
+        <dynamic>
+            <isNotEmpty property="vehiclePk"  prepend=" AND ">p.vehicle_pk = #vehiclePk#</isNotEmpty>          
+        <isNotEmpty property="vehiclePlate" prepend=" AND ">p.plate like upper(rtrim(#vehiclePlate#))</isNotEmpty></dynamic>
+    </statement>
+    
+    <statement id="vehicleSelect" resultMap="vehicle_result" cacheModel="vehicle_cache">
+        SELECT
+        v.vehicle_pk,v.school_fk,v.plate,v.state,s.name as schoolName,v.make,v.year,v.vin,
+        v.insurance_policy,v.insurance_expire,v.insurance_company,v.insurance_agent,v.insurance_phone,v.deleted
+        FROM vehicle v, school s
+        WHERE
+        <dynamic>
+            <isNotEmpty property="vehiclePk">v.vehicle_pk = #vehiclePk# AND</isNotEmpty>
+            <isNotEmpty property="schoolFk">v.school_fk = #schoolFk# AND</isNotEmpty>
+            <isNotEmpty property="deleted">v.deleted = #deleted# AND</isNotEmpty>
+        </dynamic>
+        s.school_pk = v.school_fk
+        order by schoolName, v.plate
+    </statement>
+
+    <statement id="vehicleSearchBeginsWith" resultMap="vehicle_result" cacheModel="vehicle_cache">
+        SELECT
+        v.vehicle_pk,v.school_fk,v.plate,v.state,s.name as schoolName,v.make,v.year,v.vin,
+        v.insurance_policy,v.insurance_expire,v.insurance_company,v.insurance_agent,v.insurance_phone,v.deleted
+        FROM vehicle v, school s
+        WHERE
+        <dynamic>
+            <isNotEmpty property="vehiclePlate">upper(rtrim(v.plate)) like upper(rtrim(#vehiclePlate#)) AND</isNotEmpty>
+            <isNotEmpty property="schoolFk">v.school_fk = #schoolFk# AND</isNotEmpty>
+            <isNotEmpty property="deleted">v.deleted = #deleted# AND</isNotEmpty>
+        </dynamic>
+        s.school_pk = v.school_fk
+        order by schoolName, v.plate
+    </statement>
+    
+    <statement id="vehicleInsert">
+        INSERT INTO vehicle(
+        school_fk,plate,state
+        <dynamic>
+            <isNotEmpty property="vehicleMake" prepend=" , ">make</isNotEmpty>
+            <isNotEmpty property="vehicleYear" prepend=" , ">year</isNotEmpty>
+            <isNotEmpty property="vehicleVin" prepend=" , ">vin</isNotEmpty>
+            <isNotEmpty property="insurancePolicy" prepend=" , ">insurance_policy</isNotEmpty>
+            <isNotEmpty property="insuranceExpire" prepend=" , ">insurance_expire</isNotEmpty>
+            <isNotEmpty property="insuranceCompany" prepend=" , ">insurance_company</isNotEmpty>
+            <isNotEmpty property="insuranceAgent" prepend=" , ">insurance_agent</isNotEmpty>
+            <isNotEmpty property="insurancePhone" prepend=" , ">insurance_phone</isNotEmpty>
+        </dynamic>
+        ,deleted
+        )
+        VALUES(
+        #schoolFk#,upper(rtrim(#vehiclePlate#)),upper(rtrim(#vehicleState#))
+        <dynamic>
+            <isNotEmpty property="vehicleMake" prepend=" , ">upper(rtrim(#vehicleMake#))</isNotEmpty>
+            <isNotEmpty property="vehicleYear" prepend=" , ">#vehicleYear#</isNotEmpty>
+            <isNotEmpty property="vehicleVin" prepend=" , ">upper(rtrim(#vehicleVin#))</isNotEmpty>
+            <isNotEmpty property="insurancePolicy" prepend=" , ">upper(rtrim(#insurancePolicy#))</isNotEmpty>
+            <isNotEmpty property="insuranceExpire" prepend=" , ">#insuranceExpire#</isNotEmpty>
+            <isNotEmpty property="insuranceCompany" prepend=" , ">upper(rtrim(#insuranceCompany#))</isNotEmpty>
+            <isNotEmpty property="insuranceAgent" prepend=" , ">upper(rtrim(#insuranceAgent#))</isNotEmpty>
+            <isNotEmpty property="insurancePhone" prepend=" , ">#insurancePhone#</isNotEmpty>
+        </dynamic>
+        ,0
+        )   
+    </statement> 
+    
+    <statement id="vehicleUpdate">
+        UPDATE vehicle
+        <dynamic prepend=" SET ">
+            <isNotEmpty property="vehiclePlate" prepend=" , ">plate = upper(rtrim(#vehiclePlate#))</isNotEmpty>
+            <isNotEmpty property="vehicleState" prepend=" , ">state = upper(rtrim(#vehicleState#))</isNotEmpty>
+            <isNotEmpty property="schoolFk" prepend=" , ">school_fk = #schoolFk#</isNotEmpty>
+            <isNotEmpty property="vehicleMake" prepend=" , ">make = upper(rtrim(#vehicleMake#))</isNotEmpty>
+            <isNotEmpty property="vehicleYear" prepend=" , ">year = #vehicleYear#</isNotEmpty>
+            <isNotEmpty property="vehicleVin" prepend=" , ">vin = upper(rtrim(#vehicleVin#))</isNotEmpty>
+            <isNotEmpty property="insurancePolicy" prepend=" , ">insurance_policy = upper(rtrim(#insurancePolicy#))</isNotEmpty>
+            <isNotEmpty property="insuranceExpire" prepend=" , ">insurance_expire = #insuranceExpire#</isNotEmpty>
+            <isNotEmpty property="insuranceCompany" prepend=" , ">insurance_company = upper(rtrim(#insuranceCompany#))</isNotEmpty>
+            <isNotEmpty property="insuranceAgent" prepend=" , ">insurance_agent = upper(rtrim(#insuranceAgent#))</isNotEmpty>
+            <isNotEmpty property="insurancePhone" prepend=" , ">insurance_phone = #insurancePhone#</isNotEmpty>
+        </dynamic>
+        WHERE vehicle_pk = #vehiclePk#
+    </statement>
+    
+    <statement id="vehicleDelete">    
+        UPDATE vehicle
+        <dynamic prepend=" SET ">
+            <isNotEmpty property="deleted" prepend=" , ">deleted = #deleted#</isNotEmpty>
+        </dynamic> 
+        <dynamic prepend=" WHERE ">   
+            <isNotEmpty property="vehiclePk" prepend=" AND ">vehicle_pk = #vehiclePk#</isNotEmpty>         
+            <isNotEmpty property="schoolPk" prepend=" AND ">school_fk = #schoolPk#</isNotEmpty>   
+        </dynamic>
+    </statement>
+    
+    <statement id="classroomVehicleSearch" resultMap="vehicle_commercial_result" cacheModel="vehicle_cache">
+        SELECT v.vehicle_pk,v.plate,v.state
+        FROM classroom c
+        INNER JOIN vehicle v ON
+        c.school_fk = v.school_fk
+        WHERE
+        v.vehicle_pk IS NOT NULL AND
+        v.deleted = 0
+        <dynamic>
+            <isNotEmpty property="classroomPk" prepend=" AND ">c.classroom_pk = #classroomPk#</isNotEmpty>
+        </dynamic>
+        order by v.plate
+    </statement>
+    
+    <statement id="commercialVehicleSearch" resultMap="vehicle_commercial_result" cacheModel="vehicle_cache">
+        SELECT v.vehicle_pk,v.plate,v.state
+        FROM vehicle v
+        WHERE
+        v.vehicle_pk IS NOT NULL AND
+        v.deleted = 0        
+        <dynamic>
+            <isNotEmpty property="schoolFk" prepend=" AND ">v.school_fk = #schoolFk#</isNotEmpty>
+        </dynamic>
+        order by v.plate
+    </statement>
+    
+</sqlMap>

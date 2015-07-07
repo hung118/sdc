@@ -1,0 +1,441 @@
+div, ul, ol, li, h1, h2, h3, form, fieldset, input, textarea, blockquote {
+margin:0pt;
+padding:0pt;
+}
+body,p,th,td {
+margin:1pt;
+padding:2pt;
+}
+
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+        font-size-adjust: none;
+        font-stretch: normal;
+        font-style: normal;
+        font-variant: normal;
+        font-weight: normal;
+        line-height: normal;
+        text-align: left;
+	color: #000000;
+}
+
+h2 {
+	font-size: 13px;
+        font-weight: normal;
+        }
+h3 {
+	font-size: 14px;
+        font-weight: bold;
+        }
+h4 {
+        padding: 2pt;
+        font-size: 15px;
+        font-weight: bold;
+        color: #000000;/*#336699; */
+        background-color: #C9D9D6; /*#E9E9E9; */
+        border-style: solid;
+        border-width: 1px; 
+        border-color: #31737C;
+        width: 93%;
+        }
+
+hr.dashed {border: none 0; 
+	border-top: 1px dashed #336699;
+	border-bottom: 1px dashed #E9E9E9;
+	width: 94%;
+	height: 2px;
+	margin: 10px auto 0 0;
+}
+
+
+div.footerImage hr {
+  display: none;
+}
+
+ div.footerImage {
+  height: 49px;
+  width: 94%;
+  margin: 10px auto 0 0;
+  background: #fff url(../images/footer.png) no-repeat scroll right;
+}
+
+ div.outerHeader {
+  height: 89px;
+  border: 1px solid #000;
+  background: url(../images/expand_headerz.gif);
+  }
+
+ div.innerHeader {
+  height: 100%;  
+  background-image: url(../images/header.gif);
+  background-repeat: no-repeat;
+}
+
+.greenTable table{
+    border-collapse: separate;
+    border-style: solid; 
+    border-color: #31737C;
+    border-width: 1px;
+}
+
+.greenTable td {
+      font-weight: bold;
+      border-width: 0px;
+}
+
+.wideTable table {
+table-layout: fixed
+}
+
+.wideTable td {
+        width:  350px;
+}
+
+.ieSubmit {
+        width:  700px;
+}
+
+.boldText {
+	font-weight: bold;
+     }   
+
+td {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: normal;
+	color: #000000;
+        border-style: solid; 
+        border-color: #336699;
+        border-width: 1px;
+}
+th {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+        background-color: #DCDADA; 
+	color: #000000;
+        border-style: solid; 
+        border-color: #336699;
+        border-width: 1px;
+}
+
+.noBorders td {
+    border-width: 0px;
+}
+
+.tdCenter {
+    text-align: center;
+}
+
+a {
+	color: #336699;
+	text-decoration: underline;
+}
+a:hover {
+	color: #72889C;
+	text-decoration: none;
+}
+
+input.readonly {
+background-color: #DCDADA; 
+}
+
+/** jquery datepicker **/
+.datePickerContainer * {
+margin: 0pt;
+padding: 0pt;
+border-width: 0px;
+}
+input.date, input.datepicker {
+	width: 5.5em !important;
+}
+img.ui-datepicker-trigger {
+	cursor: pointer;
+	vertical-align: middle;
+	margin-left:3px;
+}
+.ui-datepicker-prev, .ui-datepicker-next {  
+    display: inline-block;  
+    width: 30px;  
+    height: 30px;  
+    text-align: center;  
+    cursor: pointer;  
+    background-image: url('/sdc/images/arrow.png');  
+    background-repeat: no-repeat;  
+    line-height: 600%;  
+    overflow: hidden;  
+} 
+.ui-datepicker-prev {
+	float: left;
+	background-position: center -30px;
+}
+.ui-datepicker-next {
+	float: right;
+	background-position: center 0px;
+}
+.ui-datepicker .ui-state-hover .ui-icon,.ui-datepicker .ui-state-focus .ui-icon {
+	background-image: url(/sdc/images/ui-icons_6e2672_256x240.png); 
+} 
+
+.innerNews {
+	width:500px;
+	margin:0px auto;
+	text-align:left;
+	padding:15px;
+	}
+
+
+.newsMessage{
+    padding: 1pt;
+    background-color: #EAE8E8; 
+    border-style: solid;
+    border-width: 1px;
+    border-color: #C0C0C0;
+}
+
+.searchDecision{
+    padding: 2pt;
+    background-color: #31737C;
+    border-style: outset;
+    border-width: 1px;
+    border-color: #000;
+}
+.searchDecision a {
+    color: #FFF;
+    text-decoration: none;
+}
+
+.searchDecision a:hover {
+    color: #C0C0C0;
+    text-decoration: none;
+}
+
+
+.actionMessage{
+    padding: 1pt;
+    background-color: #C0FFC0;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #00C000;
+}
+.actionError{
+    padding: 1pt;
+    background-color: #FFC0C0;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #C00000;
+} 
+
+.messageList li {
+    margin:1pt;
+    padding:2pt;
+}
+
+.errorText {
+	color:red;
+	font-weight:bold;
+	width:93%;
+	padding:2px;
+	spacing:0px;
+	border-style:none;
+	margin-top:10px;
+	margin-bottom:20px;
+}
+
+.errorMessage { /*sometimes struts style.css isn't active */
+color:red;
+font-weight:bold;
+text-align:center;
+}
+
+.errorLabel { /*sometimes struts style.css isn't active */
+color:red;
+font-style:italic;
+}
+
+.required { /*sometimes struts style.css isn't active */
+color:red;
+}
+
+.multiBox {
+  border: 1px solid black;
+  width: auto;
+  margin: 5px auto 5px 5px;
+  background-color: #C2C2C2;
+  padding: 2px 3px 3px 3px;
+  color: Blue;
+  font-size: 11px;  
+}
+
+.multiBox label.checked {
+    background-color: #C0FFC0;
+ }
+ .multiBox label.unchecked {
+    background-color: White;
+ }
+
+.multiBox a {
+  color: Blue;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.multiBox div {
+  height: 270px;
+  width: 355px;
+  overflow: auto;
+  border: 1px solid black;
+  padding: 2px;
+  background-color: #E1E1E1;
+}
+
+.multiBox label {
+  display: block;
+  font: 11px Verdana, sans-serif;
+  border: 1px solid black;
+  padding: 2px 2px 2px 20px;
+  margin: 3px 1px 3px 1px;
+  vertical-align: middle;
+  line-height: 11px;
+  background-color: White;
+  color: black;
+}
+
+.multiBox label:hover {
+  background-color: #DFE4E7;
+}
+
+.multiBox input {
+  margin: 0px 8px 0px 5px;
+  vertical-align: middle;
+}
+
+#select_associatedSchools label.checked {
+    background-color: #C0FFC0;
+ }
+ #select_associatedSchools label.unchecked {
+    background-color: White;
+ }
+
+#select_associatedSchools {
+  border: 1px solid black;
+  width: 260px;
+  margin: 5px auto 5px 5px;
+  background-color: #C2C2C2;
+  padding: 2px 3px 3px 3px;
+  color: Blue;
+  font-size: 11px;  
+}
+
+#select_associatedSchools a {
+  color: Blue;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+#select_associatedSchools div {
+  height: 270px;
+  overflow: auto;
+  border: 1px solid black;
+  padding: 2px;
+  background-color: #E1E1E1;
+}
+
+#select_associatedSchools label {
+  display: block;
+  font: 11px Verdana, sans-serif;
+  border: 1px solid black;
+  padding: 2px 2px 2px 20px;
+  margin: 3px 1px 3px 1px;
+  vertical-align: middle;
+  line-height: 11px;
+  background-color: White;
+  color: black;
+}
+
+#select_associatedSchools label:hover {
+  background-color: #DFE4E7;
+}
+
+#select_associatedSchools input {
+  margin: 0px 8px 0px 5px;
+  vertical-align: middle;
+}
+
+/*yui stuff*/
+
+.yui-panel .hd {
+background-color:#31737C;
+}
+
+.yui-calcontainer table {
+table-layout: auto;
+}
+
+.yui-calendar td{
+        width:  auto;
+}
+
+
+.calweekdaycell { 
+background-color:#DCDADA;
+border:none;
+color:#000000;
+font-family:sans-serif;
+font-size:12px;
+font-weight:normal;
+}
+
+
+/*end yui stuff*/
+.pagebanner{
+    margin: 10px 10px 2px;
+    padding: 2px 4px 2px 0px;
+    /*    background-color: #CFDBDD; */
+    border-style: solid;
+    border-width: 1px;
+    border-color: #31737C;
+}
+
+.pagelinks{
+    padding:2px;
+    /*
+    background-color: #CFDBDD;
+    font-size:0.95em;
+    margin-bottom:5px;
+    margin-top:-18px;
+    */
+    border-style: solid;
+    border-width: 1px;
+    border-color: #31737C;
+}
+
+#displayTagTable {
+    margin: 7px 10px 10px 10px;
+    padding: 2px 4px 2px 0px;
+    }
+    
+    .labelFormat {
+        padding: 2px 2px 10px;
+        
+    }
+    
+    .labelFormat .label {
+        background-color: #78C1B4;
+        color: White;
+    }
+    
+    .labelFormat label{
+          border: 1px solid black;
+  padding: 2px 2px 2px 5px;
+  margin: 3px 1px 3px 1px;
+  vertical-align: middle;
+  line-height: 23px;
+}
+
+.studentAudit {
+	color:gray;
+	font-size:10px;
+	font-style:italic;
+}

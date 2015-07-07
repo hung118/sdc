@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- Field-Validator Syntax -->
+    <field name="currentBranch.address1">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="school.address1.required"/>
+        </field-validator>
+    </field>
+   
+    <field name="currentBranch.city">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="school.city.required"/>
+        </field-validator>
+    </field>
+    
+    <field name="currentBranch.state">
+        <field-validator type="required">
+            <message key="school.state.required"/>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="regex">
+                [A-Z][A-Z]
+            </param>
+            <message key="school.state.required"/>
+        </field-validator>
+    </field>
+
+    <field name="currentBranch.zip">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="school.zip.required"/>
+        </field-validator>
+    </field>
+
+    <field name="currentBranch.businessPhone">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message key="school.businessPhone.required"/>
+        </field-validator>
+    </field>
+</validators>

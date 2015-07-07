@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>SDC Third Party - Add Student</title>
+
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        
+        
+        <link type="text/css" rel="stylesheet" href="/sdc/common/sdc.css"/>
+
+<link rel="stylesheet" type="text/css" href="/sdc/common/build/fonts/fonts-min.css" />
+<link rel="stylesheet" type="text/css" href="/sdc/common/build/calendar/assets/skins/sam/calendar.css" />
+<script type="text/javascript" src="/sdc/common/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="/sdc/common/build/calendar/calendar-min.js"></script>
+<script type="text/javascript" src="/sdc/struts/dputils.js"></script>       
+        
+        
+        
+<!--begin custom header content for this example-->
+<style type="text/css">
+	#examplecontainer {height:450px;  position:relative}
+
+	#show2up { position:absolute; left:5px; top:10px; clear:both}
+	#show1up { position:absolute; left:5px; top:300px; clear:both}
+
+	#cal1Container { display:none; position:absolute; left:5px; top:10px; z-index:2}
+	#cal2Container { display:none; position:absolute; left:5px; top:300px; z-index:1}
+	#roadTestCompletionDateContainer { display:none; position:absolute; left:305px; top:725px; z-index:1}
+</style>
+
+<!--end custom header content for this example-->
+
+     </head>
+    
+<body class="yui-skin-sam">   
+    
+    
+<div id="examplecontainer">
+    <button id="show2up" type="button">Show CalendarGroup</button>
+    <div id="cal1Container"></div>
+
+    <button id="show1up" type="button">Show Calendar</button>
+    <div id="cal2Container"></div>
+</div>
+
+<script type="text/javascript">
+	YAHOO.namespace("example.calendar");
+
+	YAHOO.example.calendar.init = function() {
+
+		YAHOO.example.calendar.cal1 = new YAHOO.widget.CalendarGroup("cal1","cal1Container", { pages:2, title:"Please make a selection:", close:true } );
+		YAHOO.example.calendar.cal1.render();
+
+		// Listener to show the 2 page Calendar when the button is clicked
+		YAHOO.util.Event.addListener("show2up", "click", YAHOO.example.calendar.cal1.show, YAHOO.example.calendar.cal1, true);
+
+		YAHOO.example.calendar.cal2 = new YAHOO.widget.Calendar("cal2","cal2Container", { title:"Choose a date:", close:true } );
+		YAHOO.example.calendar.cal2.render();
+
+		// Listener to show the 1-up Calendar when the button is clicked
+		YAHOO.util.Event.addListener("show1up", "click", YAHOO.example.calendar.cal2.show, YAHOO.example.calendar.cal2, true);
+	}
+
+	YAHOO.util.Event.onDOMReady(YAHOO.example.calendar.init);
+</script>
+    
+    
+    
+    
+    
+        
+        <h1>SDC Third Party Student - Update Change</h1>
+        <br/>
+        
+        <form id="update_change" name="editForm" action="/sdc/thirdparty/update_change.do" method="post">
+<table class="wwFormTable">
+            <tr>
+    <td class="tdLabel"><label for="update_change_currentStudent_fileNumber" class="label">File Number:</label></td>
+    <td
+><label id="update_change_currentStudent_fileNumber" class="actionMessage">194193546</label></td>
+</tr>
+
+
+            <input type="hidden" name="fileNumber" value="194193546" id="update_change_fileNumber"/>
+            <input type="hidden" name="currentStudent.fileNumber" value="194193546" id="update_change_currentStudent_fileNumber"/>
+            
+                <tr>
+    <td class="tdLabel"><label for="update_change_currentStudent_studentNumber" class="label">Student Number:</label></td>
+    <td
+><label id="update_change_currentStudent_studentNumber">384201312140765</label></td>
+</tr>
+
+
+            
+            
+                
+                <tr>
+    <td class="tdLabel"><label class="label">Eligibility Date :</label></td>
+    <td
+><label>07/07/2005</label></td>
+</tr>
+
+
+                <input type="hidden" name="currentStudent.eligibilityDate" value="7/7/05" id="update_change_currentStudent_eligibilityDate"/>
+            
+        
+        
+        <tr>
+    <td class="tdLabel"><label for="update_change_currentStudent_firstName" class="label">First Name:</label></td>
+    <td
+><label id="update_change_currentStudent_firstName">YOU</label></td>
+</tr>
+
+
+        <tr>
+    <td class="tdLabel"><label for="update_change_currentStudent_lastName" class="label">Last Name:</label></td>
+    <td
+><label id="update_change_currentStudent_lastName">TUBE</label></td>
+</tr>
+
+
+        <input type="hidden" name="firstName" value="YOU" id="update_change_firstName"/>
+        <input type="hidden" name="lastName" value="TUBE" id="update_change_lastName"/>
+        
+        <input type="hidden" name="currentStudent.firstName" value="YOU" id="update_change_currentStudent_firstName"/>
+        <input type="hidden" name="currentStudent.lastName" value="TUBE" id="update_change_currentStudent_lastName"/>
+        
+        
+        
+        <tr>
+    <td class="tdLabel"><label class="label">Date of Birth  (MM/DD/YYYY):</label></td>
+    <td
+><label>07/07/1987</label></td>
+</tr>
+
+
+        <input type="hidden" name="dob" value="7/7/87" id="update_change_dob"/>
+        
+        <input type="hidden" name="currentStudent.dob" value="7/7/87" id="update_change_currentStudent_dob"/>
+        
+        <tr>
+    <td class="tdLabel"><label for="update_change_schoolFk" class="label">School:</label></td>
+    <td
+><select name="schoolFk" id="update_change_schoolFk">
+    <option value="417">3 BROTHERS TESTING SCHOOL</option>
+
+
+</select>
+</td>
+</tr>
+
+
+      
+	        <input type="hidden" name="currentStudent.roadTestCompletionDate" value="12/1/13" id="update_change_currentStudent_roadTestCompletionDate"/>
+	        <tr>
+    <td class="tdLabel"><label for="roadTestCompletionDate" class="label">Road Test Completion Date (MM/DD/YYYY):</label></td>
+    <td
+><input type="hidden" name="roadTestCompletionDate" id="roadTestCompletionDateInput" value="2013-12-02T00:00:00">
+     <input name="dojo.roadTestCompletionDate" id="roadTestCompletionDateInputVisible"
+     >
+  <img id="roadTestCompletionDateImg" style="vertical-align: middle;" 
+         src="/sdc/struts/dateIcon.gif"
+   > 
+<br />
+
+<div id="roadTestCompletionDateContainer"
+style="display:none"
+></div>
+
+<script type="text/javascript">
+YAHOO.util.Event.addListener(window, "load", function() {
+       YAHOO.namespace("datepickers").roadTestCompletionDate =  new YAHOO.widget.Calendar("roadTestCompletionDate","roadTestCompletionDateContainer");
+       
+           YAHOO.datepickers.roadTestCompletionDate.cfg.setProperty("selected","12/02/2013",false); 
+           YAHOO.datepickers.roadTestCompletionDate.cfg.setProperty("pagedate","12/2013",false); 
+           YAHOO.util.Dom.get("roadTestCompletionDateInput").value = "2013-12-02T00:00:00";
+           var visibleInput = YAHOO.util.Dom.get("roadTestCompletionDateInputVisible");
+               YAHOO.s2yui.showDateValue(visibleInput, "12/02/2013");    
+           YAHOO.datepickers.roadTestCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("roadTestCompletionDateImg", "click", function() {
+              var display = YAHOO.util.Dom.getStyle("roadTestCompletionDateContainer", "display");
+              if(display == "none") {
+                 YAHOO.datepickers.roadTestCompletionDate.show();
+              } else {
+                 YAHOO.datepickers.roadTestCompletionDate.hide();
+              }
+           }, YAHOO.datepickers.roadTestCompletionDate, true);
+           YAHOO.datepickers.roadTestCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("roadTestCompletionDateInputVisible", "blur", function() {
+              YAHOO.util.Dom.get("roadTestCompletionDateInput").value = YAHOO.util.Dom.get("roadTestCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.roadTestCompletionDate, true);
+           YAHOO.util.Event.addListener("roadTestCompletionDateInputVisible", "change", function() {
+              YAHOO.util.Dom.get("roadTestCompletionDateInput").value = YAHOO.util.Dom.get("roadTestCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.roadTestCompletionDate, true);
+       
+       
+       YAHOO.datepickers.roadTestCompletionDate.render();
+       
+       YAHOO.datepickers.roadTestCompletionDate.selectEvent.subscribe(function(type,args,obj) {
+         var input = YAHOO.util.Dom.get("roadTestCompletionDateInput");
+         var visibleInput = YAHOO.util.Dom.get("roadTestCompletionDateInputVisible");
+         var dates = args[0]; 
+         var date = dates[0];
+         var year = date[0], month = date[1], day = date[2];
+         
+         if(!YAHOO.lang.isNumber(year)
+            || !YAHOO.lang.isNumber(month)
+            || !YAHOO.lang.isNumber(day)) {
+            //yahoo couldn't parse what the user typed in
+            input.value = visibleInput.value;
+            return;
+         }
+         
+         var dateObj = this._toDate(date);
+         input.value = YAHOO.s2yui.toRFC3339(dateObj);
+         
+                var fromattedDate = month + "/" + day + "/" + year;    
+            YAHOO.s2yui.showDateValue(visibleInput, fromattedDate);
+            this.hide();
+       }, YAHOO.datepickers.roadTestCompletionDate, true);
+    }); 
+</script>
+</td>
+</tr>
+
+
+	        <tr>
+    <td class="tdLabel"><label for="roadTestStartTime" class="label">Start Time:</label></td>
+    <td
+><input type="text" name="roadTestStartTime" size="5" maxlength="5" value="08:00" id="roadTestStartTime" required="true"/></td>
+</tr>
+
+
+	        <tr>
+    <td class="tdLabel"><label for="roadTestEndTime" class="label">End Time:</label></td>
+    <td
+><input type="text" name="roadTestEndTime" size="5" maxlength="5" value="09:00" id="roadTestEndTime" required="true"/></td>
+</tr>
+
+
+	        <tr>
+    <td class="tdLabel"><label for="roadTestScore" class="label">Road Score (points missed):      <img
+      	src='/sdc/images/information.png'
+
+      	title="Road Score should be between 0 - 20.  This should not be a percentage, it is a points reduction score"
+      	alt="Road Score should be between 0 - 20.  This should not be a percentage, it is a points reduction score" />
+</label></td>
+    <td
+><input type="text" name="roadTestScore" size="2" maxlength="3" value="3" id="roadTestScore" required="true"/></td>
+</tr>
+
+
+	        <tr>
+    <td class="tdLabel"><label for="routeNumber" class="label">Route Number:      <img
+      	src='/sdc/images/information.png'
+
+      	title="Two digit route number"
+      	alt="Two digit route number" />
+</label></td>
+    <td
+><input type="text" name="routeNumber" size="2" maxlength="2" value="1" id="routeNumber" required="true"/></td>
+</tr>
+
+
+	        <tr>
+    <td class="tdLabel"><label for="routeArea" class="label">Route Area:      <img
+      	src='/sdc/images/information.png'
+
+      	title="City or area of road test"
+      	alt="City or area of road test" />
+</label></td>
+    <td
+><input type="text" name="routeArea" maxlength="45" value="1" id="routeArea" required="true"/></td>
+</tr>
+
+
+	        <tr>
+    <td class="tdLabel"><label for="update_change_roadInstructorPk" class="label">Road Test Instructor:</label></td>
+    <td
+><select name="roadInstructorPk" id="update_change_roadInstructorPk" required="true">
+    <option value="304" selected="selected">DENNIS J GALI</option>
+    <option value="586">ROSE ANN CORDOVA</option>
+    <option value="600">SERGE DEMOSTHE NANA TAFEN</option>
+    <option value="502">STEVEN R STALTER</option>
+    <option value="629">TODD ROBERT HELLSTROM</option>
+
+
+</select>
+</td>
+</tr>
+
+
+	        <tr>
+    <td class="tdLabel"><label for="update_change_vehicleFk" class="label">Vehicle:</label></td>
+    <td
+><select name="vehicleFk" id="update_change_vehicleFk" required="true">
+    <option value="143" selected="selected">999ACU</option>
+    <option value="142">TEST2</option>
+
+
+</select>
+</td>
+</tr>
+
+    
+	        <tr>
+    <td colspan="2"><div style="text-align:right"><button type="submit" id="update_change_update_change" name="action:update_change" value="Update" onclick="return validate('roadTestCompletionDate');">
+Update</button>
+</div></td>
+</tr>
+
+Update
+</button>
+</div></td>
+</tr>
+
+
+
+        <input type="hidden" name="studentPk" value="140765" id="update_change_studentPk"/>
+        <input type="hidden" name="licenseType" value="LRN" id="update_change_licenseType"/>
+        <input type="hidden" name="currentStudent.licenseType" value="LRN" id="update_change_currentStudent_licenseType"/>
+        <input type="hidden" name="currentStudent.studentPk" value="140765" id="update_change_currentStudent_studentPk"/>
+        <input type="hidden" name="completionRoadPk" value="104138" id="update_change_completionRoadPk"/>
+        </table></form>
+
+
+
+<!-- javascript that is needed for tooltips -->
+<script type="text/javascript" src='/sdc/struts/domTT.js'></script>
+<link rel="stylesheet" type="text/css" href="/sdc/struts/domTT.css"/>
+	
+
+        
+        <button id="show1" style="display:none"/></div>
+        
+<hr width="93%" class="dashed"/> 
+<div class="footerImage"><hr /></div>
+
+<p style="text-align:center; width:94%;">
+    Copyright (c) <script>document.write(new Date().getFullYear())</script> State of Utah<br />
+</p>
+		<p style="text-align:center; width:94%;">
+			<span style="text-align:right; color:#CCCCCC; width:94%;">MAJOR_VERSION.MINOR_VERSION.BUG_VERSION.1418</span>
+		</p>
+        
+    </body>
+    
+</html>

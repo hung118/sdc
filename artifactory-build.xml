@@ -1,0 +1,44 @@
+<project name="maven_pom" default="init" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+	<!-- set global properties for this build -->
+	<property name="web" location="./" />
+	<property name="src" location="WEB-INF/classes" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="major_version" value="3" />
+	<property name="minor_version" value="1" />
+	<property name="bug_version" value="0" />
+	<property name="current_version" value="${major_version}.${minor_version}.${bug_version}" />
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+	</target>
+
+	<target name="version">
+		<typedef resource="com/googlecode/svntask/svntask.xml">
+			<classpath>
+				<fileset dir="${web}">
+					<include name="svnkit.jar" />
+					<include name="svntask.jar" />
+				</fileset>
+			</classpath>
+		</typedef>
+
+		<svn>
+			<info path="." revisionProperty="revisionVersion" />
+		</svn>
+		<property name="version" value="${revisionVersion}" />
+	</target>
+
+	<target name="change-release" depends="version">
+		<replace file="pom.xml" token="REPLACE_VERSION" value="${current_version}.${revisionVersion}" />
+		<echo message="Changed Version to: ${current_version}.${revisionVersion}" />
+	</target>
+
+	<replace file="pom.xml" token="MAJOR_VERSION" value="${major_version}" />
+	<replace file="pom.xml" token="MINOR_VERSION" value="${minor_version}" />
+	<replace file="pom.xml" token="BUG_VERSION" value="${bug_version}" />
+	<echo message="Changed MAJOR.MINOR.BUG version to: ${major_version}.${minor_version}.${bug_version}" />
+
+</project>

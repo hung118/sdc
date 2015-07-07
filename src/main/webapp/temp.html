@@ -1,0 +1,1261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Utah SDC Student Info</title>
+
+<!-- CSS for Menu -->
+<link rel="stylesheet" type="text/css"
+	href="/sdc/common/yui/menu/assets/menu.css" />
+<link rel="stylesheet" type="text/css"
+	href="/sdc/common/yui/reset/reset-min.css" />
+<link rel="stylesheet" type="text/css"
+	href="/sdc/common/yui/fonts/fonts-min.css" />
+<!-- CSS for Panels -->
+<link rel="stylesheet" type="text/css"
+	href="/sdc/common/yui/container/assets/container.css" />
+<!-- CSS for App -->
+<link href="/sdc/common/sdc.css" rel="stylesheet" type="text/css" />
+
+<!-- Dependencies -->
+<script type="text/javascript" src="/sdc/common/yui/yahoo-dom-event.js"></script>
+<script type="text/javascript"
+	src="/sdc/common/yui/container/container-min.js"></script>
+
+
+<!-- Source File -->
+<script type="text/javascript" src="/sdc/common/yui/menu/menu-min.js"></script>
+
+<!-- Source File for App -->
+<script type="text/javascript" src="/sdc/common/sdc.js"></script>
+
+<!-- Page-specific script -->
+<script type="text/javascript">
+    YAHOO.example.onMenuBarReady = function() {
+    // Instantiate and render the menu bar
+
+    var oMenuBar = new YAHOO.widget.MenuBar("sdcMenu", { autosubmenudisplay:true, hidedelay:750, lazyload:true });
+    oMenuBar.render();
+    };
+        // Initialize and render the menu bar when it is available in the DOM
+    YAHOO.util.Event.onContentReady("sdcMenu", YAHOO.example.onMenuBarReady);
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/sdc/struts/yahoo-dom-event.js"></script>
+
+<link rel="stylesheet" type="text/css"
+	href="/sdc/struts/assets/calendar.css"><script
+	type="text/javascript" src="/sdc/struts/calendar-min.js"></script> <script
+	type="text/javascript" src="/sdc/struts/dputils.js"></script> <script
+	language="javascript" type="text/javascript">
+            YAHOO.namespace("example.container");
+            function init() {
+                
+                // Define various event handlers for Dialog
+                var handleYes = function() {
+                    this.hide();
+                    var site = '/sdc/highSchoolFront.do';
+                    window.location.href=site;
+                };
+                var handleNo = function() {
+                    this.hide();
+                };
+                
+                // Instantiate the Dialog
+                YAHOO.example.container.simpledialog1 = new YAHOO.widget.SimpleDialog("simpledialog1", 
+                    { width: "300px",
+                        fixedcenter: true,
+                        visible: false,
+                        modal:true,
+                        draggable: false,
+                        close: true,
+                        text: "Do you want to start over?",
+                        icon: YAHOO.widget.SimpleDialog.ICON_HELP,
+                        constraintoviewport: true,
+                        buttons: [ { text:"Yes", handler:handleYes, isDefault:true },
+                            { text:"No",  handler:handleNo } ]
+                    } );
+                    YAHOO.example.container.simpledialog1.setHeader("Return to search?");
+                    
+                    // Render the Dialog
+                    YAHOO.example.container.simpledialog1.render(document.body);
+                    
+                    YAHOO.util.Event.addListener("show1", "click", YAHOO.example.container.simpledialog1.show, YAHOO.example.container.simpledialog1, true);
+                    
+                }
+                YAHOO.util.Event.addListener(window, "load", init);
+                
+                function editRoadCheck(){
+                    var a=document.getElementById('roadCheck');
+                    var b=document.getElementById('editRoad');
+                    if (a.checked == true) {
+                        if(b.style.display == "none") { 
+                            showNews('editRoad');
+                        }    
+                    } else {
+                    if(b.style.display =="block") {
+                        showNews('editRoad');
+                    }
+                }    
+            }
+            
+
+	function update(action) {
+		var d = document.forms[0];
+		if (validate()) {
+			if (action == "update") {
+				// redmine 9841
+				if ("190202846" == "") {
+					alert("This student has an empty file number.\nPlease contact DLD for assistance.");
+					return false;
+				}
+				
+				
+				d.action = "/sdc/student/update.do";
+			} else if (action == "generateFullCompletion") {
+				
+				d.action = "/sdc/student/generateFullCompletion.do";
+				d.target = "_blank";
+				document.getElementById("show1").click();
+			} else if (action == "generateOcsFullCompletion") {
+				
+				d.action = "/sdc/student/generateOcsFullCompletion.do";
+				d.target = "_blank";
+				if (validateWritten()) {
+					document.getElementById("show1").click();
+				} else {
+					return false;
+				}
+			} else {
+				
+				d.action = "/sdc/student/generateWrittenPDF.do";
+				d.target = "_blank";
+				document.getElementById("show1").click();
+			}
+			return updateDateField('dob,writtenTestCompletionDate,classroomCompletionDate,behindWheelCompletionDate,observationCompletionDate,roadTestCompletionDate');
+		} else {
+			return false;
+		}
+	}
+
+	function validateWritten() {
+		var retVal = true;
+		var wdate = document.getElementById("writtenTestCompletionDateInput");
+		var wscore = document.getElementById("writtenTestScore");
+
+		if (wdate != null) {
+			if (wdate.value != "") {
+				if (wscore.value == "") {
+					alert("Written Score Cannot Be Blank!");
+					retVal = false;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	function validate() {
+		var retVal = true;
+		var rdate = document.getElementById("roadTestCompletionDateInput");
+		var rscore = document.getElementById("roadTestScore");
+
+		if (rdate != null && rdate.value == "") {
+			alert("Road Test Completion Date is required.");
+			return false;
+		}
+		if (rscore != null && rscore.value == "") {
+			alert("Road Score is required.");
+			return false;
+		}
+
+		return retVal;
+	}
+
+	function disableFields() {
+		retVal = false;
+		var d = document.forms[0];
+		if (d.roadCheck != null) {
+			if (d.roadCheck.checked == false) {
+				d.elements['currentStudent.roadTestCompletionDate'].disabled = true;
+				d.elements['currentStudent.roadTestScore'].disabled = true;
+				d.elements['currentStudent.roadTestInstructorFk'].disabled = true;
+			} else {
+				d.elements['currentStudent.roadTestScore'].disabled = false;
+			}
+		}
+		retVal = true;
+		return retVal;
+	}
+	function format(dt) {
+		if (YAHOO.lang.isString(dt)) {
+			var parts = dt.split("/");
+			var month = parts[0];
+			var day = parts[1];
+			var year = parts[2];
+			return month + "/" + day + "/" + year;
+		} else {
+			var month = dt.getMonth();
+			var day = dt.getDate();
+			var year = dt.getFullYear();
+			return month + "/" + day + "/" + year;
+		}
+	}
+</script>
+</head>
+
+<body>
+
+<div style="width: 94%;">
+<div class="outerHeader">
+
+<div class="innerHeader"></div>
+</div>
+
+<div id="sdcMenu" class="yuimenubar">
+<div class="bd">
+<ul class="first-of-type">
+	<li class="yuimenubaritem first-of-type"><a href="/sdc/Home.do">Home</a></li>
+	<li class="yuimenubaritem">High School
+	<div id="highschool" class="yuimenu">
+	<div class="bd">
+	<ul>
+
+		<li class="yuimenuitem"><a href="/sdc/highSchoolFront.do">File
+		Number Search</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/student/dateOfBirthSearch.do">Name and Date of Birth
+		Search</a></li>
+
+		<li class="yuimenuitem"><a
+			href="/sdc/student/knowledgeTestGenerator.do">Knowledge Test
+		Generator</a></li>
+	</ul>
+	</div>
+	</div>
+	</li>
+	<li class="yuimenubaritem">Commercial
+	<div id="commercial" class="yuimenu">
+
+	<div class="bd">
+	<ul>
+		<li class="yuimenuitem"><a
+			href="/sdc/commercial/commercialFront.do">Student Records</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/commercial/inputFileNumber.do">File Number Search</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/commercial/inputStudentNumber.do">Student Number
+		Search</a></li>
+		<li class="yuimenuitem"><a href="/sdc/commercial/inputDOB.do">Name
+		and Date of Birth Search</a></li>
+	</ul>
+	</div>
+
+	</div>
+	</li>
+	<li class="yuimenubaritem">Road Tester
+	<div id="thirdparty" class="yuimenu">
+	<div class="bd">
+	<ul>
+		<li class="yuimenuitem"><a
+			href="/sdc/thirdparty/thirdPartyFront.do">File Number Search</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/thirdparty/dateOfBirthSearch.do">Name and Date of
+		Birth Search</a></li>
+	</ul>
+	</div>
+
+	</div>
+	</li>
+
+	<li class="yuimenubaritem">Reports
+	<div id="reports" class="yuimenu">
+	<div class="bd">
+	<ul>
+		<li class="yuimenuitem"><a
+			href="/sdc/reports/completionDatesSearch.do">High School Test
+		Report</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/PDFReport?report=initRoadTester">Road Tester
+		Statistics</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/PDFReport?report=initSchoolCompletion">School
+		Completions</a></li>
+
+		<li class="yuimenuitem"><a
+			href="/sdc/PDFReport?report=schoolList" target="_blank">Public
+		List of Schools</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/PDFReport?report=testerList" target="_blank">Public
+		List of Testers</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/PDFReport?report=instructorList" target="_blank">SDC
+		User Report</a></li>
+		<li class="yuimenuitem"><a href="/sdc/PDFReport?report=bondList"
+			target="_blank">List of Surety Bond Companies</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/PDFReport?report=initInstructorExpiration">Instructor
+		License Expiration</a></li>
+		<li class="yuimenuitem"><a
+			href="/sdc/PDFReport?report=initSchoolExpiration">School
+		Expirations</a></li>
+
+		<li class="yuimenuitem">Overlapping Time Reports testing
+		<div id="overlap" class="yuimenu">
+		<div class="bd">
+		<ul class="first-of-type">
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=studentOver1">Students
+			Multi Training</a></li>
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=studentOver2">Students
+			Multi Training By Type</a></li>
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=instructorOver1">Instructor
+			Multi BTW</a></li>
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=instructorOver2">Instructor
+			Multi Training By Type</a></li>
+
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=instructorOver3">Instructor
+			Multi Classroom</a></li>
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=instructorOver4">Training
+			and Testing Overlap</a></li>
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=instructorOver5">Training
+			over 10 hours</a></li>
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=instructorOver6">Testing
+			over 10 hours</a></li>
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=instructorOver7">Training
+			and Testing over 10 hours</a></li>
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=vehicleOver1">Vehicle
+			Training Overlap</a></li>
+
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=vehicleOver2">Vehicle
+			Testing Overlap</a></li>
+			<li class="yuimenuitem"><a
+				href="/sdc/PDFReport?showPage=&amp;page=testerOver1">Road Tester
+			Overlap</a></li>
+		</ul>
+		</div>
+		</div>
+		</li>
+	</ul>
+	</div>
+	</div>
+	</li>
+
+
+	<li class="yuimenubaritem">Administration
+	<div id="administration" class="yuimenu">
+	<div class="bd">
+	<ul>
+		<li class="yuimenuitem">News
+		<div id="news" class="yuimenu">
+		<div class="bd">
+		<ul class="first-of-type">
+			<li class="yuimenuitem"><a href="/sdc/news/edit-.do">Create
+			News Item</a></li>
+			<li class="yuimenuitem"><a href="/sdc/news/search.do">Search
+			News Items</a></li>
+
+		</ul>
+		</div>
+		</div>
+		</li>
+		<li class="yuimenuitem">Person
+		<div id="person" class="yuimenu">
+		<div class="bd">
+		<ul class="first-of-type">
+			<li class="yuimenuitem"><a href="/sdc/person/edit-.do">Create
+			User</a></li>
+			<li class="yuimenuitem"><a href="/sdc/person/search.do">Search
+			Users</a></li>
+
+		</ul>
+		</div>
+		</div>
+		</li>
+		<li class="yuimenuitem">School
+		<div id="school" class="yuimenu">
+		<div class="bd">
+		<ul class="first-of-type">
+			<li class="yuimenuitem"><a href="/sdc/school/edit-.do">Create
+			School</a></li>
+			<li class="yuimenuitem"><a href="/sdc/school/search.do">Search
+			Schools</a></li>
+
+		</ul>
+		</div>
+		</div>
+		</li>
+		<li class="yuimenuitem">Vehicle
+		<div id="vehicle" class="yuimenu">
+		<div class="bd">
+		<ul class="first-of-type">
+			<li class="yuimenuitem"><a href="/sdc/vehicle/edit-.do">Create
+			New Vehicle</a></li>
+			<li class="yuimenuitem"><a href="/sdc/vehicle/search.do">Search
+			Vehicles</a></li>
+
+		</ul>
+		</div>
+		</div>
+		</li>
+		<li class="yuimenuitem">Surety Bond
+		<div id="bond" class="yuimenu">
+		<div class="bd">
+		<ul class="first-of-type">
+			<li class="yuimenuitem"><a href="/sdc/bond/edit-.do">Create
+			New Bond</a></li>
+			<li class="yuimenuitem"><a href="/sdc/bond/search.do">Search
+			Bonds</a></li>
+
+		</ul>
+		</div>
+		</div>
+		</li>
+		<li class="yuimenuitem">Group
+		<div id="group" class="yuimenu">
+		<div class="bd">
+		<ul class="first-of-type">
+			<li class="yuimenuitem"><a href="/sdc/school/searchGroup.do">Search
+			Commercial Groups</a></li>
+		</ul>
+
+		</div>
+		</div>
+		</li>
+		<li class="yuimenuitem">Audit Logs
+		<div id="auditLogs" class="yuimenu">
+		<div class="bd">
+		<ul class="first-of-type">
+			<li class="yuimenuitem"><a
+				href="/sdc/reports/searchAuditLogs.do">Search Audit Logs</a></li>
+		</ul>
+
+		</div>
+		</div>
+		</li>
+	</ul>
+	</div>
+	</div>
+	</li>
+</ul>
+</div>
+</div>
+</div>
+
+<br />
+<div class="docBody"><br />
+
+
+
+<h1>Utah SDC Student Info testing</h1>
+<br />
+
+<div class="wideTable">
+
+<form id="create_input" name="editForm" onsubmit="return true;"
+	action="create_input.do" method="post">
+<table class="wwFormTable">
+	<tr>
+		<td class="tdLabel"><label
+			for="create_input_currentStudent_fileNumber" class="label">File
+		Number:</label></td>
+
+		<td><label id="create_input_currentStudent_fileNumber"
+			class="actionError">190202846</label></td>
+	</tr>
+
+	<input type="hidden" name="currentStudent.fileNumber" value="190202846"
+		id="create_input_currentStudent_fileNumber" />
+
+
+
+	<tr>
+		<td class="tdLabel"><label for="create_input_" class="label">Eligibility
+		Date :</label></td>
+		<td><label id="create_input_">10/25/2011</label></td>
+	</tr>
+
+
+
+
+	<tr>
+		<td class="tdLabel"><label
+			for="create_input_currentStudent_firstName" class="label">First
+		Name:</label></td>
+		<td><label id="create_input_currentStudent_firstName">ROSIES</label></td>
+	</tr>
+
+	<tr>
+		<td class="tdLabel"><label
+			for="create_input_currentStudent_lastName" class="label">Last
+		Name:</label></td>
+		<td><label id="create_input_currentStudent_lastName">DLTEST</label></td>
+
+	</tr>
+
+	<input type="hidden" name="currentStudent.firstName" value="ROSIES"
+		id="create_input_currentStudent_firstName" />
+	<input type="hidden" name="currentStudent.lastName" value="DLTEST"
+		id="create_input_currentStudent_lastName" />
+
+
+
+
+	<tr>
+		<td class="tdLabel"><label for="create_input_" class="label">Date
+		of Birth (MM/DD/YYYY):</label></td>
+		<td><label id="create_input_">01/02/1995</label></td>
+	</tr>
+
+	<input type="hidden" name="currentStudent.dob" value="1/2/95"
+		id="create_input_currentStudent_dob" />
+
+
+
+
+
+
+
+	<tr>
+		<td class="tdLabel"><label for="create_input_" class="label">Written
+		Test Score:</label></td>
+		<td><label id="create_input_">PASS</label></td>
+	</tr>
+
+
+
+
+	<tr>
+		<td class="tdLabel"><label for="create_input_" class="label">Written
+		Test Completion Date (MM/DD/YYYY):</label></td>
+		<td><label id="create_input_">04/25/2011</label></td>
+
+	</tr>
+
+	<input type="hidden" name="currentStudent.writtenTestScore" value="101"
+		id="create_input_currentStudent_writtenTestScore" />
+	<input type="hidden" name="currentStudent.writtenTestCompletionDate"
+		value="4/25/11"
+		id="create_input_currentStudent_writtenTestCompletionDate" />
+	<input type="hidden"
+		name="currentStudent.writtenCompletionSchoolNumber" value=""
+		id="create_input_currentStudent_writtenCompletionSchoolNumber" />
+
+
+	<tr>
+		<td colspan="2">
+		<table width="100%" class="noBorders">
+			<tr>
+				<td class="tdLabel"><label for="classroomCompletionDate"
+					class="label">Classroom Completion Date (MM/DD/YYYY):</label></td>
+
+				<td><input type="hidden"
+					name="currentStudent.classroomCompletionDate"
+					id="classroomCompletionDateInput" value=""> <input
+					name="dojo.currentStudent.classroomCompletionDate"
+					id="classroomCompletionDateInputVisible"> <img
+					id="classroomCompletionDateImg" style="vertical-align: middle;"
+					src="/sdc/struts/dateIcon.gif"> <br />
+				<div id="classroomCompletionDateContainer" style="display: none"></div>
+				<script type="text/javascript">
+YAHOO.util.Event.addListener(window, "load", function() {
+       YAHOO.namespace("datepickers").classroomCompletionDate =  new YAHOO.widget.Calendar("classroomCompletionDate","classroomCompletionDateContainer");
+       
+           YAHOO.datepickers.classroomCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("classroomCompletionDateImg", "click", function() {
+              var display = YAHOO.util.Dom.getStyle("classroomCompletionDateContainer", "display");
+              if(display == "none") {
+                 YAHOO.datepickers.classroomCompletionDate.show();
+              } else {
+                 YAHOO.datepickers.classroomCompletionDate.hide();
+              }
+           }, YAHOO.datepickers.classroomCompletionDate, true);
+           YAHOO.datepickers.classroomCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("classroomCompletionDateInputVisible", "blur", function() {
+              YAHOO.util.Dom.get("classroomCompletionDateInput").value = YAHOO.util.Dom.get("classroomCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.classroomCompletionDate, true);
+           YAHOO.util.Event.addListener("classroomCompletionDateInputVisible", "change", function() {
+              YAHOO.util.Dom.get("classroomCompletionDateInput").value = YAHOO.util.Dom.get("classroomCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.classroomCompletionDate, true);
+       
+       
+       YAHOO.datepickers.classroomCompletionDate.render();
+       
+       YAHOO.datepickers.classroomCompletionDate.selectEvent.subscribe(function(type,args,obj) {
+         var input = YAHOO.util.Dom.get("classroomCompletionDateInput");
+         var visibleInput = YAHOO.util.Dom.get("classroomCompletionDateInputVisible");
+         var dates = args[0]; 
+         var date = dates[0];
+         var year = date[0], month = date[1], day = date[2];
+         
+         if(!YAHOO.lang.isNumber(year)
+            || !YAHOO.lang.isNumber(month)
+            || !YAHOO.lang.isNumber(day)) {
+            //yahoo couldn't parse what the user typed in
+            input.value = visibleInput.value;
+            return;
+         }
+         
+         var dateObj = this._toDate(date);
+         input.value = YAHOO.s2yui.toRFC3339(dateObj);
+         
+                var fromattedDate = month + "/" + day + "/" + year;    
+            YAHOO.s2yui.showDateValue(visibleInput, fromattedDate);
+            this.hide();
+       }, YAHOO.datepickers.classroomCompletionDate, true);
+    }); 
+</script></td>
+			</tr>
+
+			<tr>
+				<td valign="top" align="right"></td>
+				<td valign="top" align="left"><input type="checkbox"
+					name="currentStudent.classroomCompletionCheck" value="true"
+					id="create_input_currentStudent_classroomCompletionCheck" /> <input
+					type="hidden"
+					name="__checkbox_currentStudent.classroomCompletionCheck"
+					value="true" /> <label
+					for="create_input_currentStudent_classroomCompletionCheck"
+					class="checkboxLabel">Classroom Non-Participant</label></td>
+			</tr>
+
+
+			<input type="hidden"
+				name="currentStudent.classroomCompletionSchoolNumber" value=""
+				id="create_input_currentStudent_classroomCompletionSchoolNumber" />
+		</table>
+
+		</td>
+	</tr>
+
+
+
+	<tr>
+		<td colspan="2">
+		<table width="100%" class="noBorders">
+			<tr>
+				<td class="tdLabel"><label for="observationCompletionDate"
+					class="label">Observation Completion Date (MM/DD/YYYY):</label></td>
+				<td><input type="hidden"
+					name="currentStudent.observationCompletionDate"
+					id="observationCompletionDateInput" value=""> <input
+					name="dojo.currentStudent.observationCompletionDate"
+					id="observationCompletionDateInputVisible"> <img
+					id="observationCompletionDateImg" style="vertical-align: middle;"
+					src="/sdc/struts/dateIcon.gif"> <br />
+				<div id="observationCompletionDateContainer" style="display: none"></div>
+				<script type="text/javascript">
+YAHOO.util.Event.addListener(window, "load", function() {
+       YAHOO.namespace("datepickers").observationCompletionDate =  new YAHOO.widget.Calendar("observationCompletionDate","observationCompletionDateContainer");
+       
+           YAHOO.datepickers.observationCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("observationCompletionDateImg", "click", function() {
+              var display = YAHOO.util.Dom.getStyle("observationCompletionDateContainer", "display");
+              if(display == "none") {
+                 YAHOO.datepickers.observationCompletionDate.show();
+              } else {
+                 YAHOO.datepickers.observationCompletionDate.hide();
+              }
+           }, YAHOO.datepickers.observationCompletionDate, true);
+           YAHOO.datepickers.observationCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("observationCompletionDateInputVisible", "blur", function() {
+              YAHOO.util.Dom.get("observationCompletionDateInput").value = YAHOO.util.Dom.get("observationCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.observationCompletionDate, true);
+           YAHOO.util.Event.addListener("observationCompletionDateInputVisible", "change", function() {
+              YAHOO.util.Dom.get("observationCompletionDateInput").value = YAHOO.util.Dom.get("observationCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.observationCompletionDate, true);
+       
+       
+       YAHOO.datepickers.observationCompletionDate.render();
+       
+       YAHOO.datepickers.observationCompletionDate.selectEvent.subscribe(function(type,args,obj) {
+         var input = YAHOO.util.Dom.get("observationCompletionDateInput");
+         var visibleInput = YAHOO.util.Dom.get("observationCompletionDateInputVisible");
+         var dates = args[0]; 
+         var date = dates[0];
+         var year = date[0], month = date[1], day = date[2];
+         
+         if(!YAHOO.lang.isNumber(year)
+            || !YAHOO.lang.isNumber(month)
+            || !YAHOO.lang.isNumber(day)) {
+            //yahoo couldn't parse what the user typed in
+            input.value = visibleInput.value;
+            return;
+         }
+         
+         var dateObj = this._toDate(date);
+         input.value = YAHOO.s2yui.toRFC3339(dateObj);
+         
+                var fromattedDate = month + "/" + day + "/" + year;    
+            YAHOO.s2yui.showDateValue(visibleInput, fromattedDate);
+            this.hide();
+       }, YAHOO.datepickers.observationCompletionDate, true);
+    }); 
+</script></td>
+			</tr>
+
+			<tr>
+				<td valign="top" align="right"></td>
+				<td valign="top" align="left"><input type="checkbox"
+					name="currentStudent.observationCompletionCheck" value="true"
+					id="create_input_currentStudent_observationCompletionCheck" /> <input
+					type="hidden"
+					name="__checkbox_currentStudent.observationCompletionCheck"
+					value="true" /> <label
+					for="create_input_currentStudent_observationCompletionCheck"
+					class="checkboxLabel">Observation Non-Participant</label></td>
+			</tr>
+
+
+			<input type="hidden"
+				name="currentStudent.observationCompletionSchoolNumber" value=""
+				id="create_input_currentStudent_observationCompletionSchoolNumber" />
+		</table>
+		</td>
+	</tr>
+
+
+
+
+
+
+	<tr>
+		<td colspan="2">
+		<table width="100%" class="noBorders">
+			<tr>
+				<td class="tdLabel"><label for="behindWheelCompletionDate"
+					class="label">Behind the Wheel Completion Date
+				(MM/DD/YYYY):</label></td>
+				<td><input type="hidden"
+					name="currentStudent.behindWheelCompletionDate"
+					id="behindWheelCompletionDateInput" value=""> <input
+					name="dojo.currentStudent.behindWheelCompletionDate"
+					id="behindWheelCompletionDateInputVisible"> <img
+					id="behindWheelCompletionDateImg" style="vertical-align: middle;"
+					src="/sdc/struts/dateIcon.gif"> <br />
+				<div id="behindWheelCompletionDateContainer" style="display: none"></div>
+				<script type="text/javascript">
+YAHOO.util.Event.addListener(window, "load", function() {
+       YAHOO.namespace("datepickers").behindWheelCompletionDate =  new YAHOO.widget.Calendar("behindWheelCompletionDate","behindWheelCompletionDateContainer");
+       
+           YAHOO.datepickers.behindWheelCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("behindWheelCompletionDateImg", "click", function() {
+              var display = YAHOO.util.Dom.getStyle("behindWheelCompletionDateContainer", "display");
+              if(display == "none") {
+                 YAHOO.datepickers.behindWheelCompletionDate.show();
+              } else {
+                 YAHOO.datepickers.behindWheelCompletionDate.hide();
+              }
+           }, YAHOO.datepickers.behindWheelCompletionDate, true);
+           YAHOO.datepickers.behindWheelCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("behindWheelCompletionDateInputVisible", "blur", function() {
+              YAHOO.util.Dom.get("behindWheelCompletionDateInput").value = YAHOO.util.Dom.get("behindWheelCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.behindWheelCompletionDate, true);
+           YAHOO.util.Event.addListener("behindWheelCompletionDateInputVisible", "change", function() {
+              YAHOO.util.Dom.get("behindWheelCompletionDateInput").value = YAHOO.util.Dom.get("behindWheelCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.behindWheelCompletionDate, true);
+       
+       
+       YAHOO.datepickers.behindWheelCompletionDate.render();
+       
+       YAHOO.datepickers.behindWheelCompletionDate.selectEvent.subscribe(function(type,args,obj) {
+         var input = YAHOO.util.Dom.get("behindWheelCompletionDateInput");
+         var visibleInput = YAHOO.util.Dom.get("behindWheelCompletionDateInputVisible");
+         var dates = args[0]; 
+         var date = dates[0];
+         var year = date[0], month = date[1], day = date[2];
+         
+         if(!YAHOO.lang.isNumber(year)
+            || !YAHOO.lang.isNumber(month)
+            || !YAHOO.lang.isNumber(day)) {
+            //yahoo couldn't parse what the user typed in
+            input.value = visibleInput.value;
+            return;
+         }
+         
+         var dateObj = this._toDate(date);
+         input.value = YAHOO.s2yui.toRFC3339(dateObj);
+         
+                var fromattedDate = month + "/" + day + "/" + year;    
+            YAHOO.s2yui.showDateValue(visibleInput, fromattedDate);
+            this.hide();
+       }, YAHOO.datepickers.behindWheelCompletionDate, true);
+    }); 
+</script></td>
+			</tr>
+
+			<tr>
+				<td valign="top" align="right"></td>
+				<td valign="top" align="left"><input type="checkbox"
+					name="currentStudent.behindWheelCompletionCheck" value="true"
+					id="create_input_currentStudent_behindWheelCompletionCheck" /> <input
+					type="hidden"
+					name="__checkbox_currentStudent.behindWheelCompletionCheck"
+					value="true" /> <label
+					for="create_input_currentStudent_behindWheelCompletionCheck"
+					class="checkboxLabel">Behind the Wheel Non-Participant</label></td>
+			</tr>
+
+
+			<input type="hidden" name="currentStudent.btwCompletionSchoolNumber"
+				value="" id="create_input_currentStudent_btwCompletionSchoolNumber" />
+		</table>
+		</td>
+	</tr>
+
+
+
+
+
+
+	<tr>
+
+		<td class="tdLabel"><label
+			for="create_input_currentRoadTestInstructor" class="label">Road
+		Test Instructor:</label></td>
+		<td><label id="create_input_currentRoadTestInstructor">ELLEN
+		MCNEIL</label></td>
+	</tr>
+
+
+	<tr>
+		<td class="tdLabel"><label for="create_input_" class="label">Road
+		Test Completion Date (MM/DD/YYYY):</label></td>
+		<td><label id="create_input_">08/12/1012</label></td>
+	</tr>
+
+
+
+	<tr>
+		<td class="tdLabel"><label
+			for="create_input_currentStudent_roadTestScore" class="label">Road
+		Score (points missed):</label></td>
+		<td><label id="create_input_currentStudent_roadTestScore">4</label></td>
+	</tr>
+
+
+	<input type="hidden" name="currentStudent.roadCompletionSchoolNumber"
+		value="" id="create_input_currentStudent_roadCompletionSchoolNumber" />
+	<tr>
+		<td colspan="2">
+
+		<table width="100%" class="noBorders">
+			<tr>
+				<td colspan="2">Change Road Test Information ? &nbsp; <input
+					type="checkbox" value="true" name="roadCheck" id="roadCheck"
+					onclick="javascript:showNews('editRoad');" /></td>
+			</tr>
+		</table>
+
+
+		<div id="editRoad" style="display: none;">
+		<table width="100%" class="noBorders"
+			style="background-color: #E5E5E5;">
+			<tr>
+				<td class="tdLabel"><label for="roadTestCompletionDate"
+					class="label">Road Test Completion Date (MM/DD/YYYY)<span
+					class="required">*</span>:</label></td>
+				<td><input type="hidden"
+					name="currentStudent.roadTestCompletionDate"
+					id="roadTestCompletionDateInput" value="1012-08-12T00:00:00">
+				<input name="dojo.currentStudent.roadTestCompletionDate"
+					id="roadTestCompletionDateInputVisible"> <img
+					id="roadTestCompletionDateImg" style="vertical-align: middle;"
+					src="/sdc/struts/dateIcon.gif"> <br />
+				<div id="roadTestCompletionDateContainer" style="display: none"></div>
+				<script type="text/javascript">
+YAHOO.util.Event.addListener(window, "load", function() {
+       YAHOO.namespace("datepickers").roadTestCompletionDate =  new YAHOO.widget.Calendar("roadTestCompletionDate","roadTestCompletionDateContainer");
+       
+           YAHOO.datepickers.roadTestCompletionDate.cfg.setProperty("selected","08/12/1012",false); 
+           YAHOO.datepickers.roadTestCompletionDate.cfg.setProperty("pagedate","08/1012",false); 
+           YAHOO.util.Dom.get("roadTestCompletionDateInput").value = "1012-08-12T00:00:00";
+           var visibleInput = YAHOO.util.Dom.get("roadTestCompletionDateInputVisible");
+               YAHOO.s2yui.showDateValue(visibleInput, "08/12/1012");    
+           YAHOO.datepickers.roadTestCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("roadTestCompletionDateImg", "click", function() {
+              var display = YAHOO.util.Dom.getStyle("roadTestCompletionDateContainer", "display");
+              if(display == "none") {
+                 YAHOO.datepickers.roadTestCompletionDate.show();
+              } else {
+                 YAHOO.datepickers.roadTestCompletionDate.hide();
+              }
+           }, YAHOO.datepickers.roadTestCompletionDate, true);
+           YAHOO.datepickers.roadTestCompletionDate.cfg.setProperty("close", true, false); 
+           YAHOO.util.Event.addListener("roadTestCompletionDateInputVisible", "blur", function() {
+              YAHOO.util.Dom.get("roadTestCompletionDateInput").value = YAHOO.util.Dom.get("roadTestCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.roadTestCompletionDate, true);
+           YAHOO.util.Event.addListener("roadTestCompletionDateInputVisible", "change", function() {
+              YAHOO.util.Dom.get("roadTestCompletionDateInput").value = YAHOO.util.Dom.get("roadTestCompletionDateInputVisible").value;
+           }, YAHOO.datepickers.roadTestCompletionDate, true);
+       
+       
+       YAHOO.datepickers.roadTestCompletionDate.render();
+       
+       YAHOO.datepickers.roadTestCompletionDate.selectEvent.subscribe(function(type,args,obj) {
+         var input = YAHOO.util.Dom.get("roadTestCompletionDateInput");
+         var visibleInput = YAHOO.util.Dom.get("roadTestCompletionDateInputVisible");
+         var dates = args[0]; 
+         var date = dates[0];
+         var year = date[0], month = date[1], day = date[2];
+         
+         if(!YAHOO.lang.isNumber(year)
+            || !YAHOO.lang.isNumber(month)
+            || !YAHOO.lang.isNumber(day)) {
+            //yahoo couldn't parse what the user typed in
+            input.value = visibleInput.value;
+            return;
+         }
+         
+         var dateObj = this._toDate(date);
+         input.value = YAHOO.s2yui.toRFC3339(dateObj);
+         
+                var fromattedDate = month + "/" + day + "/" + year;    
+            YAHOO.s2yui.showDateValue(visibleInput, fromattedDate);
+            this.hide();
+       }, YAHOO.datepickers.roadTestCompletionDate, true);
+    }); 
+</script></td>
+			</tr>
+
+			<tr>
+				<td class="tdLabel"><label for="roadTestScore" class="label">Road
+				Score (points missed)<span class="required">*</span>: <img
+					src='/sdc/images/information.png'
+					alt="Road Score should be between 0 - 20.  This should not be a percentage, it is a points reduction score"
+					title="Road Score should be between 0 - 20.  This should not be a percentage, it is a points reduction score" />
+				</label></td>
+				<td><input type="text" name="currentStudent.roadTestScore"
+					size="2" maxlength="2" value="4" id="roadTestScore" /></td>
+
+			</tr>
+
+			<tr>
+				<td class="tdLabel"><label
+					for="create_input_currentStudent_roadTestInstructorFk"
+					class="label">Road Test Instructor:</label></td>
+				<td><select name="currentStudent.roadTestInstructorFk"
+					id="create_input_currentStudent_roadTestInstructorFk">
+					<option value="517" selected="selected">ELLEN MCNEIL</option>
+					<option value="425">HUNG NGUYEN</option>
+
+
+				</select></td>
+			</tr>
+
+		</table>
+		</div>
+		</td>
+	</tr>
+
+
+
+
+
+	<tr>
+		<td class="tdLabel"><label
+			for="create_input_currentStudent_schoolFk" class="label">School:</label></td>
+		<td><select name="currentStudent.schoolFk"
+			id="create_input_currentStudent_schoolFk">
+
+			<option value="184">ALPINE DISTRICT</option>
+			<option value="11">ALTA HIGH</option>
+			<option value="185">ALTAMONT HIGH</option>
+			<option value="186" selected="selected">AMERICAN FORK HIGH</option>
+			<option value="187">AMERICAN LEADERSHIP</option>
+			<option value="189">BEAR RIVER HIGH</option>
+
+			<option value="190">BEAVER DISTRICT</option>
+			<option value="191">BEAVER HIGH</option>
+			<option value="192">BEN LOMOND HIGH</option>
+			<option value="193">BINGHAM HIGH</option>
+			<option value="194">BONNEVILLE HIGH</option>
+			<option value="195">BOUNTIFUL HIGH</option>
+
+			<option value="196">BOX ELDER DISTRICT</option>
+			<option value="197">BOX ELDER HIGH</option>
+			<option value="394">BRIGHAM YOUNG UNIVERSITY</option>
+			<option value="198">BRIGHTON HIGH</option>
+			<option value="199">BRYCE VALLEY HIGH</option>
+			<option value="200">CACHE DISTRICT</option>
+
+			<option value="201">CANYON VIEW HIGH</option>
+			<option value="202">CARBON DISTRICT</option>
+			<option value="203">CARBON HIGH</option>
+			<option value="204">CEDAR HIGH</option>
+			<option value="205">CEDAR RIDGE HIGH</option>
+			<option value="206">CENTRAL HIGH</option>
+
+			<option value="207">CLEARFIELD HIGH</option>
+			<option value="14">COPPER HILLS HIGH</option>
+			<option value="208">COTTONWOOD HIGH</option>
+			<option value="209">CREEKSIDE HIGH</option>
+			<option value="210">CYPRUS HIGH</option>
+			<option value="211">DAGGETT DISTRICT</option>
+
+			<option value="212">DAVIS DISTRICT</option>
+			<option value="213">DAVIS HIGH</option>
+			<option value="214">DELTA HIGH</option>
+			<option value="395">DESERT HILLS HIGH SCHOOL</option>
+			<option value="216">DIXIE HIGH</option>
+			<option value="219">DUCHESNE DISTRICT</option>
+
+			<option value="217">DUCHESNE HIGH</option>
+			<option value="218">DUGWAY HIGH</option>
+			<option value="220">EAST CARBON HIGH</option>
+			<option value="221">EAST HIGH</option>
+			<option value="389">ELECTRONIC HIGH SCHOOL</option>
+			<option value="222">EMERY DISTRICT</option>
+
+			<option value="223">EMERY HIGH</option>
+			<option value="224">ENTERPRISE HIGH</option>
+			<option value="225">ESCALANTE HIGH</option>
+			<option value="226">ESKDALE HIGH</option>
+			<option value="227">FREMONT HIGH SCHOOL</option>
+			<option value="228">GARFIELD DISTRICT</option>
+
+			<option value="229">GRAND COUNTY HIGH</option>
+			<option value="230">GRAND DISTRICT</option>
+			<option value="231">GRANGER HIGH</option>
+			<option value="232">GRANITE DISTRICT</option>
+			<option value="233">GRANITE DISTRICT OFF</option>
+			<option value="234">GRANITE HIGH</option>
+
+			<option value="235">GRANTSVILLE HIGH</option>
+			<option value="236">GREAT BASIN HIGH</option>
+			<option value="237">GREEN RIVER HIGH</option>
+			<option value="238">GUNNISON HIGH</option>
+			<option value="239">HARLEY DAVIDSON</option>
+			<option value="240">HERITAGE SCHOOL</option>
+
+			<option value="418">HERRIMAN HIGH SCHOOL</option>
+			<option value="241">HIGHLAND HIGH</option>
+			<option value="242">HILL AIR FORCE</option>
+			<option value="1">HILLCREST HIGH</option>
+			<option value="243">HORIZONTE HIGH</option>
+			<option value="244">HUNTER HIGH</option>
+
+			<option value="245">HURRICANE HIGH</option>
+			<option value="246">INDEPENDENCE HIGH</option>
+			<option value="247">IRON DISTRICT</option>
+			<option value="248">JORDAN DISTRICT</option>
+			<option value="249">JORDAN HIGH</option>
+			<option value="250">JUAB DISTRICT</option>
+
+			<option value="251">JUAB HIGH</option>
+			<option value="252">KANAB HIGH</option>
+			<option value="253">KANE DISTRICT</option>
+			<option value="254">KEARNS HIGH</option>
+			<option value="255">LAKE POWELL SCHOOL</option>
+			<option value="397">LANDMARK HIGH SCHOOL</option>
+
+			<option value="256">LAYTON HIGH</option>
+			<option value="257">LEHI HIGH</option>
+			<option value="258">LOGAN DISTRICT</option>
+			<option value="259">LOGAN HIGH</option>
+			<option value="260">LONE PEAK HIGH</option>
+			<option value="261">MANILA HIGH</option>
+
+			<option value="262">MANTI HIGH</option>
+			<option value="403">MAPLE MOUNTAIN HIGH</option>
+			<option value="409">MERIT COLLEGE PREPARATORY ACADEMY</option>
+			<option value="263">MILFORD HIGH</option>
+			<option value="264">MILLARD DISTRICT</option>
+			<option value="265">MILLARD HIGH</option>
+
+			<option value="266">MILLCREEK HIGH</option>
+			<option value="267">MONTICELLO HIGH</option>
+			<option value="268">MONUMENT VALLEY HIGH</option>
+			<option value="269">MORGAN DISTRICT</option>
+			<option value="270">MORGAN HIGH</option>
+			<option value="271">MOUNTAIN CREST HIGH</option>
+
+			<option value="272">MOUNTAIN HIGH</option>
+			<option value="273">MOUNTAIN VIEW HIGH</option>
+			<option value="402">MURRAY COMMUNITY ED</option>
+			<option value="274">MURRAY DISTRICT</option>
+			<option value="275">MURRAY HIGH</option>
+			<option value="276">NEBO DISTRICT</option>
+
+			<option value="277">NORTH SANPETE DISTRICT</option>
+			<option value="278">NORTH SANPETE HIGH</option>
+			<option value="279">NORTH SEVIER HIGH</option>
+			<option value="280">NORTH SUMMIT DISTRIC</option>
+			<option value="281">NORTH SUMMIT HIGH</option>
+			<option value="282">NORTHRIDGE HIGH</option>
+
+			<option value="399">NUAMES</option>
+			<option value="283">OGDEN DISTRICT</option>
+			<option value="284">OGDEN HIGH</option>
+			<option value="285">OLYMPUS HIGH</option>
+			<option value="286">OREM HIGH</option>
+			<option value="287">PANGUITCH HIGH</option>
+
+			<option value="288">PARK CITY DISTRICT</option>
+			<option value="289">PARK CITY HIGH</option>
+			<option value="290">PAROWAN HIGH</option>
+			<option value="291">PAYSON HIGH</option>
+			<option value="292">PINEVIEW HIGH</option>
+			<option value="293">PIUTE DISTRICT</option>
+
+			<option value="294">PIUTE HIGH</option>
+			<option value="295">PLEASANT GROVE HIGH</option>
+			<option value="296">PRIVATE SCHOOLS</option>
+			<option value="297">PROVO DISTRICT</option>
+			<option value="298">PROVO HIGH</option>
+			<option value="299">RICH DISTRICT</option>
+
+			<option value="300">RICH HIGH</option>
+			<option value="301">RICHFIELD HIGH</option>
+			<option value="302">RIVERTON HIGH</option>
+			<option value="414">ROCKWELL CHARTER HIGH SCHOOL</option>
+			<option value="303">ROY HIGH</option>
+			<option value="396">SALEM HILLS HIGH SCHOOL</option>
+
+			<option value="304">SALT LAKE COMMUNITY</option>
+			<option value="305">SALT LAKE DISTRICT</option>
+			<option value="306">SAN JUAN DISTRICT</option>
+			<option value="307">SAN JUAN HIGH</option>
+			<option value="308">SEVIER DISTRICT</option>
+			<option value="309">SKYLINE HIGH</option>
+
+			<option value="310">SKYVIEW HIGH</option>
+			<option value="311">SNOW CANYON HIGH</option>
+			<option value="313">SOUTH SEVIER HIGH</option>
+			<option value="314">SOUTH SUMMIT DISTRIC</option>
+			<option value="315">SOUTH SUMMIT HIGH</option>
+			<option value="316">SOUTHEAST APPLIED TE</option>
+
+			<option value="317">SPANISH FORK HIGH</option>
+			<option value="318">SPRINGVILLE HIGH</option>
+			<option value="405">STANSBURY HIGH SCHOOL</option>
+			<option value="319">SUMMIT HIGH</option>
+			<option value="387">SYRACUSE HIGH SCHOOL</option>
+			<option value="320">TABIONA HIGH</option>
+
+			<option value="321">TAYLORSVILLE HIGH</option>
+			<option value="322">TIMPANOGOS HIGH</option>
+			<option value="323">TIMPVIEW HIGH</option>
+			<option value="324">TINTIC DISTRICT</option>
+			<option value="325">TINTIC HIGH</option>
+			<option value="326">TOOELE DISTRICT</option>
+
+			<option value="327">TOOELE HIGH</option>
+			<option value="393">TOOELE SOUTH HIGH</option>
+			<option value="328">TOOELE VALLEY ADULT</option>
+			<option value="329">UINTAH DISTRICT</option>
+			<option value="330">UINTAH HIGH</option>
+			<option value="401">UINTAH RIVER HIGH SCHOOL</option>
+
+			<option value="331">UNION HIGH</option>
+			<option value="332">UTAH MOTORCYCLE ASSO</option>
+			<option value="392">UTAH SC @ WOODLAND HILLS (SOUTHVALLEY
+			COMM)</option>
+			<option value="333">VALLEY HIGH</option>
+			<option value="334">VIEWMONT HIGH</option>
+			<option value="335">WASATCH DISTRICT</option>
+
+			<option value="336">WASATCH HIGH</option>
+			<option value="337">WASHINGTON ADULT HIG</option>
+			<option value="338">WASHINGTON DISTRICT</option>
+			<option value="340">WASHINGTON HIGH</option>
+			<option value="339">WASHINGTON HIGH</option>
+			<option value="341">WAYNE DISTRICT</option>
+
+			<option value="342">WAYNE HIGH</option>
+			<option value="343">WEBER BASIN JOB CORPS</option>
+			<option value="344">WEBER DISTRICT</option>
+			<option value="345">WEBER DISTRICT OFFIC</option>
+			<option value="346">WEBER HIGH</option>
+			<option value="347">WENDOVER HIGH</option>
+
+			<option value="348">WEST HIGH</option>
+			<option value="349">WEST JORDAN HIGH</option>
+			<option value="408">WESTLAKE</option>
+			<option value="410">WESTRIDGE ACADEMY</option>
+			<option value="350">WHITEHORSE HIGH</option>
+			<option value="351">WOODS CROSS HIGH</option>
+
+
+		</select></td>
+	</tr>
+
+
+
+
+
+
+
+	<tr>
+		<td colspan="2">
+		<div style="text-align: right" class="ieSubmit">
+		<button type="submit" id="create_input_0" value="Update"
+			onclick="return update('update');">Update</button>
+		</div>
+		</td>
+	</tr>
+
+
+	<tr>
+		<td colspan="2">
+		<div style="text-align: right" class="ieSubmit">
+		<button type="submit" id="generateFullCompletion"
+			value="Generate Full Completion Slip"
+			onclick="return update('generateFullCompletion');">Generate
+		Full Completion Slip</button>
+
+		</div>
+		</td>
+	</tr>
+
+
+
+	<input type="hidden" name="currentStudent.studentPk" value="123554"
+		id="create_input_currentStudent_studentPk" />
+	<input type="hidden" name="currentStudent.licenseType" value="LRN"
+		id="create_input_currentStudent_licenseType" />
+</table>
+</form>
+
+
+
+<!-- javascript that is needed for tooltips --> <script
+	type="text/javascript" src='/sdc/struts/domTT.js'></script>
+<link rel="stylesheet" type="text/css" href="/sdc/struts/domTT.css" />
+
+
+</div>
+
+
+
+
+<script language="javascript" type="text/javascript">
+	editRoadCheck();
+</script>
+
+
+<button id="show1" style="display: none" />
+</div>
+
+<hr width="93%" class="dashed" />
+<div class="footerImage">
+<hr />
+</div>
+
+<p style="text-align: center; width: 94%;">Copyright (c) 2008 State
+of Utah&nbsp;&nbsp; <span
+	style="text-align: right; color: #CCCCCC; width: 94%;">version
+1.11.0 build 443</span></p>
+
+</body>
+
+</html>

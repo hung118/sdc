@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMapConfig 
+PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">  
+
+<sqlMapConfig>
+    
+    <properties resource="database.properties" />
+    <settings 
+        cacheModelsEnabled="true" 
+        statementCachingEnabled="true" 
+    />
+    
+    <transactionManager type="JDBC" >
+        <dataSource type="JNDI">
+            <property name="DataSource" value="java:comp/env/${DatabaseJNDIPath}"/>
+        </dataSource>
+    </transactionManager>
+    
+    <sqlMap resource="sql/AuditSQL.xml" />
+    <sqlMap resource="sql/BondSQL.xml" />
+    <sqlMap resource="sql/BranchSQL.xml" />
+    <sqlMap resource="sql/ClassroomSQL.xml" />
+    <sqlMap resource="sql/NewsSQL.xml" />
+    <sqlMap resource="sql/PersonRolesSQL.xml" />
+    <sqlMap resource="sql/PersonSchoolSQL.xml" />
+    <sqlMap resource="sql/PersonSQL.xml" />
+    <sqlMap resource="sql/RoadTesterSQL.xml" />
+    <sqlMap resource="sql/RoleTypesSQL.xml" />
+    <sqlMap resource="sql/SchoolSQL.xml" />
+    <sqlMap resource="sql/SDCSQL.xml" />
+    <sqlMap resource="sql/StudentSQL.xml" />
+    <sqlMap resource="sql/VehicleSQL.xml" />
+</sqlMapConfig>
